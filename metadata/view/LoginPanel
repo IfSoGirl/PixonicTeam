@@ -1,0 +1,76 @@
+{
+    "type": "Ext.Panel",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "designer|userAlias": "loginpanel",
+        "designer|userClassName": "LoginPanel"
+    },
+    "name": "MyPanel",
+    "designerId": "7f019401-58b9-4d15-873e-a24af04a3ced",
+    "cn": [
+        {
+            "type": "Ext.Container",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "container|align": "center",
+                "layout": "vbox"
+            },
+            "name": "MyContainer",
+            "designerId": "702fbd5d-6d4e-4f32-8c4a-d6919ff8863b",
+            "cn": [
+                {
+                    "type": "Ext.Label",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "html": "hi2",
+                        "id": "helloLabel",
+                        "padding": "50 0 50 0",
+                        "style": "text-align: center"
+                    },
+                    "name": "MyLabel",
+                    "designerId": "cdbac9f0-5bf6-42f3-a486-e5d371dcec45"
+                },
+                {
+                    "type": "Ext.Button",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "action": "confirm",
+                        "baseCls": "google-button-active",
+                        "height": 46,
+                        "id": "loginBtn",
+                        "pressedCls": "google-button-pressed",
+                        "style": null,
+                        "text": null,
+                        "width": 191,
+                        "zIndex": null
+                    },
+                    "name": "MyButton",
+                    "designerId": "3cfef5e8-87ab-4bc5-abd8-dd8f26026ac7",
+                    "customConfigs": [
+                        {
+                            "group": "(Custom Properties)",
+                            "name": "action",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

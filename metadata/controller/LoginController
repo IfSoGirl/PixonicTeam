@@ -1,0 +1,140 @@
+{
+    "type": "Ext.app.Controller",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "designer|userClassName": "LoginController"
+    },
+    "name": "MyController",
+    "designerId": "1ac66694-44e0-4510-ac74-a68180d744ca",
+    "cn": [
+        {
+            "type": "controllerref",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "ref": "loginBtn",
+                "selector": "#loginBtn"
+            },
+            "name": "loginBtn",
+            "designerId": "8f5d01bd-d454-4c02-b65a-666c60f32dfc"
+        },
+        {
+            "type": "controlleraction",
+            "reference": {
+                "name": "listeners",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|controlQuery": "[action=confirm]",
+                "designer|targetType": "Ext.Button",
+                "fn": "onButtonTap",
+                "implHandler": [
+                    "      this.checkAuth(false);"
+                ],
+                "name": "tap"
+            },
+            "name": "onButtonTap",
+            "designerId": "a65220c2-bf42-477e-8476-7376c2c124d4"
+        },
+        {
+            "type": "basicfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|params": [
+                    "immediate"
+                ],
+                "fn": "checkAuth",
+                "implHandler": [
+                    "    console.log(\"trying login with immediate \" + immediate);",
+                    "    gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: immediate}, this.handleAuthResult);"
+                ]
+            },
+            "name": "checkAuth",
+            "designerId": "e7f55c6f-85e2-4e46-9ecb-ff207dd09d65"
+        },
+        {
+            "type": "basicfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|params": [
+                    "result"
+                ],
+                "fn": "handleAuthResult",
+                "implHandler": [
+                    " if (result && !result.error) {",
+                    "     console.log(\"Auth OK, token\" + result.access_token);",
+                    " } else {",
+                    "     console.log(\"AUth ERROR\"+ result.error);",
+                    " }"
+                ]
+            },
+            "name": "handleAuthResult",
+            "designerId": "33e9fe4a-fd00-4900-b334-d4d9780091c1"
+        },
+        {
+            "type": "fixedfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "fn": "launch",
+                "implHandler": [
+                    "        console.log('launch controller');",
+                    "        gapi.client.setApiKey(apiKey);",
+                    "        window.setTimeout(this.checkAuth(false), 1);",
+                    ""
+                ]
+            },
+            "name": "launch",
+            "designerId": "358bc240-5ab4-4443-9654-0939f55e5fa4"
+        },
+        {
+            "type": "basicfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "fn": "loadCalendarApi",
+                "implHandler": [
+                    "gapi.client.load('calendar', 'v3', listUpcomingEvents);",
+                    ""
+                ]
+            },
+            "name": "loadCalendarApi",
+            "designerId": "dbaacef5-72e5-491d-90f8-f0499be7ecbe"
+        },
+        {
+            "type": "basicfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "fn": "listUpcomingEvents"
+            },
+            "name": "listUpcomingEvents",
+            "designerId": "4860c54e-017c-4210-a245-4b92b07f6662"
+        }
+    ]
+}
