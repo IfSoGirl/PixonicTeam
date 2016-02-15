@@ -37,7 +37,13 @@
                 "designer|targetType": "Ext.Button",
                 "fn": "onButtonTap",
                 "implHandler": [
-                    "      this.checkAuth(false);"
+                    "var params = 'client_id=' + encodeURIComponent(clientId);",
+                    "params += '&redirect_uri='+encodeURIComponent(\"http://localhost:1841\");",
+                    "params += '&response_type=code';",
+                    "params += '&scope=' + encodeURIComponent(scopes);",
+                    "var authUrl = 'https://accounts.google.com/o/oauth2/auth?' + params;",
+                    "var win = window.open(authUrl, '_blank', 'location=no,toolbar=no,width=800, height=800');",
+                    "//this.checkAuth(false);"
                 ],
                 "name": "tap"
             },
@@ -99,7 +105,6 @@
                 "implHandler": [
                     "        console.log('launch controller');",
                     "        gapi.client.setApiKey(apiKey);",
-                    "        window.setTimeout(this.checkAuth(false), 1);",
                     ""
                 ]
             },

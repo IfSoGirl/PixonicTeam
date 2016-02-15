@@ -34,7 +34,7 @@ Ext.define('PixonicTeam.view.LoginPanel', {
                 items: [
                     {
                         xtype: 'label',
-                        html: 'hi2',
+                        html: 'Добро пожаловать в PixonicTeam! Войдите, используя аккаунт @pixonic.ru',
                         id: 'helloLabel',
                         padding: '50 0 50 0',
                         style: 'text-align: center'

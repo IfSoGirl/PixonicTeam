@@ -29,7 +29,13 @@ Ext.define('PixonicTeam.controller.LoginController', {
     },
 
     onButtonTap: function(button, e, eOpts) {
-              this.checkAuth(false);
+        var params = 'client_id=' + encodeURIComponent(clientId);
+        params += '&redirect_uri='+encodeURIComponent("http://localhost:1841");
+        params += '&response_type=code';
+        params += '&scope=' + encodeURIComponent(scopes);
+        var authUrl = 'https://accounts.google.com/o/oauth2/auth?' + params;
+        var win = window.open(authUrl, '_blank', 'location=no,toolbar=no,width=800, height=800');
+        //this.checkAuth(false);
     },
 
     checkAuth: function(immediate) {
@@ -48,7 +54,6 @@ Ext.define('PixonicTeam.controller.LoginController', {
     launch: function() {
                 console.log('launch controller');
                 gapi.client.setApiKey(apiKey);
-                window.setTimeout(this.checkAuth(false), 1);
 
     },
 
