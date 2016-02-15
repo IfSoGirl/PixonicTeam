@@ -15,10 +15,13 @@
 
 Ext.define('PixonicTeam.controller.LoginController', {
     extend: 'Ext.app.Controller',
+    alias: 'controller.loginController',
 
     config: {
         refs: {
-            loginBtn: '#loginBtn'
+            loginBtn: '#loginBtn',
+            loginView: '#loginpanel',
+            profileView: '#profileWindow'
         },
 
         control: {
@@ -30,12 +33,72 @@ Ext.define('PixonicTeam.controller.LoginController', {
 
     onButtonTap: function(button, e, eOpts) {
         var params = 'client_id=' + encodeURIComponent(clientId);
-        params += '&redirect_uri='+encodeURIComponent("http://localhost:1841");
+        params += '&redirect_uri='+encodeURIComponent(redirectUri);
         params += '&response_type=code';
         params += '&scope=' + encodeURIComponent(scopes);
         var authUrl = 'https://accounts.google.com/o/oauth2/auth?' + params;
         var win = window.open(authUrl, '_blank', 'location=no,toolbar=no,width=800, height=800');
-        //this.checkAuth(false);
+        gwin = win;
+         var context = this;
+
+        win.addEventListener('loadstart', function (data) {
+            console.log('LOAD START');
+            console.log('Here is data url');
+           console.log(data.url);
+            var pos =  data.url.indexOf(redirectUri);
+             console.log('redirect in data' + pos);
+            if (pos === 0) {
+                console.log('redirect url found, CLOSE WINDOW');
+                win.close();
+                var url = data.url;
+                console.log('Final URL ' + url);
+                access_code = /\?code=(.+)$/.exec(url);
+                  var error = /\?error=(.+)$/.exec(url);
+                console.log('CODE = '+ access_code);
+                console.log('ERROR = '+ error);
+                //getToken();
+
+
+                Ext.Ajax.request({
+                    url: 'https://www.googleapis.com/oauth2/v3/token',
+                    method: 'POST',
+
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded'},
+
+                    params: {
+                        client_id: clientId,
+                      //  client_secret: this.secret,
+                        redirect_uri: redirectUri,
+                        code: access_code,
+                        grant_type: 'authorization_code'
+                    },
+
+                    callback: function(options, success, response) {
+                        console.log('Get server response'+response.responseText);
+                        console.log(esponse.responseText);
+            }
+        });
+
+
+            }
+        });
+         /*//else {
+            console.log('InAppBrowser not found11');
+            console.log("google window url " + win.document.URL);
+            var s = win.location.href;
+            if (gwin.document.URL.indexOf(redirectUri) === 0) {
+                console.log('redirect url found');
+                win.close();
+                var url = win.document.URL;
+                console.log('Final URL ' + url);
+                var access_code = context.gulp(url, 'code');
+                if (access_code) {
+                console.log('Access Code: ' + access_code);
+            } else {
+               console.log('Access Code Not Found');
+                }
+            }*/
+
     },
 
     checkAuth: function(immediate) {
@@ -46,9 +109,11 @@ Ext.define('PixonicTeam.controller.LoginController', {
     handleAuthResult: function(result) {
          if (result && !result.error) {
              console.log("Auth OK, token" + result.access_token);
+            var c =  this.getController('loginController');
          } else {
              console.log("AUth ERROR"+ result.error);
          }
+
     },
 
     launch: function() {

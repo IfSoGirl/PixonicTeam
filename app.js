@@ -21,8 +21,8 @@ Ext.Loader.setConfig({
 
 Ext.application({
     views: [
-        'MyNavigationView',
-        'LoginPanel'
+        'LoginPanel',
+        'Profile'
     ],
     controllers: [
         'LoginController'
@@ -31,7 +31,7 @@ Ext.application({
 
     launch: function() {
 
-        Ext.create('PixonicTeam.view.MyNavigationView', {fullscreen: true});
+        Ext.create('PixonicTeam.view.LoginPanel', {fullscreen: true});
     }
 
 });

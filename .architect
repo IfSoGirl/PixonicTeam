@@ -1,14 +1,6 @@
 {
     "expandedState": {
         "view": true,
-        "2266b2a0-6ec5-43ec-a819-3b8160d9a990": {
-            "id": "2266b2a0-6ec5-43ec-a819-3b8160d9a990",
-            "cn": [
-                {
-                    "id": "00573619-9948-4080-833a-bf65d858a359"
-                }
-            ]
-        },
         "7f019401-58b9-4d15-873e-a24af04a3ced": {
             "id": "7f019401-58b9-4d15-873e-a24af04a3ced",
             "cn": [
@@ -22,6 +14,14 @@
                             "id": "3cfef5e8-87ab-4bc5-abd8-dd8f26026ac7"
                         }
                     ]
+                }
+            ]
+        },
+        "c20fba9c-259a-464a-aa51-1502eeaf1da7": {
+            "id": "c20fba9c-259a-464a-aa51-1502eeaf1da7",
+            "cn": [
+                {
+                    "id": "8369d28f-a6be-4c5a-bc9b-ffe5717feb28"
                 }
             ]
         },
@@ -51,6 +51,12 @@
                 },
                 {
                     "id": "4860c54e-017c-4210-a245-4b92b07f6662"
+                },
+                {
+                    "id": "543354b3-f72b-4e2b-909b-c03eaab579c0"
+                },
+                {
+                    "id": "47ab92bc-2425-497f-8865-4c6014ecc95c"
                 }
             ]
         },
@@ -69,15 +75,17 @@
         },
         "44f34976-020b-410e-9166-71f667f9ff43": {
             "id": "44f34976-020b-410e-9166-71f667f9ff43"
+        },
+        "77b7c7ed-2f35-416f-8c81-cd388242bc49": {
+            "id": "77b7c7ed-2f35-416f-8c81-cd388242bc49"
         }
     },
     "tabState": {
         "openTabs": [
             "1ac66694-44e0-4510-ac74-a68180d744ca",
             "bcb01d96-9575-4d46-9723-22bb484ad8bc",
-            "7f019401-58b9-4d15-873e-a24af04a3ced",
             "47f048e1-91fd-4210-bcb1-3fc991be4160",
-            "44f34976-020b-410e-9166-71f667f9ff43"
+            "77b7c7ed-2f35-416f-8c81-cd388242bc49"
         ]
     },
     "canvasState": {
@@ -85,7 +93,7 @@
     },
     "inspectorState": {
         "topInstance": "1ac66694-44e0-4510-ac74-a68180d744ca",
-        "selectedInstance": "1ac66694-44e0-4510-ac74-a68180d744ca"
+        "selectedInstance": "a65220c2-bf42-477e-8476-7376c2c124d4"
     },
     "editMode": "code",
     "userSettings": {

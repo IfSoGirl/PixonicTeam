@@ -31732,6 +31732,208 @@ Ext.define('Ext.ComponentQuery', {
 });
 
 /**
+ * This is a simple way to add an image of any size to your application and have it participate in the layout system
+ * like any other component. This component typically takes between 1 and 3 configurations - a {@link #src}, and
+ * optionally a {@link #height} and a {@link #width}:
+ *
+ *     @example miniphone
+ *     var img = Ext.create('Ext.Img', {
+ *         src: 'http://www.sencha.com/assets/images/sencha-avatar-64x64.png',
+ *         height: 64,
+ *         width: 64
+ *     });
+ *     Ext.Viewport.add(img);
+ *
+ * It's also easy to add an image into a panel or other container using its xtype:
+ *
+ *     @example miniphone
+ *     Ext.create('Ext.Panel', {
+ *         fullscreen: true,
+ *         layout: 'hbox',
+ *         items: [
+ *             {
+ *                 xtype: 'image',
+ *                 src: 'http://www.sencha.com/assets/images/sencha-avatar-64x64.png',
+ *                 flex: 1
+ *             },
+ *             {
+ *                 xtype: 'panel',
+ *                 flex: 2,
+ *                 html: 'Sencha Inc.<br/>1700 Seaport Boulevard Suite 120, Redwood City, CA'
+ *             }
+ *         ]
+ *     });
+ *
+ * Here we created a panel which contains an image (a profile picture in this case) and a text area to allow the user
+ * to enter profile information about themselves. In this case we used an {@link Ext.layout.HBox hbox layout} and
+ * flexed the image to take up one third of the width and the text area to take two thirds of the width. See the
+ * {@link Ext.layout.HBox hbox docs} for more information on flexing items.
+ */
+Ext.define('Ext.Img', {
+    extend: Ext.Component,
+    xtype: [
+        'image',
+        'img'
+    ],
+    /**
+     * @event tap
+     * Fires whenever the component is tapped
+     * @param {Ext.Img} this The Image instance
+     * @param {Ext.EventObject} e The event object
+     */
+    /**
+     * @event load
+     * Fires when the image is loaded
+     * @param {Ext.Img} this The Image instance
+     * @param {Ext.EventObject} e The event object
+     */
+    /**
+     * @event error
+     * Fires if an error occured when trying to load the image
+     * @param {Ext.Img} this The Image instance
+     * @param {Ext.EventObject} e The event object
+     */
+    config: {
+        /**
+         * @cfg {String} src The source of this image
+         * @accessor
+         */
+        src: null,
+        /**
+         * @cfg
+         * @inheritdoc
+         */
+        baseCls: Ext.baseCSSPrefix + 'img',
+        /**
+         * @cfg {String} imageCls The CSS class to be used when {@link #mode} is not set to 'background'
+         * @accessor
+         */
+        imageCls: Ext.baseCSSPrefix + 'img-image',
+        /**
+         * @cfg {String} backgroundCls The CSS class to be used when {@link #mode} is set to 'background'
+         * @accessor
+         */
+        backgroundCls: Ext.baseCSSPrefix + 'img-background',
+        /**
+         * @cfg {String} mode If set to 'background', uses a background-image CSS property instead of an
+         * `<img>` tag to display the image.
+         */
+        mode: 'background'
+    },
+    beforeInitialize: function() {
+        var me = this;
+        me.onLoad = Ext.Function.bind(me.onLoad, me);
+        me.onError = Ext.Function.bind(me.onError, me);
+    },
+    initialize: function() {
+        var me = this;
+        me.callParent();
+        me.relayEvents(me.renderElement, '*');
+        me.element.on({
+            tap: 'onTap',
+            scope: me
+        });
+    },
+    hide: function() {
+        this.callParent(arguments);
+        this.hiddenSrc = this.hiddenSrc || this.getSrc();
+        this.setSrc(null);
+    },
+    show: function() {
+        this.callParent(arguments);
+        if (this.hiddenSrc) {
+            this.setSrc(this.hiddenSrc);
+            delete this.hiddenSrc;
+        }
+    },
+    updateMode: function(mode) {
+        var me = this,
+            imageCls = me.getImageCls(),
+            backgroundCls = me.getBackgroundCls();
+        if (mode === 'background') {
+            if (me.imageElement) {
+                me.imageElement.destroy();
+                delete me.imageElement;
+                me.updateSrc(me.getSrc());
+            }
+            me.replaceCls(imageCls, backgroundCls);
+        } else {
+            me.imageElement = me.element.createChild({
+                tag: 'img'
+            });
+            me.replaceCls(backgroundCls, imageCls);
+        }
+    },
+    updateImageCls: function(newCls, oldCls) {
+        this.replaceCls(oldCls, newCls);
+    },
+    updateBackgroundCls: function(newCls, oldCls) {
+        this.replaceCls(oldCls, newCls);
+    },
+    onTap: function(e) {
+        this.fireEvent('tap', this, e);
+    },
+    onAfterRender: function() {
+        this.updateSrc(this.getSrc());
+    },
+    /**
+     * @private
+     */
+    updateSrc: function(newSrc) {
+        var me = this,
+            dom;
+        if (me.getMode() === 'background') {
+            dom = this.imageObject || new Image();
+        } else {
+            dom = me.imageElement.dom;
+        }
+        this.imageObject = dom;
+        dom.setAttribute('src', Ext.isString(newSrc) ? newSrc : '');
+        dom.addEventListener('load', me.onLoad, false);
+        dom.addEventListener('error', me.onError, false);
+    },
+    detachListeners: function() {
+        var dom = this.imageObject;
+        if (dom) {
+            dom.removeEventListener('load', this.onLoad, false);
+            dom.removeEventListener('error', this.onError, false);
+        }
+    },
+    onLoad: function(e) {
+        this.detachListeners();
+        if (this.getMode() === 'background') {
+            this.element.dom.style.backgroundImage = 'url("' + this.imageObject.src + '")';
+        }
+        this.fireEvent('load', this, e);
+    },
+    onError: function(e) {
+        this.detachListeners();
+        // Attempt to set the src even though the error event fired.
+        if (this.getMode() === 'background') {
+            this.element.dom.style.backgroundImage = 'url("' + this.imageObject.src + '")';
+        }
+        this.fireEvent('error', this, e);
+    },
+    doSetWidth: function(width) {
+        var sizingElement = (this.getMode() === 'background') ? this.element : this.imageElement;
+        sizingElement.setWidth(width);
+        this.callParent(arguments);
+    },
+    doSetHeight: function(height) {
+        var sizingElement = (this.getMode() === 'background') ? this.element : this.imageElement;
+        sizingElement.setHeight(height);
+        this.callParent(arguments);
+    },
+    destroy: function() {
+        this.detachListeners();
+        Ext.destroy(this.imageObject, this.imageElement);
+        delete this.imageObject;
+        delete this.imageElement;
+        this.callParent();
+    }
+});
+
+/**
  * A simple label component which allows you to insert content using {@link #html} configuration.
  *
  *     @example miniphone
@@ -31879,721 +32081,6 @@ Ext.define('Ext.LoadMask', {
         this[newIndicator ? 'removeCls' : 'addCls'](Ext.baseCSSPrefix + 'indicator-hidden');
     }
 }, function() {});
-
-/**
- * {@link Ext.Title} is used for the {@link Ext.Toolbar#title} configuration in the {@link Ext.Toolbar} component.
- * @private
- */
-Ext.define('Ext.Title', {
-    extend: Ext.Component,
-    xtype: 'title',
-    config: {
-        /**
-         * @cfg
-         * @inheritdoc
-         */
-        baseCls: 'x-title',
-        /**
-         * @cfg {String} title The title text
-         */
-        title: ''
-    },
-    // @private
-    updateTitle: function(newTitle) {
-        this.setHtml(newTitle);
-    }
-});
-
-/**
-The {@link Ext.Spacer} component is generally used to put space between items in {@link Ext.Toolbar} components.
-
-## Examples
-
-By default the {@link #flex} configuration is set to 1:
-
-    @example miniphone preview
-    Ext.create('Ext.Container', {
-        fullscreen: true,
-        items: [
-            {
-                xtype : 'toolbar',
-                docked: 'top',
-                items: [
-                    {
-                        xtype: 'button',
-                        text : 'Button One'
-                    },
-                    {
-                        xtype: 'spacer'
-                    },
-                    {
-                        xtype: 'button',
-                        text : 'Button Two'
-                    }
-                ]
-            }
-        ]
-    });
-
-Alternatively you can just set the {@link #width} configuration which will get the {@link Ext.Spacer} a fixed width:
-
-    @example preview
-    Ext.create('Ext.Container', {
-        fullscreen: true,
-        layout: {
-            type: 'vbox',
-            pack: 'center',
-            align: 'stretch'
-        },
-        items: [
-            {
-                xtype : 'toolbar',
-                docked: 'top',
-                items: [
-                    {
-                        xtype: 'button',
-                        text : 'Button One'
-                    },
-                    {
-                        xtype: 'spacer',
-                        width: 50
-                    },
-                    {
-                        xtype: 'button',
-                        text : 'Button Two'
-                    }
-                ]
-            },
-            {
-                xtype: 'container',
-                items: [
-                    {
-                        xtype: 'button',
-                        text : 'Change Ext.Spacer width',
-                        handler: function() {
-                            //get the spacer using ComponentQuery
-                            var spacer = Ext.ComponentQuery.query('spacer')[0],
-                                from = 10,
-                                to = 250;
-
-                            //set the width to a random number
-                            spacer.setWidth(Math.floor(Math.random() * (to - from + 1) + from));
-                        }
-                    }
-                ]
-            }
-        ]
-    });
-
-You can also insert multiple {@link Ext.Spacer}'s:
-
-    @example preview
-    Ext.create('Ext.Container', {
-        fullscreen: true,
-        items: [
-            {
-                xtype : 'toolbar',
-                docked: 'top',
-                items: [
-                    {
-                        xtype: 'button',
-                        text : 'Button One'
-                    },
-                    {
-                        xtype: 'spacer'
-                    },
-                    {
-                        xtype: 'button',
-                        text : 'Button Two'
-                    },
-                    {
-                        xtype: 'spacer',
-                        width: 20
-                    },
-                    {
-                        xtype: 'button',
-                        text : 'Button Three'
-                    }
-                ]
-            }
-        ]
-    });
- */
-Ext.define('Ext.Spacer', {
-    extend: Ext.Component,
-    alias: 'widget.spacer',
-    config: {},
-    /**
-         * @cfg {Number} flex
-         * The flex value of this spacer. This defaults to 1, if no width has been set.
-         * @accessor
-         */
-    /**
-         * @cfg {Number} width
-         * The width of this spacer. If this is set, the value of {@link #flex} will be ignored.
-         * @accessor
-         */
-    // @private
-    constructor: function(config) {
-        config = config || {};
-        if (!config.width) {
-            config.flex = 1;
-        }
-        this.callParent([
-            config
-        ]);
-    }
-});
-
-/**
- * {@link Ext.Toolbar}s are most commonly used as docked items as within a {@link Ext.Container}. They can be docked either `top` or `bottom` using the {@link #docked} configuration.
- *
- * They allow you to insert items (normally {@link Ext.Button buttons}) and also add a {@link #title}.
- *
- * The {@link #defaultType} of {@link Ext.Toolbar} is {@link Ext.Button}.
- *
- * You can alternatively use {@link Ext.TitleBar} if you want the title to automatically adjust the size of its items.
- *
- * ## Examples
- *
- *     @example miniphone preview
- *     Ext.create('Ext.Container', {
- *         fullscreen: true,
- *         layout: {
- *             type: 'vbox',
- *             pack: 'center'
- *         },
- *         items: [
- *             {
- *                 xtype : 'toolbar',
- *                 docked: 'top',
- *                 title: 'My Toolbar'
- *             },
- *             {
- *                 xtype: 'container',
- *                 defaults: {
- *                     xtype: 'button',
- *                     margin: '10 10 0 10'
- *                 },
- *                 items: [
- *                     {
- *                         text: 'Toggle docked',
- *                         handler: function() {
- *                             var toolbar = Ext.ComponentQuery.query('toolbar')[0],
- *                                 newDocked = (toolbar.getDocked() === 'top') ? 'bottom' : 'top';
- *
- *                             toolbar.setDocked(newDocked);
- *                         }
- *                     },
- *                     {
- *                         text: 'Toggle UI',
- *                         handler: function() {
- *                             var toolbar = Ext.ComponentQuery.query('toolbar')[0],
- *                                 newUi = (toolbar.getUi() === 'light') ? 'dark' : 'light';
- *
- *                             toolbar.setUi(newUi);
- *                         }
- *                     },
- *                     {
- *                         text: 'Change title',
- *                         handler: function() {
- *                             var toolbar = Ext.ComponentQuery.query('toolbar')[0],
- *                                 titles = ['My Toolbar', 'Ext.Toolbar', 'Configurations are awesome!', 'Beautiful.'],
-                                   //internally, the title configuration gets converted into a {@link Ext.Title} component,
-                                   //so you must get the title configuration of that component
- *                                 title = toolbar.getTitle().getTitle(),
- *                                 newTitle = titles[titles.indexOf(title) + 1] || titles[0];
- *
- *                             toolbar.setTitle(newTitle);
- *                         }
- *                     }
- *                 ]
- *             }
- *         ]
- *     });
- *
- * ## Notes
- *
- * You must use a HTML5 doctype for {@link #docked} `bottom` to work. To do this, simply add the following code to the HTML file:
- *
- *     <!doctype html>
- *
- * So your index.html file should look a little like this:
- *
- *     <!doctype html>
- *     <html>
- *         <head>
- *             <title>MY application title</title>
- *             ...
- *
- */
-Ext.define('Ext.Toolbar', {
-    extend: Ext.Container,
-    xtype: 'toolbar',
-    // @private
-    isToolbar: true,
-    config: {
-        /**
-         * @cfg baseCls
-         * @inheritdoc
-         */
-        baseCls: Ext.baseCSSPrefix + 'toolbar',
-        /**
-         * @cfg {String} ui
-         * The ui for this {@link Ext.Toolbar}. Either 'light' or 'dark'. You can create more UIs by using using the CSS Mixin {@link #sencha-toolbar-ui}
-         * @accessor
-         */
-        ui: 'dark',
-        /**
-         * @cfg {String/Ext.Title} title
-         * The title of the toolbar.
-         * @accessor
-         */
-        title: null,
-        /**
-         * @cfg {String} defaultType
-         * The default xtype to create.
-         * @accessor
-         */
-        defaultType: 'button',
-        /**
-         * @cfg {String} docked
-         * The docked position for this {@link Ext.Toolbar}.
-         * If you specify `left` or `right`, the {@link #layout} configuration will automatically change to a `vbox`. It's also
-         * recommended to adjust the {@link #width} of the toolbar if you do this.
-         * @accessor
-         */
-        /**
-         * @cfg {String} minHeight
-         * The minimum height height of the Toolbar.
-         * @accessor
-         */
-        minHeight: null,
-        /**
-         * @cfg {Object/String} layout Configuration for this Container's layout. Example:
-         *
-         *     Ext.create('Ext.Container', {
-         *         layout: {
-         *             type: 'hbox',
-         *             align: 'middle'
-         *         },
-         *         items: [
-         *             {
-         *                 xtype: 'panel',
-         *                 flex: 1,
-         *                 style: 'background-color: red;'
-         *             },
-         *             {
-         *                 xtype: 'panel',
-         *                 flex: 2,
-         *                 style: 'background-color: green'
-         *             }
-         *         ]
-         *     });
-         *
-         * See the [layouts guide](../../../core_concepts/layouts.html) for more information
-         *
-         * __Note:__ If you set the {@link #docked} configuration to `left` or `right`, the default layout will change from the
-         * `hbox` to a `vbox`.
-         *
-         * @accessor
-         */
-        layout: {
-            type: 'hbox',
-            align: 'center'
-        }
-    },
-    hasCSSMinHeight: true,
-    constructor: function(config) {
-        config = config || {};
-        if (config.docked == "left" || config.docked == "right") {
-            config.layout = {
-                type: 'vbox',
-                align: 'stretch'
-            };
-        }
-        this.callParent([
-            config
-        ]);
-    },
-    // @private
-    applyTitle: function(title) {
-        if (typeof title == 'string') {
-            title = {
-                title: title,
-                centered: Ext.theme.is.Tizen ? false : true
-            };
-        }
-        return Ext.factory(title, Ext.Title, this.getTitle());
-    },
-    // @private
-    updateTitle: function(newTitle, oldTitle) {
-        if (newTitle) {
-            this.add(newTitle);
-        }
-        if (oldTitle) {
-            oldTitle.destroy();
-        }
-    },
-    /**
-     * Shows the title, if it exists.
-     */
-    showTitle: function() {
-        var title = this.getTitle();
-        if (title) {
-            title.show();
-        }
-    },
-    /**
-     * Hides the title, if it exists.
-     */
-    hideTitle: function() {
-        var title = this.getTitle();
-        if (title) {
-            title.hide();
-        }
-    }
-}, /**
-     * Returns an {@link Ext.Title} component.
-     * @member Ext.Toolbar
-     * @method getTitle
-     * @return {Ext.Title}
-     */
-/**
-     * Use this to update the {@link #title} configuration.
-     * @member Ext.Toolbar
-     * @method setTitle
-     * @param {String/Ext.Title} title You can either pass a String, or a config/instance of {@link Ext.Title}.
-     */
-function() {});
-
-/**
- * {@link Ext.TitleBar}'s are most commonly used as a docked item within an {@link Ext.Container}.
- *
- * The main difference between a {@link Ext.TitleBar} and an {@link Ext.Toolbar} is that
- * the {@link #title} configuration is **always** centered horizontally in a {@link Ext.TitleBar} between
- * any items aligned left or right.
- *
- * You can also give items of a {@link Ext.TitleBar} an `align` configuration of `left` or `right`
- * which will dock them to the `left` or `right` of the bar.
- *
- * ## Examples
- *
- *     @example preview
- *     Ext.Viewport.add({
- *         xtype: 'titlebar',
- *         docked: 'top',
- *         title: 'Navigation',
- *         items: [
- *             {
- *                 iconCls: 'add',
- *                 align: 'left'
- *             },
- *             {
- *                 iconCls: 'home',
- *                 align: 'right'
- *             }
- *         ]
- *     });
- *
- *     Ext.Viewport.setStyleHtmlContent(true);
- *     Ext.Viewport.setHtml('This shows the title being centered and buttons using align <i>left</i> and <i>right</i>.');
- *
- * <br />
- *
- *     @example preview
- *     Ext.Viewport.add({
- *         xtype: 'titlebar',
- *         docked: 'top',
- *         title: 'Navigation',
- *         items: [
- *             {
- *                 align: 'left',
- *                 text: 'This button has a super long title'
- *             },
- *             {
- *                 iconCls: 'home',
- *                 align: 'right'
- *             }
- *         ]
- *     });
- *
- *     Ext.Viewport.setStyleHtmlContent(true);
- *     Ext.Viewport.setHtml('This shows how the title is automatically moved to the right when one of the aligned buttons is very wide.');
- *
- * <br />
- *
- *     @example preview
- *     Ext.Viewport.add({
- *         xtype: 'titlebar',
- *         docked: 'top',
- *         title: 'A very long title',
- *         items: [
- *             {
- *                 align: 'left',
- *                 text: 'This button has a super long title'
- *             },
- *             {
- *                 align: 'right',
- *                 text: 'Another button'
- *             }
- *         ]
- *     });
- *
- *     Ext.Viewport.setStyleHtmlContent(true);
- *     Ext.Viewport.setHtml('This shows how the title and buttons will automatically adjust their size when the width of the items are too wide..');
- *
- * The {@link #defaultType} of Toolbar's is {@link Ext.Button button}.
- */
-Ext.define('Ext.TitleBar', {
-    extend: Ext.Container,
-    xtype: 'titlebar',
-    // @private
-    isToolbar: true,
-    config: {
-        /**
-         * @cfg
-         * @inheritdoc
-         */
-        baseCls: Ext.baseCSSPrefix + 'toolbar',
-        /**
-         * @cfg
-         * @inheritdoc
-         */
-        cls: Ext.baseCSSPrefix + 'navigation-bar',
-        /**
-         * @cfg {String} ui
-         * Style options for Toolbar. Either 'light' or 'dark'.
-         * @accessor
-         */
-        ui: 'dark',
-        /**
-         * @cfg {String} title
-         * The title of the toolbar.
-         * @accessor
-         */
-        title: null,
-        /**
-         * @cfg {String} titleAlign
-         * The alignment for the title of the toolbar.
-         * @accessor
-         */
-        titleAlign: 'center',
-        /**
-         * @cfg {String} defaultType
-         * The default xtype to create.
-         * @accessor
-         */
-        defaultType: 'button',
-        /**
-         * @cfg {String} minHeight
-         * The minimum height height of the Toolbar.
-         * @accessor
-         */
-        minHeight: null,
-        /**
-         * @cfg
-         * @hide
-         */
-        layout: {
-            type: 'hbox'
-        },
-        /**
-         * @cfg {Array/Object} items The child items to add to this TitleBar. The {@link #defaultType} of
-         * a TitleBar is {@link Ext.Button}, so you do not need to specify an `xtype` if you are adding
-         * buttons.
-         *
-         * You can also give items a `align` configuration which will align the item to the `left` or `right` of
-         * the TitleBar.
-         * @accessor
-         */
-        items: [],
-        /**
-         * @cfg {String} maxButtonWidth The maximum width of the button by percentage
-         * @accessor
-         */
-        maxButtonWidth: '40%'
-    },
-    platformConfig: [
-        {
-            theme: [
-                'Blackberry',
-                'Blackberry103',
-                'Tizen'
-            ],
-            titleAlign: 'left'
-        },
-        {
-            theme: [
-                'Cupertino'
-            ],
-            maxButtonWidth: '80%'
-        }
-    ],
-    hasCSSMinHeight: true,
-    beforeInitialize: function() {
-        this.applyItems = this.applyInitialItems;
-    },
-    initialize: function() {
-        delete this.applyItems;
-        this.add(this.initialItems);
-        delete this.initialItems;
-        this.on({
-            painted: 'refreshTitlePosition',
-            single: true
-        });
-    },
-    applyInitialItems: function(items) {
-        var me = this,
-            titleAlign = me.getTitleAlign(),
-            defaults = me.getDefaults() || {};
-        me.initialItems = items;
-        me.leftBox = me.add({
-            xtype: 'container',
-            style: 'position: relative',
-            layout: {
-                type: 'hbox',
-                align: 'center'
-            },
-            listeners: {
-                resize: 'refreshTitlePosition',
-                scope: me
-            }
-        });
-        me.spacer = me.add({
-            xtype: 'component',
-            style: 'position: relative',
-            flex: 1,
-            listeners: {
-                resize: 'refreshTitlePosition',
-                scope: me
-            }
-        });
-        me.rightBox = me.add({
-            xtype: 'container',
-            style: 'position: relative',
-            layout: {
-                type: 'hbox',
-                align: 'center'
-            },
-            listeners: {
-                resize: 'refreshTitlePosition',
-                scope: me
-            }
-        });
-        switch (titleAlign) {
-            case 'left':
-                me.titleComponent = me.leftBox.add({
-                    xtype: 'title',
-                    cls: Ext.baseCSSPrefix + 'title-align-left',
-                    hidden: defaults.hidden
-                });
-                me.refreshTitlePosition = Ext.emptyFn;
-                break;
-            case 'right':
-                me.titleComponent = me.rightBox.add({
-                    xtype: 'title',
-                    cls: Ext.baseCSSPrefix + 'title-align-right',
-                    hidden: defaults.hidden
-                });
-                me.refreshTitlePosition = Ext.emptyFn;
-                break;
-            default:
-                me.titleComponent = me.add({
-                    xtype: 'title',
-                    hidden: defaults.hidden,
-                    centered: true
-                });
-                break;
-        }
-        me.doAdd = me.doBoxAdd;
-        me.remove = me.doBoxRemove;
-        me.doInsert = me.doBoxInsert;
-    },
-    doBoxAdd: function(item) {
-        if (item.config.align == 'right') {
-            this.rightBox.add(item);
-        } else {
-            this.leftBox.add(item);
-        }
-    },
-    doBoxRemove: function(item, destroy) {
-        if (item.config.align == 'right') {
-            this.rightBox.remove(item, destroy);
-        } else {
-            this.leftBox.remove(item, destroy);
-        }
-    },
-    doBoxInsert: function(index, item) {
-        if (item.config.align == 'right') {
-            this.rightBox.insert(index, item);
-        } else {
-            this.leftBox.insert(index, item);
-        }
-    },
-    calculateMaxButtonWidth: function() {
-        var maxButtonWidth = this.getMaxButtonWidth();
-        //check if it is a percentage
-        if (Ext.isString(maxButtonWidth)) {
-            maxButtonWidth = parseInt(maxButtonWidth.replace('%', ''), 10);
-        }
-        maxButtonWidth = Math.round((this.element.getWidth() / 100) * maxButtonWidth);
-        return maxButtonWidth;
-    },
-    refreshTitlePosition: function() {
-        if (this.isDestroyed) {
-            return;
-        }
-        var titleElement = this.titleComponent.renderElement;
-        titleElement.setWidth(null);
-        titleElement.setLeft(null);
-        //set the min/max width of the left button
-        var leftBox = this.leftBox,
-            leftButton = leftBox.down('button'),
-            singleButton = leftBox.getItems().getCount() == 1,
-            leftBoxWidth, maxButtonWidth;
-        if (leftButton && singleButton) {
-            if (leftButton.getWidth() == null) {
-                leftButton.renderElement.setWidth('auto');
-            }
-            leftBoxWidth = leftBox.renderElement.getWidth();
-            maxButtonWidth = this.calculateMaxButtonWidth();
-            if (leftBoxWidth > maxButtonWidth) {
-                leftButton.renderElement.setWidth(maxButtonWidth);
-            }
-        }
-        var spacerBox = this.spacer.renderElement.getPageBox();
-        if (Ext.browser.is.IE) {
-            titleElement.setWidth(spacerBox.width);
-        }
-        var titleBox = titleElement.getPageBox(),
-            widthDiff = titleBox.width - spacerBox.width,
-            titleLeft = titleBox.left,
-            titleRight = titleBox.right,
-            halfWidthDiff, leftDiff, rightDiff;
-        if (widthDiff > 0) {
-            halfWidthDiff = widthDiff / 2;
-            titleLeft += halfWidthDiff;
-            titleRight -= halfWidthDiff;
-            titleElement.setWidth(spacerBox.width);
-        }
-        leftDiff = spacerBox.left - titleLeft;
-        rightDiff = titleRight - spacerBox.right;
-        if (leftDiff > 0) {
-            titleElement.setLeft(leftDiff);
-        } else if (rightDiff > 0) {
-            titleElement.setLeft(-rightDiff);
-        }
-        titleElement.repaint();
-    },
-    // @private
-    updateTitle: function(newTitle) {
-        this.titleComponent.setTitle(newTitle);
-        if (this.isPainted()) {
-            this.refreshTitlePosition();
-        }
-    }
-});
 
 /**
  * @author Ed Spencer
@@ -50332,1077 +49819,6 @@ Ext.define('Ext.log.writer.Console', {
 });
 
 /**
- * This component is used in {@link Ext.navigation.View} to control animations in the toolbar. You should never need to
- * interact with the component directly, unless you are subclassing it.
- * @private
- * @author Robert Dougan <rob@sencha.com>
- */
-Ext.define('Ext.navigation.Bar', {
-    extend: Ext.TitleBar,
-    // @private
-    isToolbar: true,
-    config: {
-        /**
-         * @cfg
-         * @inheritdoc
-         */
-        baseCls: Ext.baseCSSPrefix + 'toolbar',
-        /**
-         * @cfg
-         * @inheritdoc
-         */
-        cls: Ext.baseCSSPrefix + 'navigation-bar',
-        /**
-         * @cfg {String} ui
-         * Style options for Toolbar. Either 'light' or 'dark'.
-         * @accessor
-         */
-        ui: 'dark',
-        /**
-         * @cfg {String} title
-         * The title of the toolbar. You should NEVER set this, it is used internally. You set the title of the
-         * navigation bar by giving a navigation views children a title configuration.
-         * @private
-         * @accessor
-         */
-        title: null,
-        /**
-         * @cfg
-         * @hide
-         * @accessor
-         */
-        defaultType: 'button',
-        /**
-         * @cfg
-         * @ignore
-         * @accessor
-         */
-        layout: {
-            type: 'hbox'
-        },
-        /**
-         * @cfg {Array/Object} items The child items to add to this NavigationBar. The {@link #cfg-defaultType} of
-         * a NavigationBar is {@link Ext.Button}, so you do not need to specify an `xtype` if you are adding
-         * buttons.
-         *
-         * You can also give items a `align` configuration which will align the item to the `left` or `right` of
-         * the NavigationBar.
-         * @hide
-         * @accessor
-         */
-        /**
-         * @cfg {String} defaultBackButtonText
-         * The text to be displayed on the back button if:
-         * a) The previous view does not have a title
-         * b) The {@link #useTitleForBackButtonText} configuration is true.
-         * @private
-         * @accessor
-         */
-        defaultBackButtonText: 'Back',
-        /**
-         * @cfg {Object} animation
-         * @private
-         * @accessor
-         */
-        animation: {
-            duration: 300
-        },
-        /**
-         * @cfg {Boolean} useTitleForBackButtonText
-         * Set to false if you always want to display the {@link #defaultBackButtonText} as the text
-         * on the back button. True if you want to use the previous views title.
-         * @private
-         * @accessor
-         */
-        useTitleForBackButtonText: null,
-        /**
-         * @cfg {Ext.navigation.View} view A reference to the navigation view this bar is linked to.
-         * @private
-         * @accessor
-         */
-        view: null,
-        /**
-         * @cfg {Boolean} androidAnimation Optionally enable CSS transforms on Android 2
-         * for NavigationBar animations.  Note that this may cause flickering if the
-         * NavigationBar is hidden.
-         * @accessor
-         */
-        android2Transforms: false,
-        /**
-         * @cfg {Ext.Button/Object} backButton The configuration for the back button
-         * @private
-         * @accessor
-         */
-        backButton: {
-            align: 'left',
-            ui: 'back',
-            hidden: true
-        }
-    },
-    platformConfig: [
-        {
-            theme: [
-                'Blackberry',
-                'Blackberry103'
-            ],
-            animation: false
-        }
-    ],
-    /**
-     * @event back
-     * Fires when the back button was tapped.
-     * @param {Ext.navigation.Bar} this This bar
-     */
-    constructor: function(config) {
-        config = config || {};
-        if (!config.items) {
-            config.items = [];
-        }
-        this.backButtonStack = [];
-        this.activeAnimations = [];
-        this.callParent([
-            config
-        ]);
-    },
-    /**
-     * @private
-     */
-    applyBackButton: function(config) {
-        return Ext.factory(config, Ext.Button, this.getBackButton());
-    },
-    /**
-     * @private
-     */
-    updateBackButton: function(newBackButton, oldBackButton) {
-        if (oldBackButton) {
-            this.remove(oldBackButton);
-        }
-        if (newBackButton) {
-            this.add(newBackButton);
-            newBackButton.on({
-                scope: this,
-                tap: this.onBackButtonTap
-            });
-        }
-    },
-    onBackButtonTap: function() {
-        this.fireEvent('back', this);
-    },
-    /**
-     * @private
-     */
-    updateView: function(newView) {
-        var me = this,
-            backButton = me.getBackButton(),
-            innerItems, i, backButtonText, item, title, titleText;
-        me.getItems();
-        if (newView) {
-            //update the back button stack with the current inner items of the view
-            innerItems = newView.getInnerItems();
-            for (i = 0; i < innerItems.length; i++) {
-                item = innerItems[i];
-                title = (item.getTitle) ? item.getTitle() : item.config.title;
-                me.backButtonStack.push(title || '&nbsp;');
-            }
-            titleText = me.getTitleText();
-            if (titleText === undefined) {
-                titleText = '';
-            }
-            me.setTitle(titleText);
-            backButtonText = me.getBackButtonText();
-            if (backButtonText) {
-                backButton.setText(backButtonText);
-                backButton.show();
-            }
-        }
-    },
-    /**
-     * @private
-     */
-    onViewAdd: function(view, item) {
-        var me = this,
-            backButtonStack = me.backButtonStack,
-            hasPrevious, title;
-        me.endAnimation();
-        title = (item.getTitle) ? item.getTitle() : item.config.title;
-        backButtonStack.push(title || '&nbsp;');
-        hasPrevious = backButtonStack.length > 1;
-        me.doChangeView(view, hasPrevious, false);
-    },
-    /**
-     * @private
-     */
-    onViewRemove: function(view) {
-        var me = this,
-            backButtonStack = me.backButtonStack,
-            hasPrevious;
-        me.endAnimation();
-        backButtonStack.pop();
-        hasPrevious = backButtonStack.length > 1;
-        me.doChangeView(view, hasPrevious, true);
-    },
-    /**
-     * @private
-     */
-    doChangeView: function(view, hasPrevious, reverse) {
-        var me = this,
-            leftBox = me.leftBox,
-            leftBoxElement = leftBox.element,
-            titleComponent = me.titleComponent,
-            titleElement = titleComponent.element,
-            backButton = me.getBackButton(),
-            titleText = me.getTitleText(),
-            backButtonText = me.getBackButtonText(),
-            animation = me.getAnimation() && view.getLayout().getAnimation(),
-            animated = animation && animation.isAnimation && view.isPainted(),
-            properties, leftGhost, titleGhost, leftProps, titleProps;
-        if (animated) {
-            leftGhost = me.createProxy(leftBox.element);
-            leftBoxElement.setStyle('opacity', '0');
-            backButton.setText(backButtonText);
-            backButton[hasPrevious ? 'show' : 'hide']();
-            titleGhost = me.createProxy(titleComponent.element.getParent());
-            titleElement.setStyle('opacity', '0');
-            me.setTitle(titleText);
-            properties = me.measureView(leftGhost, titleGhost, reverse);
-            leftProps = properties.left;
-            titleProps = properties.title;
-            me.isAnimating = true;
-            me.animate(leftBoxElement, leftProps.element);
-            me.animate(titleElement, titleProps.element, function() {
-                titleElement.setLeft(properties.titleLeft);
-                me.isAnimating = false;
-                me.refreshTitlePosition();
-            });
-            if (Ext.browser.is.AndroidStock2 && !this.getAndroid2Transforms()) {
-                leftGhost.ghost.destroy();
-                titleGhost.ghost.destroy();
-            } else {
-                me.animate(leftGhost.ghost, leftProps.ghost);
-                me.animate(titleGhost.ghost, titleProps.ghost, function() {
-                    leftGhost.ghost.destroy();
-                    titleGhost.ghost.destroy();
-                });
-            }
-        } else {
-            if (hasPrevious) {
-                backButton.setText(backButtonText);
-                backButton.show();
-            } else {
-                backButton.hide();
-            }
-            me.setTitle(titleText);
-        }
-    },
-    /**
-     * Calculates and returns the position values needed for the back button when you are pushing a title.
-     * @private
-     */
-    measureView: function(oldLeft, oldTitle, reverse) {
-        var me = this,
-            barElement = me.element,
-            newLeftElement = me.leftBox.element,
-            titleElement = me.titleComponent.element,
-            minOffset = Math.min(barElement.getWidth() / 3, 200),
-            newLeftWidth = newLeftElement.getWidth(),
-            barX = barElement.getX(),
-            barWidth = barElement.getWidth(),
-            titleX = titleElement.getX(),
-            titleLeft = titleElement.getLeft(),
-            titleWidth = titleElement.getWidth(),
-            oldLeftX = oldLeft.x,
-            oldLeftWidth = oldLeft.width,
-            oldLeftLeft = oldLeft.left,
-            useLeft = Ext.browser.is.AndroidStock2 && !this.getAndroid2Transforms(),
-            newOffset, oldOffset, leftAnims, titleAnims, omega, theta;
-        theta = barX - oldLeftX - oldLeftWidth;
-        if (reverse) {
-            newOffset = theta;
-            oldOffset = Math.min(titleX - oldLeftWidth, minOffset);
-        } else {
-            oldOffset = theta;
-            newOffset = Math.min(titleX - barX, minOffset);
-        }
-        if (useLeft) {
-            leftAnims = {
-                element: {
-                    from: {
-                        left: newOffset,
-                        opacity: 1
-                    },
-                    to: {
-                        left: 0,
-                        opacity: 1
-                    }
-                }
-            };
-        } else {
-            leftAnims = {
-                element: {
-                    from: {
-                        transform: {
-                            translateX: newOffset
-                        },
-                        opacity: 0
-                    },
-                    to: {
-                        transform: {
-                            translateX: 0
-                        },
-                        opacity: 1
-                    }
-                },
-                ghost: {
-                    to: {
-                        transform: {
-                            translateX: oldOffset
-                        },
-                        opacity: 0
-                    }
-                }
-            };
-        }
-        theta = barX - titleX + newLeftWidth;
-        if ((oldLeftLeft + titleWidth) > titleX) {
-            omega = barX - titleX - titleWidth;
-        }
-        if (reverse) {
-            titleElement.setLeft(0);
-            oldOffset = barX + barWidth - titleX - titleWidth;
-            if (omega !== undefined) {
-                newOffset = omega;
-            } else {
-                newOffset = theta;
-            }
-        } else {
-            newOffset = barX + barWidth - titleX - titleWidth;
-            if (omega !== undefined) {
-                oldOffset = omega;
-            } else {
-                oldOffset = theta;
-            }
-            newOffset = Math.max(titleLeft, newOffset);
-        }
-        if (useLeft) {
-            titleAnims = {
-                element: {
-                    from: {
-                        left: newOffset,
-                        opacity: 1
-                    },
-                    to: {
-                        left: titleLeft,
-                        opacity: 1
-                    }
-                }
-            };
-        } else {
-            titleAnims = {
-                element: {
-                    from: {
-                        transform: {
-                            translateX: newOffset
-                        },
-                        opacity: 0
-                    },
-                    to: {
-                        transform: {
-                            translateX: titleLeft
-                        },
-                        opacity: 1
-                    }
-                },
-                ghost: {
-                    to: {
-                        transform: {
-                            translateX: oldOffset
-                        },
-                        opacity: 0
-                    }
-                }
-            };
-        }
-        return {
-            left: leftAnims,
-            title: titleAnims,
-            titleLeft: titleLeft
-        };
-    },
-    /**
-     * Helper method used to animate elements.
-     * You pass it an element, objects for the from and to positions an option onEnd callback called when the animation is over.
-     * Normally this method is passed configurations returned from the methods such as #measureTitle(true) etc.
-     * It is called from the #pushLeftBoxAnimated, #pushTitleAnimated, #popBackButtonAnimated and #popTitleAnimated
-     * methods.
-     *
-     * If the current device is Android, it will use top/left to animate.
-     * If it is anything else, it will use transform.
-     * @private
-     */
-    animate: function(element, config, callback) {
-        var me = this,
-            animation;
-        //reset the left of the element
-        element.setLeft(0);
-        config = Ext.apply(config, {
-            element: element,
-            easing: 'ease-in-out',
-            duration: me.getAnimation().duration || 250,
-            preserveEndState: true
-        });
-        animation = new Ext.fx.Animation(config);
-        animation.on('animationend', function() {
-            if (callback) {
-                callback.call(me);
-            }
-        }, me);
-        Ext.Animator.run(animation);
-        me.activeAnimations.push(animation);
-    },
-    endAnimation: function() {
-        var activeAnimations = this.activeAnimations,
-            animation, i, ln;
-        if (activeAnimations) {
-            ln = activeAnimations.length;
-            for (i = 0; i < ln; i++) {
-                animation = activeAnimations[i];
-                if (animation.isAnimating) {
-                    animation.stopAnimation();
-                } else {
-                    animation.destroy();
-                }
-            }
-            this.activeAnimations = [];
-        }
-    },
-    refreshTitlePosition: function() {
-        if (!this.isAnimating) {
-            this.callParent();
-        }
-    },
-    /**
-     * Returns the text needed for the current back button at anytime.
-     * @private
-     */
-    getBackButtonText: function() {
-        var text = this.backButtonStack[this.backButtonStack.length - 2],
-            useTitleForBackButtonText = this.getUseTitleForBackButtonText();
-        if (!useTitleForBackButtonText) {
-            if (text) {
-                text = this.getDefaultBackButtonText();
-            }
-        }
-        return text;
-    },
-    /**
-     * Returns the text needed for the current title at anytime.
-     * @private
-     */
-    getTitleText: function() {
-        return this.backButtonStack[this.backButtonStack.length - 1];
-    },
-    /**
-     * Handles removing back button stacks from this bar
-     * @private
-     */
-    beforePop: function(count) {
-        count--;
-        for (var i = 0; i < count; i++) {
-            this.backButtonStack.pop();
-        }
-    },
-    /**
-     * We override the hidden method because we don't want to remove it from the view using display:none. Instead we just position it off
-     * the screen, much like the navigation bar proxy. This means that all animations, pushing, popping etc. all still work when if you hide/show
-     * this bar at any time.
-     * @private
-     */
-    doSetHidden: function(hidden) {
-        if (!hidden) {
-            this.element.setStyle({
-                position: 'relative',
-                top: 'auto',
-                left: 'auto',
-                width: 'auto'
-            });
-        } else {
-            this.element.setStyle({
-                position: 'absolute',
-                top: '-1000px',
-                left: '-1000px',
-                width: this.element.getWidth() + 'px'
-            });
-        }
-    },
-    /**
-     * Creates a proxy element of the passed element, and positions it in the same position, using absolute positioning.
-     * The createNavigationBarProxy method uses this to create proxies of the backButton and the title elements.
-     * @private
-     */
-    createProxy: function(element) {
-        var ghost, x, y, left, width;
-        ghost = element.dom.cloneNode(true);
-        ghost.id = element.id + '-proxy';
-        //insert it into the toolbar
-        element.getParent().dom.appendChild(ghost);
-        //set the x/y
-        ghost = Ext.get(ghost);
-        x = element.getX();
-        y = element.getY();
-        left = element.getLeft();
-        width = element.getWidth();
-        ghost.setStyle('position', 'absolute');
-        ghost.setX(x);
-        ghost.setY(y);
-        ghost.setHeight(element.getHeight());
-        ghost.setWidth(width);
-        return {
-            x: x,
-            y: y,
-            left: left,
-            width: width,
-            ghost: ghost
-        };
-    }
-});
-
-/**
- * @author Robert Dougan <rob@sencha.com>
- *
- * NavigationView is basically a {@link Ext.Container} with a {@link Ext.layout.Card card} layout, so only one view
- * can be visible at a time. However, NavigationView also adds extra functionality on top of this to allow
- * you to `push` and `pop` views at any time. When you do this, your NavigationView will automatically animate
- * between your current active view, and the new view you want to `push`, or the previous view you want to `pop`.
- *
- * Using the NavigationView is very simple. Here is a basic example of it in action:
- *
- *     @example
- *     var view = Ext.create('Ext.NavigationView', {
- *         fullscreen: true,
- *
- *         items: [{
- *             title: 'First',
- *             items: [{
- *                 xtype: 'button',
- *                 text: 'Push a new view!',
- *                 handler: function() {
- *                     // use the push() method to push another view. It works much like
- *                     // add() or setActiveItem(). it accepts a view instance, or you can give it
- *                     // a view config.
- *                     view.push({
- *                         title: 'Second',
- *                         html: 'Second view!'
- *                     });
- *                 }
- *             }]
- *         }]
- *     });
- *
- * Now, here comes the fun part: you can push any view/item into the NavigationView, at any time, and it will
- * automatically handle the animations between the two views, including adding a back button (if necessary)
- * and showing the new title.
- *
- *     view.push({
- *         title: 'A new view',
- *         html: 'Some new content'
- *     });
- *
- * As you can see, it is as simple as calling the {@link #method-push} method, with a new view (instance or object). Done.
- *
- * You can also `pop` a view at any time. This will remove the top-most view from the NavigationView, and animate back
- * to the previous view. You can do this using the {@link #method-pop} method (which requires no arguments).
- *
- *     view.pop();
- *
- *  Applications that need compatibility with ##Older Android## devices will want to see the {@link #layout} config for details on
- *  disabling navigation view animations as these devices have poor animation support and performance.
- *
- * ###Further Reading
- * [Sencha Touch Navigation View Guide](../../../components/navigation_view.html)
- */
-Ext.define('Ext.navigation.View', {
-    extend: Ext.Container,
-    alternateClassName: 'Ext.NavigationView',
-    xtype: 'navigationview',
-    config: {
-        /**
-         * @cfg
-         * @inheritdoc
-         */
-        baseCls: Ext.baseCSSPrefix + 'navigationview',
-        /**
-         * @cfg {Boolean/Object} navigationBar
-         * The NavigationBar used in this navigation view. It defaults to be docked to the top.
-         *
-         * You can just pass in a normal object if you want to customize the NavigationBar. For example:
-         *
-         *     navigationBar: {
-         *         ui: 'dark',
-         *         docked: 'bottom'
-         *     }
-         *
-         * You **cannot** specify a *title* property in this configuration. The title of the navigationBar is taken
-         * from the configuration of this views children:
-         *
-         *     view.push({
-         *         title: 'This views title which will be shown in the navigation bar',
-         *         html: 'Some HTML'
-         *     });
-         *
-         * @accessor
-         */
-        navigationBar: {
-            docked: 'top'
-        },
-        /**
-         * @cfg {String} defaultBackButtonText
-         * The text to be displayed on the back button if:
-         *
-         * - The previous view does not have a title.
-         * - The {@link #useTitleForBackButtonText} configuration is `true`.
-         * @accessor
-         */
-        defaultBackButtonText: 'Back',
-        /**
-         * @cfg {Boolean} useTitleForBackButtonText
-         * Set to `false` if you always want to display the {@link #defaultBackButtonText} as the text
-         * on the back button. `true` if you want to use the previous views title.
-         * @accessor
-         */
-        useTitleForBackButtonText: false,
-        /**
-         * @cfg {Array/Object} items The child items to add to this NavigationView. This is usually an array of Component
-         * configurations or instances, for example:
-         *
-         *     Ext.create('Ext.Container', {
-         *         items: [
-         *             {
-         *                 xtype: 'panel',
-         *                 title: 'My title',
-         *                 html: 'This is an item'
-         *             }
-         *         ]
-         *     });
-         *
-         * If you want a title to be displayed in the {@link #navigationBar}, you must specify a `title` configuration in your
-         * view, like above.
-         *
-         * __Note:__ Only one view will be visible at a time. If you want to change to another view, use the {@link #method-push} or
-         * {@link #setActiveItem} methods.
-         * @accessor
-         */
-        /**
-         * @cfg {Object}
-         * Layout used in this navigation view, type must be set to 'card'.
-         * **Android NOTE:** Older Android devices have poor animation performance. It is recommended to set the animation to null, for example:
-         *
-         *      layout: {
-         *          type: 'card',
-         *          animation: null
-         *      }
-         *
-         * @accessor
-         */
-        layout: {
-            type: 'card',
-            animation: {
-                duration: 300,
-                easing: 'ease-out',
-                type: 'slide',
-                direction: 'left'
-            }
-        }
-    },
-    /**
-     * @event push
-     * Fires when a view is pushed into this navigation view
-     * @param {Ext.navigation.View} this The component instance
-     * @param {Mixed} view The view that has been pushed
-     */
-    /**
-     * @event pop
-     * Fires when a view is popped from this navigation view
-     * @param {Ext.navigation.View} this The component instance
-     * @param {Mixed} view The view that has been popped
-     */
-    /**
-     * @event back
-     * Fires when the back button in the navigation view was tapped.
-     * @param {Ext.navigation.View} this The component instance\
-     */
-    platformConfig: [
-        {
-            theme: [
-                'Blackberry',
-                'Blackberry103'
-            ],
-            navigationBar: {
-                splitNavigation: true
-            }
-        }
-    ],
-    // @private
-    initialize: function() {
-        var me = this,
-            navBar = me.getNavigationBar();
-        //add a listener onto the back button in the navigationbar
-        if (navBar) {
-            navBar.on({
-                back: me.onBackButtonTap,
-                scope: me
-            });
-            me.relayEvents(navBar, 'rightbuttontap');
-            me.relayEvents(me, {
-                add: 'push',
-                remove: 'pop'
-            });
-        }
-        var layout = me.getLayout();
-        if (layout && !layout.isCard) {
-            Ext.Logger.error('The base layout for a NavigationView must always be a Card Layout');
-        }
-    },
-    /**
-     * @private
-     */
-    applyLayout: function(config) {
-        config = config || {};
-        return config;
-    },
-    /**
-     * @private
-     * Called when the user taps on the back button
-     */
-    onBackButtonTap: function() {
-        this.pop();
-        this.fireEvent('back', this);
-    },
-    /**
-     * Pushes a new view into this navigation view using the default animation that this view has.
-     * @param {Object} view The view to push.
-     * @return {Ext.Component} The new item you just pushed.
-     */
-    push: function(view) {
-        return this.add(view);
-    },
-    /**
-     * Removes the current active view from the stack and sets the previous view using the default animation
-     * of this view. You can also pass a {@link Ext.ComponentQuery} selector to target what inner item to pop to.
-     * @param {Number/String/Object} count If a Number, the number of views you want to pop. If a String, the pops to a matching
-     * component query. If an Object, the pops to a matching view instance.
-     * @return {Ext.Component} The new active item
-     */
-    pop: function(count) {
-        if (this.beforePop(count)) {
-            return this.doPop();
-        }
-    },
-    /**
-     * @private
-     * Calculates whether it needs to remove any items from the stack when you are popping more than 1
-     * item. If it does, it removes those views from the stack and returns `true`.
-     * @return {Boolean} `true` if it has removed views.
-     */
-    beforePop: function(count) {
-        var me = this,
-            innerItems = me.getInnerItems();
-        if (Ext.isString(count) || Ext.isObject(count)) {
-            var last = innerItems.length - 1,
-                i;
-            for (i = last; i >= 0; i--) {
-                if ((Ext.isString(count) && Ext.ComponentQuery.is(innerItems[i], count)) || (Ext.isObject(count) && count == innerItems[i])) {
-                    count = last - i;
-                    break;
-                }
-            }
-            if (!Ext.isNumber(count)) {
-                return false;
-            }
-        }
-        var ln = innerItems.length,
-            toRemove;
-        //default to 1 pop
-        if (!Ext.isNumber(count) || count < 1) {
-            count = 1;
-        }
-        //check if we are trying to remove more items than we have
-        count = Math.min(count, ln - 1);
-        if (count) {
-            //we need to reset the backButtonStack in the navigation bar
-            me.getNavigationBar().beforePop(count);
-            //get the items we need to remove from the view and remove theme
-            toRemove = innerItems.splice(-count, count - 1);
-            for (i = 0; i < toRemove.length; i++) {
-                this.remove(toRemove[i]);
-            }
-            return true;
-        }
-        return false;
-    },
-    /**
-     * @private
-     */
-    doPop: function() {
-        var me = this,
-            innerItems = this.getInnerItems();
-        //set the new active item to be the new last item of the stack
-        me.remove(innerItems[innerItems.length - 1]);
-        // Hide the backButton
-        if (innerItems.length < 3 && this.$backButton) {
-            this.$backButton.hide();
-        }
-        // Update the title container
-        if (this.$titleContainer) {
-            if (!this.$titleContainer.setTitle) {
-                Ext.Logger.error('You have selected to display a title in a component that does not                     support titles in NavigationView. Please remove the `title` configuration from your                     NavigationView item, or change it to a component that has a `setTitle` method.');
-            }
-            var item = innerItems[innerItems.length - 2];
-            this.$titleContainer.setTitle((item.getTitle) ? item.getTitle() : item.config.title);
-        }
-        return this.getActiveItem();
-    },
-    /**
-     * Returns the previous item, if one exists.
-     * @return {Mixed} The previous view
-     */
-    getPreviousItem: function() {
-        var innerItems = this.getInnerItems();
-        return innerItems[innerItems.length - 2];
-    },
-    /**
-     * Updates the backbutton text accordingly in the {@link #navigationBar}
-     * @private
-     */
-    updateUseTitleForBackButtonText: function(useTitleForBackButtonText) {
-        var navigationBar = this.getNavigationBar();
-        if (navigationBar) {
-            navigationBar.setUseTitleForBackButtonText(useTitleForBackButtonText);
-        }
-    },
-    /**
-     * Updates the backbutton text accordingly in the {@link #navigationBar}
-     * @private
-     */
-    updateDefaultBackButtonText: function(defaultBackButtonText) {
-        var navigationBar = this.getNavigationBar();
-        if (navigationBar) {
-            navigationBar.setDefaultBackButtonText(defaultBackButtonText);
-        }
-    },
-    /**
-     * This is called when an Item is added to the BackButtonContainer of a SplitNavigation View
-     * @private
-     *
-     * @param toolbar
-     * @param item
-     */
-    onBackButtonContainerAdd: function(toolbar, item) {
-        item.on({
-            scope: this,
-            show: this.refreshBackButtonContainer,
-            hide: this.refreshBackButtonContainer
-        });
-        this.refreshBackButtonContainer();
-    },
-    /**
-     * This is called when an Item is removed from the BackButtonContainer of a SplitNavigation View
-     * @private
-     *
-     * @param toolbar
-     * @param item
-     */
-    onBackButtonContainerRemove: function(toolbar, item) {
-        item.un({
-            scope: this,
-            show: this.refreshBackButtonContainer,
-            hide: this.refreshBackButtonContainer
-        });
-        this.refreshBackButtonContainer();
-    },
-    /**
-     * This is used for Blackberry SplitNavigation to monitor the state of child items in the bottom toolbar.
-     * if no visible children exist the toolbar will be hidden
-     * @private
-     */
-    refreshBackButtonContainer: function() {
-        if (!this.$backButtonContainer) {
-            return;
-        }
-        var i = 0,
-            backButtonContainer = this.$backButtonContainer,
-            items = backButtonContainer.items,
-            item;
-        for (; i < items.length; i++) {
-            item = items.get(i);
-            if (!item.isHidden()) {
-                this.$backButtonContainer.show();
-                return;
-            }
-        }
-        this.$backButtonContainer.hide();
-    },
-    // @private
-    applyNavigationBar: function(config) {
-        var me = this;
-        if (!config) {
-            config = {
-                hidden: true,
-                docked: 'top'
-            };
-        }
-        if (config.title) {
-            delete config.title;
-            Ext.Logger.warn("Ext.navigation.View: The 'navigationBar' configuration does not accept a 'title' property. You " + "set the title of the navigationBar by giving this navigation view's children a 'title' property.");
-        }
-        config.view = this;
-        config.useTitleForBackButtonText = this.getUseTitleForBackButtonText();
-        // Blackberry specific nav setup where title is on the top title bar and the bottom toolbar is used for buttons and BACK
-        if (config.splitNavigation) {
-            this.$titleContainer = this.add({
-                docked: 'top',
-                xtype: 'titlebar',
-                ui: 'light',
-                title: this.$currentTitle || ''
-            });
-            var containerConfig = (config.splitNavigation === true) ? {} : config.splitNavigation;
-            this.$backButtonContainer = this.add({
-                xtype: 'toolbar',
-                docked: 'bottom',
-                hidden: true
-            });
-            // Any item that is added to the BackButtonContainer should be monitored for visibility
-            // this will allow the toolbar to be hidden when no items exist in it.
-            this.$backButtonContainer.on({
-                scope: me,
-                add: me.onBackButtonContainerAdd,
-                remove: me.onBackButtonContainerRemove
-            });
-            this.$backButton = this.$backButtonContainer.add({
-                xtype: 'button',
-                text: 'Back',
-                hidden: true,
-                ui: 'back'
-            });
-            // Default config items go into the bottom bar
-            if (config.items) {
-                this.$backButtonContainer.add(config.items);
-            }
-            // If the user provided items and splitNav items, default items go into the bottom bar, split nav items go into the top
-            if (containerConfig.items) {
-                this.$titleContainer.add(containerConfig.items);
-            }
-            this.$backButton.on({
-                scope: this,
-                tap: this.onBackButtonTap
-            });
-            config = {
-                hidden: true,
-                docked: 'top'
-            };
-        }
-        return Ext.factory(config, Ext.navigation.Bar, this.getNavigationBar());
-    },
-    // @private
-    updateNavigationBar: function(newNavigationBar, oldNavigationBar) {
-        if (oldNavigationBar) {
-            this.remove(oldNavigationBar, true);
-        }
-        if (newNavigationBar) {
-            this.add(newNavigationBar);
-        }
-    },
-    /**
-     * @private
-     */
-    applyActiveItem: function(activeItem, currentActiveItem) {
-        var me = this,
-            innerItems = me.getInnerItems();
-        // Make sure the items are already initialized
-        me.getItems();
-        // If we are not initialzed yet, we should set the active item to the last item in the stack
-        if (!me.initialized) {
-            activeItem = innerItems.length - 1;
-        }
-        return this.callParent([
-            activeItem,
-            currentActiveItem
-        ]);
-    },
-    doResetActiveItem: function(innerIndex) {
-        var me = this,
-            innerItems = me.getInnerItems(),
-            animation = me.getLayout().getAnimation();
-        if (innerIndex > 0) {
-            if (animation && animation.isAnimation) {
-                animation.setReverse(true);
-            }
-            me.setActiveItem(innerIndex - 1);
-            me.getNavigationBar().onViewRemove(me, innerItems[innerIndex], innerIndex);
-        }
-    },
-    /**
-     * @private
-     */
-    doRemove: function() {
-        var animation = this.getLayout().getAnimation();
-        if (animation && animation.isAnimation) {
-            animation.setReverse(false);
-        }
-        this.callParent(arguments);
-    },
-    /**
-     * @private
-     */
-    onItemAdd: function(item, index) {
-        // Check for title configuration
-        if (item && item.getDocked() && item.config.title === true) {
-            this.$titleContainer = item;
-        }
-        this.doItemLayoutAdd(item, index);
-        var navigaitonBar = this.getInitialConfig().navigationBar;
-        if (!this.isItemsInitializing && item.isInnerItem()) {
-            this.setActiveItem(item);
-            // Update the navigationBar
-            if (navigaitonBar) {
-                this.getNavigationBar().onViewAdd(this, item, index);
-            }
-            // Update the custom backButton
-            if (this.$backButtonContainer) {
-                this.$backButton.show();
-            }
-        }
-        if (item && item.isInnerItem()) {
-            // Update the title container title
-            this.updateTitleContainerTitle((item.getTitle) ? item.getTitle() : item.config.title);
-        }
-        if (this.initialized) {
-            this.fireEvent('add', this, item, index);
-        }
-    },
-    /**
-     * @private
-     * Updates the title of the titleContainer, if it exists
-     */
-    updateTitleContainerTitle: function(title) {
-        if (this.$titleContainer) {
-            if (!this.$titleContainer.setTitle) {
-                Ext.Logger.error('You have selected to display a title in a component that does not                     support titles in NavigationView. Please remove the `title` configuration from your                     NavigationView item, or change it to a component that has a `setTitle` method.');
-            }
-            this.$titleContainer.setTitle(title);
-        } else {
-            this.$currentTitle = title;
-        }
-    },
-    /**
-     * Resets the view by removing all items between the first and last item.
-     * @return {Ext.Component} The view that is now active
-     */
-    reset: function() {
-        return this.pop(this.getInnerItems().length);
-    }
-});
-
-/**
  * @private
  * Base class for iOS and Android viewports.
  */
@@ -52906,9 +51322,12 @@ Ext.define('Ext.viewport.Viewport', {
  */
 Ext.define('PixonicTeam.controller.LoginController', {
     extend: Ext.app.Controller,
+    alias: 'controller.loginController',
     config: {
         refs: {
-            loginBtn: '#loginBtn'
+            loginBtn: '#loginBtn',
+            loginView: '#loginpanel',
+            profileView: '#profileWindow'
         },
         control: {
             "[action=confirm]": {
@@ -52918,13 +51337,66 @@ Ext.define('PixonicTeam.controller.LoginController', {
     },
     onButtonTap: function(button, e, eOpts) {
         var params = 'client_id=' + encodeURIComponent(clientId);
-        params += '&redirect_uri=' + encodeURIComponent("http://localhost:1841");
+        params += '&redirect_uri=' + encodeURIComponent(redirectUri);
         params += '&response_type=code';
         params += '&scope=' + encodeURIComponent(scopes);
         var authUrl = 'https://accounts.google.com/o/oauth2/auth?' + params;
         var win = window.open(authUrl, '_blank', 'location=no,toolbar=no,width=800, height=800');
+        gwin = win;
+        var context = this;
+        win.addEventListener('loadstart', function(data) {
+            console.log('LOAD START');
+            console.log('Here is data url');
+            console.log(data.url);
+            var pos = data.url.indexOf(redirectUri);
+            console.log('redirect in data' + pos);
+            if (pos === 0) {
+                console.log('redirect url found, CLOSE WINDOW');
+                win.close();
+                var url = data.url;
+                console.log('Final URL ' + url);
+                access_code = /\?code=(.+)$/.exec(url);
+                var error = /\?error=(.+)$/.exec(url);
+                console.log('CODE = ' + access_code);
+                console.log('ERROR = ' + error);
+                //getToken();
+                Ext.Ajax.request({
+                    url: 'https://www.googleapis.com/oauth2/v3/token',
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    params: {
+                        client_id: clientId,
+                        //  client_secret: this.secret,
+                        redirect_uri: redirectUri,
+                        code: access_code,
+                        grant_type: 'authorization_code'
+                    },
+                    callback: function(options, success, response) {
+                        console.log('Get server response');
+                        console.log(response.responseText);
+                    }
+                });
+            }
+        });
     },
-    //this.checkAuth(false);
+    /*//else {
+            console.log('InAppBrowser not found11');
+            console.log("google window url " + win.document.URL);
+            var s = win.location.href;
+            if (gwin.document.URL.indexOf(redirectUri) === 0) {
+                console.log('redirect url found');
+                win.close();
+                var url = win.document.URL;
+                console.log('Final URL ' + url);
+                var access_code = context.gulp(url, 'code');
+                if (access_code) {
+                console.log('Access Code: ' + access_code);
+            } else {
+               console.log('Access Code Not Found');
+                }
+            }*/
     checkAuth: function(immediate) {
         console.log("trying login with immediate " + immediate);
         gapi.auth.authorize({
@@ -52936,6 +51408,7 @@ Ext.define('PixonicTeam.controller.LoginController', {
     handleAuthResult: function(result) {
         if (result && !result.error) {
             console.log("Auth OK, token" + result.access_token);
+            var c = this.getController('loginController');
         } else {
             console.log("AUth ERROR" + result.error);
         }
@@ -52999,7 +51472,7 @@ Ext.define('PixonicTeam.view.LoginPanel', {
 });
 
 /*
- * File: app/view/MyNavigationView.js
+ * File: app/view/Profile.js
  *
  * This file was generated by Sencha Architect version 3.2.0.
  * http://www.sencha.com/products/architect/
@@ -53012,12 +51485,16 @@ Ext.define('PixonicTeam.view.LoginPanel', {
  *
  * Do NOT hand edit this file.
  */
-Ext.define('PixonicTeam.view.MyNavigationView', {
-    extend: Ext.navigation.View,
+Ext.define('PixonicTeam.view.Profile', {
+    extend: Ext.Panel,
+    alias: 'widget.profileWindow',
     config: {
+        hidden: true,
         items: [
             {
-                xtype: 'loginpanel'
+                xtype: 'image',
+                height: 201,
+                src: 'https://upload.wikimedia.org/wikipedia/en/0/05/Hello_kitty_character_portrait.png'
             }
         ]
     }
@@ -53041,15 +51518,15 @@ Ext.define('PixonicTeam.view.MyNavigationView', {
 Ext.Loader.setConfig({});
 Ext.application({
     views: [
-        'MyNavigationView',
-        'LoginPanel'
+        'LoginPanel',
+        'Profile'
     ],
     controllers: [
         'LoginController'
     ],
     name: 'PixonicTeam',
     launch: function() {
-        Ext.create('PixonicTeam.view.MyNavigationView', {
+        Ext.create('PixonicTeam.view.LoginPanel', {
             fullscreen: true
         });
     }

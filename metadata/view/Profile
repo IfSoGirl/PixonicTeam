@@ -1,0 +1,31 @@
+{
+    "type": "Ext.Panel",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "designer|userAlias": "profileWindow",
+        "designer|userClassName": "Profile",
+        "hidden": true
+    },
+    "name": "MyPanel",
+    "designerId": "c20fba9c-259a-464a-aa51-1502eeaf1da7",
+    "cn": [
+        {
+            "type": "Ext.Img",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "height": 201,
+                "src": "https://upload.wikimedia.org/wikipedia/en/0/05/Hello_kitty_character_portrait.png"
+            },
+            "name": "MyImg",
+            "designerId": "8369d28f-a6be-4c5a-bc9b-ffe5717feb28"
+        }
+    ]
+}

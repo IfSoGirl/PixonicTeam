@@ -20,6 +20,10 @@
          "x-compile": true
       },
       {
+         "path": "utils/ajax.js",
+         "x-compile": true
+      },
+      {
          "path": "app.js",
          "bundle": true,
          "update": "delta"
@@ -77,5 +81,5 @@
    "archivePath": "archive",
    "requires": [],
    "id": "b39a096f-8560-4ac6-9a69-a91a96c5aa80",
-   "classpath": "${app.dir}/app,${app.dir}/app/utils/"
+   "classpath": "${app.dir}/app,${app.dir}/app/utils/,${app.dir}/utils/"
 }
