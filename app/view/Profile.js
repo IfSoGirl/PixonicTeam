@@ -15,19 +15,33 @@
 
 Ext.define('PixonicTeam.view.Profile', {
     extend: 'Ext.Panel',
-    alias: 'widget.profileWindow',
+    alias: 'widget.profilePanel',
 
     requires: [
-        'Ext.Img'
+        'Ext.Img',
+        'Ext.Label',
+        'Ext.Toolbar'
     ],
 
     config: {
-        hidden: true,
+        hidden: false,
+        id: 'profilePanel',
         items: [
             {
                 xtype: 'image',
                 height: 201,
                 src: 'https://upload.wikimedia.org/wikipedia/en/0/05/Hello_kitty_character_portrait.png'
+            },
+            {
+                xtype: 'label',
+                id: 'successAuthLabel'
+            },
+            {
+                xtype: 'toolbar',
+                docked: 'top',
+                html: '',
+                id: 'toolbar',
+                title: 'Профиль'
             }
         ]
     }

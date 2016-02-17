@@ -7,7 +7,11 @@
     "codeClass": null,
     "userConfig": {
         "designer|userAlias": "loginController",
-        "designer|userClassName": "LoginController"
+        "designer|userClassName": "LoginController",
+        "requires": [
+            "Ext.Ajax",
+            "PixonicTeam.view.Profile"
+        ]
     },
     "name": "MyController",
     "designerId": "1ac66694-44e0-4510-ac74-a68180d744ca",
@@ -38,72 +42,45 @@
                 "designer|targetType": "Ext.Button",
                 "fn": "onButtonTap",
                 "implHandler": [
-                    "var params = 'client_id=' + encodeURIComponent(clientId);",
-                    "params += '&redirect_uri='+encodeURIComponent(redirectUri);",
-                    "params += '&response_type=code';",
-                    "params += '&scope=' + encodeURIComponent(scopes);",
-                    "var authUrl = 'https://accounts.google.com/o/oauth2/auth?' + params;",
-                    "var win = window.open(authUrl, '_blank', 'location=no,toolbar=no,width=800, height=800');",
-                    "gwin = win;",
-                    " var context = this;",
-                    "",
-                    "win.addEventListener('loadstart', function (data) {",
-                    "    console.log('LOAD START');",
-                    "    console.log('Here is data url');",
-                    "   console.log(data.url);",
-                    "    var pos =  data.url.indexOf(redirectUri);",
-                    "     console.log('redirect in data' + pos);",
-                    "    if (pos === 0) {",
-                    "        console.log('redirect url found, CLOSE WINDOW');",
-                    "        win.close();",
-                    "        var url = data.url;",
-                    "        console.log('Final URL ' + url);",
-                    "        access_code = /\\?code=(.+)$/.exec(url);",
-                    "          var error = /\\?error=(.+)$/.exec(url);",
-                    "        console.log('CODE = '+ access_code);",
-                    "        console.log('ERROR = '+ error);",
-                    "        //getToken();",
+                    "    var params = 'client_id=' + encodeURIComponent(clientId);",
+                    "    params += '&redirect_uri='+encodeURIComponent(redirectUri);",
+                    "    params += '&response_type=code';",
+                    "    params += '&access_type=offline';",
+                    "    params += '&scope=' + encodeURIComponent(scopes);",
+                    "    var authUrl = 'https://accounts.google.com/o/oauth2/v2/auth?' + params;",
+                    "    var win = window.open(authUrl, '_blank', 'location=no,toolbar=no,width=800, height=800');",
+                    "    gwin = win;",
+                    "    var context = this, url;",
+                    "    var controller = this;",
                     "",
                     "",
-                    "        Ext.Ajax.request({",
-                    "            url: 'https://www.googleapis.com/oauth2/v3/token',",
-                    "            method: 'POST',",
-                    "",
-                    "            headers: { 'Content-Type': 'application/x-www-form-urlencoded'},",
-                    "",
-                    "            params: {",
-                    "                client_id: clientId,",
-                    "              //  client_secret: this.secret,",
-                    "                redirect_uri: redirectUri,",
-                    "                code: access_code,",
-                    "                grant_type: 'authorization_code'",
-                    "            },",
-                    "",
-                    "            callback: function(options, success, response) {",
-                    "                console.log('Get server response'+response.responseText);",
-                    "                console.log(esponse.responseText);",
+                    "    if ((Ext.os.is.Android) || (Ext.os.is.iOS)) {",
+                    "        win.addEventListener('loadstart', function (data) {",
+                    "            var pos =  data.url.indexOf(redirectUri);",
+                    "            if (pos === 0) {",
+                    "                win.close();",
+                    "                url = data.url;",
+                    "                controller.getTokenFromUrl(url);",
+                    "            }",
+                    "        });",
                     "    }",
-                    "});",
+                    "    else {",
+                    "        var repeat = setInterval(function () {",
+                    "            var pos = -1;",
+                    "            if(!win || !win.document){",
+                    "                return;",
+                    "            }",
+                    "            if (win)",
+                    "               pos =  win.document.URL.indexOf(redirectUri);",
                     "",
-                    "",
+                    "            if (pos === 0) {",
+                    "                url = win.document.URL;",
+                    "                win.close();",
+                    "                clearInterval(repeat);",
+                    "                controller.getTokenFromUrl(url);",
+                    "            }",
+                    "        }, 100);",
                     "    }",
-                    "});",
-                    " /*//else {",
-                    "    console.log('InAppBrowser not found11');",
-                    "    console.log(\"google window url \" + win.document.URL);",
-                    "    var s = win.location.href;",
-                    "    if (gwin.document.URL.indexOf(redirectUri) === 0) {",
-                    "        console.log('redirect url found');",
-                    "        win.close();",
-                    "        var url = win.document.URL;",
-                    "        console.log('Final URL ' + url);",
-                    "        var access_code = context.gulp(url, 'code');",
-                    "        if (access_code) {",
-                    "        console.log('Access Code: ' + access_code);",
-                    "    } else {",
-                    "       console.log('Access Code Not Found');",
-                    "        }",
-                    "    }*/",
                     ""
                 ],
                 "name": "tap"
@@ -112,24 +89,18 @@
             "designerId": "a65220c2-bf42-477e-8476-7376c2c124d4"
         },
         {
-            "type": "basicfunction",
+            "type": "controllerref",
             "reference": {
                 "name": "items",
                 "type": "array"
             },
             "codeClass": null,
             "userConfig": {
-                "designer|params": [
-                    "immediate"
-                ],
-                "fn": "checkAuth",
-                "implHandler": [
-                    "    console.log(\"trying login with immediate \" + immediate);",
-                    "    gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: immediate}, this.handleAuthResult);"
-                ]
+                "ref": "loginPanel",
+                "selector": "#loginPanel"
             },
-            "name": "checkAuth",
-            "designerId": "e7f55c6f-85e2-4e46-9ecb-ff207dd09d65"
+            "name": "loginPanel",
+            "designerId": "543354b3-f72b-4e2b-909b-c03eaab579c0"
         },
         {
             "type": "basicfunction",
@@ -140,21 +111,162 @@
             "codeClass": null,
             "userConfig": {
                 "designer|params": [
-                    "result"
+                    "accessCode"
                 ],
-                "fn": "handleAuthResult",
+                "fn": "getToken",
                 "implHandler": [
-                    " if (result && !result.error) {",
-                    "     console.log(\"Auth OK, token\" + result.access_token);",
-                    "    var c =  this.getController('loginController');",
-                    " } else {",
-                    "     console.log(\"AUth ERROR\"+ result.error);",
-                    " }",
-                    ""
+                    "var controller = this;",
+                    "Ext.Ajax.request({",
+                    "    url: 'https://www.googleapis.com/oauth2/v4/token',",
+                    "    headers: {",
+                    "        \"Content-Type\": \"application/x-www-form-urlencoded\"",
+                    "    },",
+                    "    method: 'POST',",
+                    "    params: {",
+                    "        code: accessCode,",
+                    "        client_id: clientId,",
+                    "        client_secret: clientSecret,",
+                    "        redirect_uri: redirectUri,",
+                    "        grant_type: 'authorization_code'",
+                    "    },",
+                    "",
+                    "    callback: function(options, success, response) {",
+                    "        console.log('Get token response '+response.status);",
+                    "        if (response.status != 200) {",
+                    "            console.log(response.responseText);",
+                    "        }",
+                    "        ",
+                    "        if (response.responseText) {",
+                    "            var json = Ext.util.JSON.decode(response.responseText);",
+                    "            accessToken = json['access_token'];",
+                    "            controller.getUserInfo(accessToken);",
+                    "        }",
+                    "    }",
+                    "});"
                 ]
             },
-            "name": "handleAuthResult",
-            "designerId": "33e9fe4a-fd00-4900-b334-d4d9780091c1"
+            "name": "getToken",
+            "designerId": "fdb9da38-a019-4d5c-aa31-27c03dc07bb2"
+        },
+        {
+            "type": "basicfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|params": [
+                    "accessToken"
+                ],
+                "fn": "getUserInfo",
+                "implHandler": [
+                    "var controller = this;",
+                    "Ext.Ajax.request({",
+                    "    url: 'https://www.googleapis.com/oauth2/v3/userinfo',",
+                    "    method: 'GET',",
+                    "    headers: {",
+                    "        \"Content-Type\": \"application/json\"",
+                    "    },",
+                    "    params: {",
+                    "        access_token : accessToken",
+                    "    },",
+                    "",
+                    "    callback: function(options, success, response) {",
+                    "        var json = Ext.util.JSON.decode(response.responseText);",
+                    "        controller.onLoginSuccess(json['email']);",
+                    "    }",
+                    "});"
+                ]
+            },
+            "name": "getUserInfo",
+            "designerId": "e3e76b6c-db00-401e-b5bc-aeaa629d48b7"
+        },
+        {
+            "type": "controllerref",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "ref": "successAuth",
+                "selector": "#successAuthLabel"
+            },
+            "name": "successAuth",
+            "designerId": "e5c1e553-6120-4092-a761-3b1de85226e6"
+        },
+        {
+            "type": "controllerref",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "ref": "errorLabel",
+                "selector": "#errorLabel"
+            },
+            "name": "errorLabel",
+            "designerId": "e38b5820-e6c7-4790-83ee-70f7f851f1bf"
+        },
+        {
+            "type": "basicfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|params": [
+                    "url"
+                ],
+                "fn": "getTokenFromUrl",
+                "implHandler": [
+                    "    var access_code = /\\?code=(.+)$/.exec(url)[1];",
+                    "    var error = /\\?error=(.+)$/.exec(url);",
+                    "    if (access_code) {",
+                    "        this.getToken(access_code);",
+                    "    }"
+                ]
+            },
+            "name": "getTokenFromUrl",
+            "designerId": "63b747e1-f4b3-45b5-b9da-74c7ff3022d6"
+        },
+        {
+            "type": "basicfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|params": [
+                    "email"
+                ],
+                "fn": "onLoginSuccess",
+                "implHandler": [
+                    "",
+                    " Ext.Viewport.setActiveItem('profilePanel');",
+                    "//var profile = Ext.Create({})"
+                ]
+            },
+            "name": "onLoginSuccess",
+            "designerId": "e2f94bcc-5c8e-4c82-82de-efc32f0c891f"
+        },
+        {
+            "type": "controllerref",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "ref": "mainPanel",
+                "selector": "#profilePanel"
+            },
+            "name": "mainPanel",
+            "designerId": "d6f61c92-d43d-456c-a5b2-08d2087b4220"
         },
         {
             "type": "fixedfunction",
@@ -166,71 +278,12 @@
             "userConfig": {
                 "fn": "launch",
                 "implHandler": [
-                    "        console.log('launch controller');",
-                    "        gapi.client.setApiKey(apiKey);",
-                    ""
+                    "Ext.Viewport.add(Ext.create('PixonicTeam.view.Profile'));",
+                    "Ext.Viewport.setActiveItem('loginpanel');"
                 ]
             },
             "name": "launch",
-            "designerId": "358bc240-5ab4-4443-9654-0939f55e5fa4"
-        },
-        {
-            "type": "basicfunction",
-            "reference": {
-                "name": "items",
-                "type": "array"
-            },
-            "codeClass": null,
-            "userConfig": {
-                "fn": "loadCalendarApi",
-                "implHandler": [
-                    "gapi.client.load('calendar', 'v3', listUpcomingEvents);",
-                    ""
-                ]
-            },
-            "name": "loadCalendarApi",
-            "designerId": "dbaacef5-72e5-491d-90f8-f0499be7ecbe"
-        },
-        {
-            "type": "basicfunction",
-            "reference": {
-                "name": "items",
-                "type": "array"
-            },
-            "codeClass": null,
-            "userConfig": {
-                "fn": "listUpcomingEvents"
-            },
-            "name": "listUpcomingEvents",
-            "designerId": "4860c54e-017c-4210-a245-4b92b07f6662"
-        },
-        {
-            "type": "controllerref",
-            "reference": {
-                "name": "items",
-                "type": "array"
-            },
-            "codeClass": null,
-            "userConfig": {
-                "ref": "loginView",
-                "selector": "#loginpanel"
-            },
-            "name": "loginView",
-            "designerId": "543354b3-f72b-4e2b-909b-c03eaab579c0"
-        },
-        {
-            "type": "controllerref",
-            "reference": {
-                "name": "items",
-                "type": "array"
-            },
-            "codeClass": null,
-            "userConfig": {
-                "ref": "profileView",
-                "selector": "#profileWindow"
-            },
-            "name": "profileView",
-            "designerId": "47ab92bc-2425-497f-8865-4c6014ecc95c"
+            "designerId": "eeaa9db2-5b6d-4000-b80f-7bd6d4a3bbf9"
         }
     ]
 }

@@ -20,6 +20,15 @@ Ext.Loader.setConfig({
 
 
 Ext.application({
+    viewport: {
+        xclass: 'Ext.viewport.Viewport',
+        layout: {
+            type: 'card',
+            animation: 'slide',
+            'animation.direction': 'right'
+        }
+    },
+
     views: [
         'LoginPanel',
         'Profile'
@@ -27,11 +36,5 @@ Ext.application({
     controllers: [
         'LoginController'
     ],
-    name: 'PixonicTeam',
-
-    launch: function() {
-
-        Ext.create('PixonicTeam.view.LoginPanel', {fullscreen: true});
-    }
-
+    name: 'PixonicTeam'
 });

@@ -6,11 +6,16 @@
     },
     "codeClass": null,
     "userConfig": {
-        "designer|userAlias": "profileWindow",
+        "designer|userAlias": "profilePanel",
         "designer|userClassName": "Profile",
-        "hidden": true
+        "hidden": false,
+        "id": "profilePanel",
+        "showAnimation": null
     },
     "name": "MyPanel",
+    "configAlternates": {
+        "showAnimation": "object"
+    },
     "designerId": "c20fba9c-259a-464a-aa51-1502eeaf1da7",
     "cn": [
         {
@@ -26,6 +31,35 @@
             },
             "name": "MyImg",
             "designerId": "8369d28f-a6be-4c5a-bc9b-ffe5717feb28"
+        },
+        {
+            "type": "Ext.Label",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "id": "successAuthLabel"
+            },
+            "name": "MyLabel1",
+            "designerId": "f346b3ef-f823-4ca2-94ee-7c835387aaf2"
+        },
+        {
+            "type": "Ext.Toolbar",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "docked": "top",
+                "html": "",
+                "id": "toolbar",
+                "title": "Профиль"
+            },
+            "name": "MyToolbar",
+            "designerId": "7c5250f3-d414-48ac-bb9a-3a35831ac0b3"
         }
     ]
 }

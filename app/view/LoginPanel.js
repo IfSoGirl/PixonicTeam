@@ -24,6 +24,7 @@ Ext.define('PixonicTeam.view.LoginPanel', {
     ],
 
     config: {
+        id: 'loginPanel',
         items: [
             {
                 xtype: 'container',
@@ -38,6 +39,11 @@ Ext.define('PixonicTeam.view.LoginPanel', {
                         id: 'helloLabel',
                         padding: '50 0 50 0',
                         style: 'text-align: center'
+                    },
+                    {
+                        xtype: 'label',
+                        cls: 'x-label-error',
+                        id: 'errorLabel'
                     },
                     {
                         xtype: 'button',

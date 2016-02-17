@@ -32083,6 +32083,393 @@ Ext.define('Ext.LoadMask', {
 }, function() {});
 
 /**
+ * {@link Ext.Title} is used for the {@link Ext.Toolbar#title} configuration in the {@link Ext.Toolbar} component.
+ * @private
+ */
+Ext.define('Ext.Title', {
+    extend: Ext.Component,
+    xtype: 'title',
+    config: {
+        /**
+         * @cfg
+         * @inheritdoc
+         */
+        baseCls: 'x-title',
+        /**
+         * @cfg {String} title The title text
+         */
+        title: ''
+    },
+    // @private
+    updateTitle: function(newTitle) {
+        this.setHtml(newTitle);
+    }
+});
+
+/**
+The {@link Ext.Spacer} component is generally used to put space between items in {@link Ext.Toolbar} components.
+
+## Examples
+
+By default the {@link #flex} configuration is set to 1:
+
+    @example miniphone preview
+    Ext.create('Ext.Container', {
+        fullscreen: true,
+        items: [
+            {
+                xtype : 'toolbar',
+                docked: 'top',
+                items: [
+                    {
+                        xtype: 'button',
+                        text : 'Button One'
+                    },
+                    {
+                        xtype: 'spacer'
+                    },
+                    {
+                        xtype: 'button',
+                        text : 'Button Two'
+                    }
+                ]
+            }
+        ]
+    });
+
+Alternatively you can just set the {@link #width} configuration which will get the {@link Ext.Spacer} a fixed width:
+
+    @example preview
+    Ext.create('Ext.Container', {
+        fullscreen: true,
+        layout: {
+            type: 'vbox',
+            pack: 'center',
+            align: 'stretch'
+        },
+        items: [
+            {
+                xtype : 'toolbar',
+                docked: 'top',
+                items: [
+                    {
+                        xtype: 'button',
+                        text : 'Button One'
+                    },
+                    {
+                        xtype: 'spacer',
+                        width: 50
+                    },
+                    {
+                        xtype: 'button',
+                        text : 'Button Two'
+                    }
+                ]
+            },
+            {
+                xtype: 'container',
+                items: [
+                    {
+                        xtype: 'button',
+                        text : 'Change Ext.Spacer width',
+                        handler: function() {
+                            //get the spacer using ComponentQuery
+                            var spacer = Ext.ComponentQuery.query('spacer')[0],
+                                from = 10,
+                                to = 250;
+
+                            //set the width to a random number
+                            spacer.setWidth(Math.floor(Math.random() * (to - from + 1) + from));
+                        }
+                    }
+                ]
+            }
+        ]
+    });
+
+You can also insert multiple {@link Ext.Spacer}'s:
+
+    @example preview
+    Ext.create('Ext.Container', {
+        fullscreen: true,
+        items: [
+            {
+                xtype : 'toolbar',
+                docked: 'top',
+                items: [
+                    {
+                        xtype: 'button',
+                        text : 'Button One'
+                    },
+                    {
+                        xtype: 'spacer'
+                    },
+                    {
+                        xtype: 'button',
+                        text : 'Button Two'
+                    },
+                    {
+                        xtype: 'spacer',
+                        width: 20
+                    },
+                    {
+                        xtype: 'button',
+                        text : 'Button Three'
+                    }
+                ]
+            }
+        ]
+    });
+ */
+Ext.define('Ext.Spacer', {
+    extend: Ext.Component,
+    alias: 'widget.spacer',
+    config: {},
+    /**
+         * @cfg {Number} flex
+         * The flex value of this spacer. This defaults to 1, if no width has been set.
+         * @accessor
+         */
+    /**
+         * @cfg {Number} width
+         * The width of this spacer. If this is set, the value of {@link #flex} will be ignored.
+         * @accessor
+         */
+    // @private
+    constructor: function(config) {
+        config = config || {};
+        if (!config.width) {
+            config.flex = 1;
+        }
+        this.callParent([
+            config
+        ]);
+    }
+});
+
+/**
+ * {@link Ext.Toolbar}s are most commonly used as docked items as within a {@link Ext.Container}. They can be docked either `top` or `bottom` using the {@link #docked} configuration.
+ *
+ * They allow you to insert items (normally {@link Ext.Button buttons}) and also add a {@link #title}.
+ *
+ * The {@link #defaultType} of {@link Ext.Toolbar} is {@link Ext.Button}.
+ *
+ * You can alternatively use {@link Ext.TitleBar} if you want the title to automatically adjust the size of its items.
+ *
+ * ## Examples
+ *
+ *     @example miniphone preview
+ *     Ext.create('Ext.Container', {
+ *         fullscreen: true,
+ *         layout: {
+ *             type: 'vbox',
+ *             pack: 'center'
+ *         },
+ *         items: [
+ *             {
+ *                 xtype : 'toolbar',
+ *                 docked: 'top',
+ *                 title: 'My Toolbar'
+ *             },
+ *             {
+ *                 xtype: 'container',
+ *                 defaults: {
+ *                     xtype: 'button',
+ *                     margin: '10 10 0 10'
+ *                 },
+ *                 items: [
+ *                     {
+ *                         text: 'Toggle docked',
+ *                         handler: function() {
+ *                             var toolbar = Ext.ComponentQuery.query('toolbar')[0],
+ *                                 newDocked = (toolbar.getDocked() === 'top') ? 'bottom' : 'top';
+ *
+ *                             toolbar.setDocked(newDocked);
+ *                         }
+ *                     },
+ *                     {
+ *                         text: 'Toggle UI',
+ *                         handler: function() {
+ *                             var toolbar = Ext.ComponentQuery.query('toolbar')[0],
+ *                                 newUi = (toolbar.getUi() === 'light') ? 'dark' : 'light';
+ *
+ *                             toolbar.setUi(newUi);
+ *                         }
+ *                     },
+ *                     {
+ *                         text: 'Change title',
+ *                         handler: function() {
+ *                             var toolbar = Ext.ComponentQuery.query('toolbar')[0],
+ *                                 titles = ['My Toolbar', 'Ext.Toolbar', 'Configurations are awesome!', 'Beautiful.'],
+                                   //internally, the title configuration gets converted into a {@link Ext.Title} component,
+                                   //so you must get the title configuration of that component
+ *                                 title = toolbar.getTitle().getTitle(),
+ *                                 newTitle = titles[titles.indexOf(title) + 1] || titles[0];
+ *
+ *                             toolbar.setTitle(newTitle);
+ *                         }
+ *                     }
+ *                 ]
+ *             }
+ *         ]
+ *     });
+ *
+ * ## Notes
+ *
+ * You must use a HTML5 doctype for {@link #docked} `bottom` to work. To do this, simply add the following code to the HTML file:
+ *
+ *     <!doctype html>
+ *
+ * So your index.html file should look a little like this:
+ *
+ *     <!doctype html>
+ *     <html>
+ *         <head>
+ *             <title>MY application title</title>
+ *             ...
+ *
+ */
+Ext.define('Ext.Toolbar', {
+    extend: Ext.Container,
+    xtype: 'toolbar',
+    // @private
+    isToolbar: true,
+    config: {
+        /**
+         * @cfg baseCls
+         * @inheritdoc
+         */
+        baseCls: Ext.baseCSSPrefix + 'toolbar',
+        /**
+         * @cfg {String} ui
+         * The ui for this {@link Ext.Toolbar}. Either 'light' or 'dark'. You can create more UIs by using using the CSS Mixin {@link #sencha-toolbar-ui}
+         * @accessor
+         */
+        ui: 'dark',
+        /**
+         * @cfg {String/Ext.Title} title
+         * The title of the toolbar.
+         * @accessor
+         */
+        title: null,
+        /**
+         * @cfg {String} defaultType
+         * The default xtype to create.
+         * @accessor
+         */
+        defaultType: 'button',
+        /**
+         * @cfg {String} docked
+         * The docked position for this {@link Ext.Toolbar}.
+         * If you specify `left` or `right`, the {@link #layout} configuration will automatically change to a `vbox`. It's also
+         * recommended to adjust the {@link #width} of the toolbar if you do this.
+         * @accessor
+         */
+        /**
+         * @cfg {String} minHeight
+         * The minimum height height of the Toolbar.
+         * @accessor
+         */
+        minHeight: null,
+        /**
+         * @cfg {Object/String} layout Configuration for this Container's layout. Example:
+         *
+         *     Ext.create('Ext.Container', {
+         *         layout: {
+         *             type: 'hbox',
+         *             align: 'middle'
+         *         },
+         *         items: [
+         *             {
+         *                 xtype: 'panel',
+         *                 flex: 1,
+         *                 style: 'background-color: red;'
+         *             },
+         *             {
+         *                 xtype: 'panel',
+         *                 flex: 2,
+         *                 style: 'background-color: green'
+         *             }
+         *         ]
+         *     });
+         *
+         * See the [layouts guide](../../../core_concepts/layouts.html) for more information
+         *
+         * __Note:__ If you set the {@link #docked} configuration to `left` or `right`, the default layout will change from the
+         * `hbox` to a `vbox`.
+         *
+         * @accessor
+         */
+        layout: {
+            type: 'hbox',
+            align: 'center'
+        }
+    },
+    hasCSSMinHeight: true,
+    constructor: function(config) {
+        config = config || {};
+        if (config.docked == "left" || config.docked == "right") {
+            config.layout = {
+                type: 'vbox',
+                align: 'stretch'
+            };
+        }
+        this.callParent([
+            config
+        ]);
+    },
+    // @private
+    applyTitle: function(title) {
+        if (typeof title == 'string') {
+            title = {
+                title: title,
+                centered: Ext.theme.is.Tizen ? false : true
+            };
+        }
+        return Ext.factory(title, Ext.Title, this.getTitle());
+    },
+    // @private
+    updateTitle: function(newTitle, oldTitle) {
+        if (newTitle) {
+            this.add(newTitle);
+        }
+        if (oldTitle) {
+            oldTitle.destroy();
+        }
+    },
+    /**
+     * Shows the title, if it exists.
+     */
+    showTitle: function() {
+        var title = this.getTitle();
+        if (title) {
+            title.show();
+        }
+    },
+    /**
+     * Hides the title, if it exists.
+     */
+    hideTitle: function() {
+        var title = this.getTitle();
+        if (title) {
+            title.hide();
+        }
+    }
+}, /**
+     * Returns an {@link Ext.Title} component.
+     * @member Ext.Toolbar
+     * @method getTitle
+     * @return {Ext.Title}
+     */
+/**
+     * Use this to update the {@link #title} configuration.
+     * @member Ext.Toolbar
+     * @method setTitle
+     * @param {String/Ext.Title} title You can either pass a String, or a config/instance of {@link Ext.Title}.
+     */
+function() {});
+
+/**
  * @author Ed Spencer
  * @private
  *
@@ -51307,6 +51694,47 @@ Ext.define('Ext.viewport.Viewport', {
  */
 
 /*
+ * File: app/view/Profile.js
+ *
+ * This file was generated by Sencha Architect version 3.2.0.
+ * http://www.sencha.com/products/architect/
+ *
+ * This file requires use of the Sencha Touch 2.4.x library, under independent license.
+ * License of Sencha Architect does not include license for Sencha Touch 2.4.x. For more
+ * details see http://www.sencha.com/license or contact license@sencha.com.
+ *
+ * This file will be auto-generated each and everytime you save your project.
+ *
+ * Do NOT hand edit this file.
+ */
+Ext.define('PixonicTeam.view.Profile', {
+    extend: Ext.Panel,
+    alias: 'widget.profilePanel',
+    config: {
+        hidden: false,
+        id: 'profilePanel',
+        items: [
+            {
+                xtype: 'image',
+                height: 201,
+                src: 'https://upload.wikimedia.org/wikipedia/en/0/05/Hello_kitty_character_portrait.png'
+            },
+            {
+                xtype: 'label',
+                id: 'successAuthLabel'
+            },
+            {
+                xtype: 'toolbar',
+                docked: 'top',
+                html: '',
+                id: 'toolbar',
+                title: 'Профиль'
+            }
+        ]
+    }
+});
+
+/*
  * File: app/controller/LoginController.js
  *
  * This file was generated by Sencha Architect version 3.2.0.
@@ -51326,8 +51754,10 @@ Ext.define('PixonicTeam.controller.LoginController', {
     config: {
         refs: {
             loginBtn: '#loginBtn',
-            loginView: '#loginpanel',
-            profileView: '#profileWindow'
+            loginPanel: '#loginPanel',
+            successAuth: '#successAuthLabel',
+            errorLabel: '#errorLabel',
+            mainPanel: '#profilePanel'
         },
         control: {
             "[action=confirm]": {
@@ -51339,88 +51769,102 @@ Ext.define('PixonicTeam.controller.LoginController', {
         var params = 'client_id=' + encodeURIComponent(clientId);
         params += '&redirect_uri=' + encodeURIComponent(redirectUri);
         params += '&response_type=code';
+        params += '&access_type=offline';
         params += '&scope=' + encodeURIComponent(scopes);
-        var authUrl = 'https://accounts.google.com/o/oauth2/auth?' + params;
+        var authUrl = 'https://accounts.google.com/o/oauth2/v2/auth?' + params;
         var win = window.open(authUrl, '_blank', 'location=no,toolbar=no,width=800, height=800');
         gwin = win;
-        var context = this;
-        win.addEventListener('loadstart', function(data) {
-            console.log('LOAD START');
-            console.log('Here is data url');
-            console.log(data.url);
-            var pos = data.url.indexOf(redirectUri);
-            console.log('redirect in data' + pos);
-            if (pos === 0) {
-                console.log('redirect url found, CLOSE WINDOW');
-                win.close();
-                var url = data.url;
-                console.log('Final URL ' + url);
-                access_code = /\?code=(.+)$/.exec(url);
-                var error = /\?error=(.+)$/.exec(url);
-                console.log('CODE = ' + access_code);
-                console.log('ERROR = ' + error);
-                //getToken();
-                Ext.Ajax.request({
-                    url: 'https://www.googleapis.com/oauth2/v3/token',
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    params: {
-                        client_id: clientId,
-                        //  client_secret: this.secret,
-                        redirect_uri: redirectUri,
-                        code: access_code,
-                        grant_type: 'authorization_code'
-                    },
-                    callback: function(options, success, response) {
-                        console.log('Get server response');
-                        console.log(response.responseText);
+        var context = this,
+            url;
+        var controller = this;
+        if ((Ext.os.is.Android) || (Ext.os.is.iOS)) {
+            win.addEventListener('loadstart', function(data) {
+                var pos = data.url.indexOf(redirectUri);
+                if (pos === 0) {
+                    win.close();
+                    url = data.url;
+                    controller.getTokenFromUrl(url);
+                }
+            });
+        } else {
+            var repeat = setInterval(function() {
+                    var pos = -1;
+                    if (!win || !win.document) {
+                        return;
                     }
-                });
+                    if (win)  {
+                        pos = win.document.URL.indexOf(redirectUri);
+                    }
+                    
+                    if (pos === 0) {
+                        url = win.document.URL;
+                        win.close();
+                        clearInterval(repeat);
+                        controller.getTokenFromUrl(url);
+                    }
+                }, 100);
+        }
+    },
+    getToken: function(accessCode) {
+        var controller = this;
+        Ext.Ajax.request({
+            url: 'https://www.googleapis.com/oauth2/v4/token',
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            method: 'POST',
+            params: {
+                code: accessCode,
+                client_id: clientId,
+                client_secret: clientSecret,
+                redirect_uri: redirectUri,
+                grant_type: 'authorization_code'
+            },
+            callback: function(options, success, response) {
+                console.log('Get token response ' + response.status);
+                if (response.status != 200) {
+                    console.log(response.responseText);
+                }
+                if (response.responseText) {
+                    var json = Ext.util.JSON.decode(response.responseText);
+                    accessToken = json['access_token'];
+                    controller.getUserInfo(accessToken);
+                }
             }
         });
     },
-    /*//else {
-            console.log('InAppBrowser not found11');
-            console.log("google window url " + win.document.URL);
-            var s = win.location.href;
-            if (gwin.document.URL.indexOf(redirectUri) === 0) {
-                console.log('redirect url found');
-                win.close();
-                var url = win.document.URL;
-                console.log('Final URL ' + url);
-                var access_code = context.gulp(url, 'code');
-                if (access_code) {
-                console.log('Access Code: ' + access_code);
-            } else {
-               console.log('Access Code Not Found');
-                }
-            }*/
-    checkAuth: function(immediate) {
-        console.log("trying login with immediate " + immediate);
-        gapi.auth.authorize({
-            client_id: clientId,
-            scope: scopes,
-            immediate: immediate
-        }, this.handleAuthResult);
+    getUserInfo: function(accessToken) {
+        var controller = this;
+        Ext.Ajax.request({
+            url: 'https://www.googleapis.com/oauth2/v3/userinfo',
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            params: {
+                access_token: accessToken
+            },
+            callback: function(options, success, response) {
+                var json = Ext.util.JSON.decode(response.responseText);
+                controller.onLoginSuccess(json['email']);
+            }
+        });
     },
-    handleAuthResult: function(result) {
-        if (result && !result.error) {
-            console.log("Auth OK, token" + result.access_token);
-            var c = this.getController('loginController');
-        } else {
-            console.log("AUth ERROR" + result.error);
+    getTokenFromUrl: function(url) {
+        var access_code = /\?code=(.+)$/.exec(url)[1];
+        var error = /\?error=(.+)$/.exec(url);
+        if (access_code) {
+            this.getToken(access_code);
         }
     },
+    onLoginSuccess: function(email) {
+        Ext.Viewport.setActiveItem('profilePanel');
+    },
+    //var profile = Ext.Create({})
     launch: function() {
-        console.log('launch controller');
-        gapi.client.setApiKey(apiKey);
-    },
-    loadCalendarApi: function() {
-        gapi.client.load('calendar', 'v3', listUpcomingEvents);
-    },
-    listUpcomingEvents: function() {}
+        Ext.Viewport.add(Ext.create('PixonicTeam.view.Profile'));
+        Ext.Viewport.setActiveItem('loginpanel');
+    }
 });
 
 /*
@@ -51441,6 +51885,7 @@ Ext.define('PixonicTeam.view.LoginPanel', {
     extend: Ext.Panel,
     alias: 'widget.loginpanel',
     config: {
+        id: 'loginPanel',
         items: [
             {
                 xtype: 'container',
@@ -51457,6 +51902,11 @@ Ext.define('PixonicTeam.view.LoginPanel', {
                         style: 'text-align: center'
                     },
                     {
+                        xtype: 'label',
+                        cls: 'x-label-error',
+                        id: 'errorLabel'
+                    },
+                    {
                         xtype: 'button',
                         action: 'confirm',
                         baseCls: 'google-button-active',
@@ -51466,35 +51916,6 @@ Ext.define('PixonicTeam.view.LoginPanel', {
                         pressedCls: 'google-button-pressed'
                     }
                 ]
-            }
-        ]
-    }
-});
-
-/*
- * File: app/view/Profile.js
- *
- * This file was generated by Sencha Architect version 3.2.0.
- * http://www.sencha.com/products/architect/
- *
- * This file requires use of the Sencha Touch 2.4.x library, under independent license.
- * License of Sencha Architect does not include license for Sencha Touch 2.4.x. For more
- * details see http://www.sencha.com/license or contact license@sencha.com.
- *
- * This file will be auto-generated each and everytime you save your project.
- *
- * Do NOT hand edit this file.
- */
-Ext.define('PixonicTeam.view.Profile', {
-    extend: Ext.Panel,
-    alias: 'widget.profileWindow',
-    config: {
-        hidden: true,
-        items: [
-            {
-                xtype: 'image',
-                height: 201,
-                src: 'https://upload.wikimedia.org/wikipedia/en/0/05/Hello_kitty_character_portrait.png'
             }
         ]
     }
@@ -51517,6 +51938,14 @@ Ext.define('PixonicTeam.view.Profile', {
 // @require @packageOverrides
 Ext.Loader.setConfig({});
 Ext.application({
+    viewport: {
+        xclass: 'Ext.viewport.Viewport',
+        layout: {
+            type: 'card',
+            animation: 'slide',
+            'animation.direction': 'right'
+        }
+    },
     views: [
         'LoginPanel',
         'Profile'
@@ -51524,12 +51953,7 @@ Ext.application({
     controllers: [
         'LoginController'
     ],
-    name: 'PixonicTeam',
-    launch: function() {
-        Ext.create('PixonicTeam.view.LoginPanel', {
-            fullscreen: true
-        });
-    }
+    name: 'PixonicTeam'
 });
 
 // @tag full-page

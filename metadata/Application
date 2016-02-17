@@ -16,5 +16,21 @@
         ]
     },
     "name": "Application",
-    "designerId": "application"
+    "designerId": "application",
+    "cn": [
+        {
+            "type": "Ext.Viewport",
+            "reference": {
+                "name": "viewport",
+                "type": "object"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "container|animation": "slide",
+                "container|animation.direction": "right"
+            },
+            "name": "Viewport",
+            "designerId": "8dfcbe04-64fa-40b0-b7ed-a70ca5caa97d"
+        }
+    ]
 }

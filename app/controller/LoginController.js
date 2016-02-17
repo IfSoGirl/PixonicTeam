@@ -17,11 +17,18 @@ Ext.define('PixonicTeam.controller.LoginController', {
     extend: 'Ext.app.Controller',
     alias: 'controller.loginController',
 
+    requires: [
+        'Ext.Ajax',
+        'PixonicTeam.view.Profile'
+    ],
+
     config: {
         refs: {
             loginBtn: '#loginBtn',
-            loginView: '#loginpanel',
-            profileView: '#profileWindow'
+            loginPanel: '#loginPanel',
+            successAuth: '#successAuthLabel',
+            errorLabel: '#errorLabel',
+            mainPanel: '#profilePanel'
         },
 
         control: {
@@ -32,103 +39,115 @@ Ext.define('PixonicTeam.controller.LoginController', {
     },
 
     onButtonTap: function(button, e, eOpts) {
-        var params = 'client_id=' + encodeURIComponent(clientId);
-        params += '&redirect_uri='+encodeURIComponent(redirectUri);
-        params += '&response_type=code';
-        params += '&scope=' + encodeURIComponent(scopes);
-        var authUrl = 'https://accounts.google.com/o/oauth2/auth?' + params;
-        var win = window.open(authUrl, '_blank', 'location=no,toolbar=no,width=800, height=800');
-        gwin = win;
-         var context = this;
-
-        win.addEventListener('loadstart', function (data) {
-            console.log('LOAD START');
-            console.log('Here is data url');
-           console.log(data.url);
-            var pos =  data.url.indexOf(redirectUri);
-             console.log('redirect in data' + pos);
-            if (pos === 0) {
-                console.log('redirect url found, CLOSE WINDOW');
-                win.close();
-                var url = data.url;
-                console.log('Final URL ' + url);
-                access_code = /\?code=(.+)$/.exec(url);
-                  var error = /\?error=(.+)$/.exec(url);
-                console.log('CODE = '+ access_code);
-                console.log('ERROR = '+ error);
-                //getToken();
+            var params = 'client_id=' + encodeURIComponent(clientId);
+            params += '&redirect_uri='+encodeURIComponent(redirectUri);
+            params += '&response_type=code';
+            params += '&access_type=offline';
+            params += '&scope=' + encodeURIComponent(scopes);
+            var authUrl = 'https://accounts.google.com/o/oauth2/v2/auth?' + params;
+            var win = window.open(authUrl, '_blank', 'location=no,toolbar=no,width=800, height=800');
+            gwin = win;
+            var context = this, url;
+            var controller = this;
 
 
-                Ext.Ajax.request({
-                    url: 'https://www.googleapis.com/oauth2/v3/token',
-                    method: 'POST',
-
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded'},
-
-                    params: {
-                        client_id: clientId,
-                      //  client_secret: this.secret,
-                        redirect_uri: redirectUri,
-                        code: access_code,
-                        grant_type: 'authorization_code'
-                    },
-
-                    callback: function(options, success, response) {
-                        console.log('Get server response'+response.responseText);
-                        console.log(esponse.responseText);
+            if ((Ext.os.is.Android) || (Ext.os.is.iOS)) {
+                win.addEventListener('loadstart', function (data) {
+                    var pos =  data.url.indexOf(redirectUri);
+                    if (pos === 0) {
+                        win.close();
+                        url = data.url;
+                        controller.getTokenFromUrl(url);
+                    }
+                });
             }
-        });
+            else {
+                var repeat = setInterval(function () {
+                    var pos = -1;
+                    if(!win || !win.document){
+                        return;
+                    }
+                    if (win)
+                       pos =  win.document.URL.indexOf(redirectUri);
 
-
+                    if (pos === 0) {
+                        url = win.document.URL;
+                        win.close();
+                        clearInterval(repeat);
+                        controller.getTokenFromUrl(url);
+                    }
+                }, 100);
             }
-        });
-         /*//else {
-            console.log('InAppBrowser not found11');
-            console.log("google window url " + win.document.URL);
-            var s = win.location.href;
-            if (gwin.document.URL.indexOf(redirectUri) === 0) {
-                console.log('redirect url found');
-                win.close();
-                var url = win.document.URL;
-                console.log('Final URL ' + url);
-                var access_code = context.gulp(url, 'code');
-                if (access_code) {
-                console.log('Access Code: ' + access_code);
-            } else {
-               console.log('Access Code Not Found');
+
+    },
+
+    getToken: function(accessCode) {
+        var controller = this;
+        Ext.Ajax.request({
+            url: 'https://www.googleapis.com/oauth2/v4/token',
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            method: 'POST',
+            params: {
+                code: accessCode,
+                client_id: clientId,
+                client_secret: clientSecret,
+                redirect_uri: redirectUri,
+                grant_type: 'authorization_code'
+            },
+
+            callback: function(options, success, response) {
+                console.log('Get token response '+response.status);
+                if (response.status != 200) {
+                    console.log(response.responseText);
                 }
-            }*/
 
+                if (response.responseText) {
+                    var json = Ext.util.JSON.decode(response.responseText);
+                    accessToken = json['access_token'];
+                    controller.getUserInfo(accessToken);
+                }
+            }
+        });
     },
 
-    checkAuth: function(immediate) {
-            console.log("trying login with immediate " + immediate);
-            gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: immediate}, this.handleAuthResult);
+    getUserInfo: function(accessToken) {
+        var controller = this;
+        Ext.Ajax.request({
+            url: 'https://www.googleapis.com/oauth2/v3/userinfo',
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            params: {
+                access_token : accessToken
+            },
+
+            callback: function(options, success, response) {
+                var json = Ext.util.JSON.decode(response.responseText);
+                controller.onLoginSuccess(json['email']);
+            }
+        });
     },
 
-    handleAuthResult: function(result) {
-         if (result && !result.error) {
-             console.log("Auth OK, token" + result.access_token);
-            var c =  this.getController('loginController');
-         } else {
-             console.log("AUth ERROR"+ result.error);
-         }
+    getTokenFromUrl: function(url) {
+            var access_code = /\?code=(.+)$/.exec(url)[1];
+            var error = /\?error=(.+)$/.exec(url);
+            if (access_code) {
+                this.getToken(access_code);
+            }
+    },
 
+    onLoginSuccess: function(email) {
+
+         Ext.Viewport.setActiveItem('profilePanel');
+        //var profile = Ext.Create({})
     },
 
     launch: function() {
-                console.log('launch controller');
-                gapi.client.setApiKey(apiKey);
-
-    },
-
-    loadCalendarApi: function() {
-        gapi.client.load('calendar', 'v3', listUpcomingEvents);
-
-    },
-
-    listUpcomingEvents: function() {
-
+        Ext.Viewport.add(Ext.create('PixonicTeam.view.Profile'));
+        Ext.Viewport.setActiveItem('loginpanel');
     }
 
 });

@@ -41,8 +41,8 @@
         Apache Cordova Team
     </author>
     <content src="index.html" />
-    <access origin="http://*.google.com" />
-    <allow-navigation href="http://*/*" />
+    <access origin="*" />
+    <allow-intent href="*://*.google.com/*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
     <allow-intent href="tel:*" />

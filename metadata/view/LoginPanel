@@ -6,9 +6,9 @@
     },
     "codeClass": null,
     "userConfig": {
-        "designer|initialView": true,
         "designer|userAlias": "loginpanel",
-        "designer|userClassName": "LoginPanel"
+        "designer|userClassName": "LoginPanel",
+        "id": "loginPanel"
     },
     "name": "MyPanel",
     "designerId": "7f019401-58b9-4d15-873e-a24af04a3ced",
@@ -42,6 +42,22 @@
                     },
                     "name": "MyLabel",
                     "designerId": "cdbac9f0-5bf6-42f3-a486-e5d371dcec45"
+                },
+                {
+                    "type": "Ext.Label",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "cls": [
+                            "x-label-error"
+                        ],
+                        "id": "errorLabel"
+                    },
+                    "name": "MyLabel2",
+                    "designerId": "fde16c20-cfe1-49ab-806f-a0cb2743488c"
                 },
                 {
                     "type": "Ext.Button",
