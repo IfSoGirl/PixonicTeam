@@ -37,21 +37,6 @@
             "designerId": "7c5250f3-d414-48ac-bb9a-3a35831ac0b3"
         },
         {
-            "type": "Ext.Img",
-            "reference": {
-                "name": "items",
-                "type": "array"
-            },
-            "codeClass": null,
-            "userConfig": {
-                "height": 220,
-                "src": "https://upload.wikimedia.org/wikipedia/en/0/05/Hello_kitty_character_portrait.png",
-                "width": 312
-            },
-            "name": "MyImg",
-            "designerId": "8369d28f-a6be-4c5a-bc9b-ffe5717feb28"
-        },
-        {
             "type": "Ext.Label",
             "reference": {
                 "name": "items",
@@ -101,6 +86,23 @@
                     "type": "string"
                 }
             ]
+        },
+        {
+            "type": "Ext.Panel",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "height": 500,
+                "html": "",
+                "id": "calendarPanel",
+                "scrollable": true,
+                "width": 500
+            },
+            "name": "MyPanel1",
+            "designerId": "e9420d7d-b880-4221-9555-d3d6b9bf5045"
         }
     ]
 }

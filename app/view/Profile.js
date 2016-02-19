@@ -19,10 +19,10 @@ Ext.define('PixonicTeam.view.Profile', {
 
     requires: [
         'Ext.Toolbar',
-        'Ext.Img',
         'Ext.Label',
         'Ext.Spacer',
-        'Ext.Button'
+        'Ext.Button',
+        'Ext.Panel'
     ],
 
     config: {
@@ -41,12 +41,6 @@ Ext.define('PixonicTeam.view.Profile', {
                 title: 'Профиль'
             },
             {
-                xtype: 'image',
-                height: 220,
-                width: 312,
-                src: 'https://upload.wikimedia.org/wikipedia/en/0/05/Hello_kitty_character_portrait.png'
-            },
-            {
                 xtype: 'label',
                 id: 'successAuthLabel'
             },
@@ -62,6 +56,14 @@ Ext.define('PixonicTeam.view.Profile', {
                 padding: '',
                 width: 150,
                 text: 'LogOut'
+            },
+            {
+                xtype: 'panel',
+                height: 500,
+                html: '',
+                id: 'calendarPanel',
+                width: 500,
+                scrollable: true
             }
         ]
     }

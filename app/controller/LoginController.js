@@ -88,8 +88,8 @@ Ext.define('PixonicTeam.controller.LoginController', {
                     console.log(response.status);
                     console.log(json);
                     if (response.status == 200) {
-                        controller.onLoginSuccess();
                         Ext.Viewport.setMasked(false);
+                        controller.onLoginSuccess();
                     }
                     else  {
                         console.log('Validating token failed, going to refresh  '+ token + ' '+ response.responsetext);
@@ -147,7 +147,6 @@ Ext.define('PixonicTeam.controller.LoginController', {
                     params += '&scope=' + encodeURIComponent(scopes);
                     var authUrl = 'https://accounts.google.com/o/oauth2/v2/auth?' + params;
                     var win = window.open(authUrl, '_blank', 'location=no,toolbar=no,width=800, height=800');
-                    gwin = win;
                     var context = this, url;
                     var controller = this;
 
@@ -253,7 +252,12 @@ Ext.define('PixonicTeam.controller.LoginController', {
     },
 
     onLoginSuccess: function() {
-        Ext.Viewport.setActiveItem('profilePanel');
+            Ext.Viewport.setActiveItem('profilePanel');
+            var email = localStorage['email'];
+            var local = email.split('@')[0];
+            var calendarURL = personalCalendarHTML.replace("SETHEREUSERNAME",local);
+            var win = window.open(calendarURL, '_blank', 'location=no,toolbar=no,width=800, height=800');
+            gwin = win;
     },
 
     showLoginElements: function() {
