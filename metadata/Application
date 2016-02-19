@@ -9,7 +9,13 @@
         "controllers": [
             "LoginController"
         ],
+        "models": [
+            "LoginCredentials"
+        ],
         "name": "PixonicTeam",
+        "stores": [
+            "CredentialsStore"
+        ],
         "views": [
             "LoginPanel",
             "Profile"
@@ -31,6 +37,32 @@
             },
             "name": "Viewport",
             "designerId": "8dfcbe04-64fa-40b0-b7ed-a70ca5caa97d"
+        },
+        {
+            "type": "Ext.Loader",
+            "reference": {
+                "name": "loader",
+                "type": "object"
+            },
+            "codeClass": null,
+            "name": "Loader132",
+            "designerId": "8bf96d96-78a4-49f9-905a-7d78b4c802e9"
+        },
+        {
+            "type": "fixedfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "fn": "launch",
+                "implHandler": [
+                    ""
+                ]
+            },
+            "name": "launch",
+            "designerId": "767288d1-710e-4228-90c2-28d9cab3fb73"
         }
     ]
 }

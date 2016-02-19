@@ -19,66 +19,181 @@ Ext.define('PixonicTeam.controller.LoginController', {
 
     requires: [
         'Ext.Ajax',
-        'PixonicTeam.view.Profile'
+        'PixonicTeam.view.Profile',
+        'PixonicTeam.store.CredentialsStore'
     ],
 
     config: {
         refs: {
-            loginBtn: '#loginBtn',
             loginPanel: '#loginPanel',
-            successAuth: '#successAuthLabel',
-            errorLabel: '#errorLabel',
             mainPanel: '#profilePanel'
         },
 
         control: {
-            "[action=confirm]": {
-                tap: 'onButtonTap'
+            "[action=login]": {
+                tap: 'onLoginButtonTap'
+            },
+            "[action=logout]": {
+                tap: 'onLogOutButtonTap'
             }
         }
     },
 
-    onButtonTap: function(button, e, eOpts) {
-            var params = 'client_id=' + encodeURIComponent(clientId);
-            params += '&redirect_uri='+encodeURIComponent(redirectUri);
-            params += '&response_type=code';
-            params += '&access_type=offline';
-            params += '&scope=' + encodeURIComponent(scopes);
-            var authUrl = 'https://accounts.google.com/o/oauth2/v2/auth?' + params;
-            var win = window.open(authUrl, '_blank', 'location=no,toolbar=no,width=800, height=800');
-            gwin = win;
-            var context = this, url;
+    onLoginButtonTap: function(button, e, eOpts) {
+        this.startLoginFlow();
+    },
+
+    onLogOutButtonTap: function(button, e, eOpts) {
+        this.revokeToken();
+    },
+
+    launch: function() {
+            Ext.Viewport.add(Ext.create('PixonicTeam.view.Profile'));
             var controller = this;
+            console.log('run controller');
+            Ext.Viewport.setMasked({xtype:'loadmask',message:'Загружаемся...'});
+            setTimeout(function() {
+                var token = localStorage['access_token'];
+                console.log('Check for exisisting token');
+                if (token) {
+                    console.log('Token exist, going to validate' + token);
+                    controller.validateToken(token);
+                }
+                else {
+                    Ext.Viewport.setMasked(false);
+                    Ext.getCmp('errorLabel').setHtml('You dont have a token. Please login to Google!');
+                    controller.showLoginElements();
+                }
+
+            }, 3000);
 
 
-            if ((Ext.os.is.Android) || (Ext.os.is.iOS)) {
-                win.addEventListener('loadstart', function (data) {
-                    var pos =  data.url.indexOf(redirectUri);
-                    if (pos === 0) {
-                        win.close();
-                        url = data.url;
-                        controller.getTokenFromUrl(url);
+    },
+
+    validateToken: function(token) {
+            var controller = this;
+                Ext.Ajax.request({
+                url: 'https://www.googleapis.com/oauth2/v3/tokeninfo',
+                method: 'GET',
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                params: {
+                    access_token : token
+                },
+                disableCaching : false,
+                callback: function(options, success, response) {
+                    console.log('Validating token ' + token);
+                    var json = Ext.util.JSON.decode(response.responseText);
+                    console.log(response.status);
+                    console.log(json);
+                    if (response.status == 200) {
+                        controller.onLoginSuccess();
+                        Ext.Viewport.setMasked(false);
                     }
-                });
+                    else  {
+                        console.log('Validating token failed, going to refresh  '+ token + ' '+ response.responsetext);
+                        controller.refreshToken();
+                       }
+                }
+            });
+    },
+
+    refreshToken: function() {
+        var refresh_token = localStorage['refresh_token'];
+        var controller = this;
+        Ext.Ajax.request({
+            url: 'https://www.googleapis.com/oauth2/v4/token',
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            disableCaching : false,
+            params: {
+                refresh_token : refresh_token,
+                client_id: clientId,
+                client_secret: clientSecret,
+                grant_type: 'refresh_token'
+
+            },
+
+            callback: function(options, success, response) {
+                console.log('Refreshed token ' + refresh_token);
+                if (response.status == 200) {
+                    var json = Ext.util.JSON.decode(response.responseText);
+                    console.log('Successfully refreshed token, got new '+ json);
+                    localStorage.setItem('access_token',json['access_token']);
+                    Ext.Viewport.setMasked(false);
+                    controller.onLoginSuccess();
+                }
+                else {
+                    Ext.getCmp('errorLabel').setHtml('Validating Token Failed');
+                    console.log(response.responseText);
+                    Ext.Viewport.setMasked(false);
+                    controller.showLoginElements();
+
+                }
             }
-            else {
-                var repeat = setInterval(function () {
-                    var pos = -1;
-                    if(!win || !win.document){
-                        return;
-                    }
-                    if (win)
-                       pos =  win.document.URL.indexOf(redirectUri);
+        });
+    },
 
-                    if (pos === 0) {
-                        url = win.document.URL;
-                        win.close();
-                        clearInterval(repeat);
-                        controller.getTokenFromUrl(url);
+    startLoginFlow: function() {
+                    console.log('Start login flow');
+                    localStorage.clear();
+                    var params = 'client_id=' + encodeURIComponent(clientId);
+                    params += '&redirect_uri='+encodeURIComponent(redirectUri);
+                    params += '&response_type=code';
+                    params += '&access_type=offline';
+                    params += '&scope=' + encodeURIComponent(scopes);
+                    var authUrl = 'https://accounts.google.com/o/oauth2/v2/auth?' + params;
+                    var win = window.open(authUrl, '_blank', 'location=no,toolbar=no,width=800, height=800');
+                    gwin = win;
+                    var context = this, url;
+                    var controller = this;
+
+
+                    if ((Ext.os.is.Android) || (Ext.os.is.iOS)) {
+                        var callback = function(data) {
+                            var pos =  data.url.indexOf(redirectUri);
+                            if (pos === 0) {
+                                console.log(data.url);
+                                win.removeEventListener('loadstart', callback);
+                                win.close();
+                                url = data.url;
+                                console.log('Get access code from url device');
+                                controller.getAccessCodeFromUrl(url);
+                            }
+                        };
+
+                        win.addEventListener('loadstart', callback);
                     }
-                }, 100);
+                    else {
+                        var repeat = setInterval(function () {
+                            var pos = -1;
+                            if(!win || !win.document){
+                                return;
+                            }
+                            if (win)
+                               pos =  win.document.URL.indexOf(redirectUri);
+
+                            if (pos === 0) {
+                                url = win.document.URL;
+                                win.close();
+                                clearInterval(repeat);
+                                console.log('Get access code from url browser');
+                                controller.getAccessCodeFromUrl(url);
+                            }
+                        }, 100);
+                    }
+    },
+
+    getAccessCodeFromUrl: function(url) {
+            var access_code = /\?code=(.+)$/.exec(url)[1];
+            var error = /\?error=(.+)$/.exec(url);
+            if (access_code) {
+                console.log('Got access code = ' + access_code);
+                this.getToken(access_code);
             }
-
     },
 
     getToken: function(accessCode) {
@@ -89,6 +204,7 @@ Ext.define('PixonicTeam.controller.LoginController', {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
             method: 'POST',
+             disableCaching : false,
             params: {
                 code: accessCode,
                 client_id: clientId,
@@ -98,21 +214,25 @@ Ext.define('PixonicTeam.controller.LoginController', {
             },
 
             callback: function(options, success, response) {
-                console.log('Get token response '+response.status);
+                console.log('Get token code, response '+accessCode + " " +response.status);
                 if (response.status != 200) {
                     console.log(response.responseText);
                 }
 
-                if (response.responseText) {
+                if (response.status == 200 && response.responseText) {
                     var json = Ext.util.JSON.decode(response.responseText);
-                    accessToken = json['access_token'];
-                    controller.getUserInfo(accessToken);
+                    var accessToken = json['access_token'];
+                    var refreshToken = json['refresh_token'];
+                    console.log("Got token " + accessToken );
+                    localStorage.setItem('access_token',accessToken);
+                    localStorage.setItem('refresh_token',refreshToken);
+                    controller.getUserInfo(accessToken, refreshToken);
                 }
             }
         });
     },
 
-    getUserInfo: function(accessToken) {
+    getUserInfo: function(accessToken, refreshToken) {
         var controller = this;
         Ext.Ajax.request({
             url: 'https://www.googleapis.com/oauth2/v3/userinfo',
@@ -123,31 +243,58 @@ Ext.define('PixonicTeam.controller.LoginController', {
             params: {
                 access_token : accessToken
             },
-
+             disableCaching : false,
             callback: function(options, success, response) {
                 var json = Ext.util.JSON.decode(response.responseText);
-                controller.onLoginSuccess(json['email']);
+                localStorage.setItem('email', json['email']);
+                controller.onLoginSuccess();
             }
         });
     },
 
-    getTokenFromUrl: function(url) {
-            var access_code = /\?code=(.+)$/.exec(url)[1];
-            var error = /\?error=(.+)$/.exec(url);
-            if (access_code) {
-                this.getToken(access_code);
+    onLoginSuccess: function() {
+        Ext.Viewport.setActiveItem('profilePanel');
+    },
+
+    showLoginElements: function() {
+         Ext.Viewport.setActiveItem('loginPanel');
+            var btn = Ext.getCmp('loginBtn');
+            btn.show();
+            var helloLabel = Ext.getCmp('helloLabel');
+            helloLabel.setHtml('Добро пожаловать в PixonicTeam! Войдите, используя аккаунт @pixonic.ru');
+
+    },
+
+    revokeToken: function() {
+            var controller = this;
+            localStorage.clear();
+            controller.showLoginElements();
+            /*Ext.Ajax.request({
+            url: 'https://accounts.google.com/o/oauth2/revoke',
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            method: 'POST',
+
+            disableCaching : false,
+
+            params: {
+                token: localStorage['access_token']
+            },
+
+            callback: function(options, success, response) {
+                console.log('Revoking token: '+ localStorage['access_token'] + " " +response.status);
+                if (response.status != 200) {
+                    console.log(response.responseText);
+                }
+
+                else {
+                    localStorage.clear();
+                    controller.showLoginElements();
+                }
             }
-    },
+            });*/
 
-    onLoginSuccess: function(email) {
-
-         Ext.Viewport.setActiveItem('profilePanel');
-        //var profile = Ext.Create({})
-    },
-
-    launch: function() {
-        Ext.Viewport.add(Ext.create('PixonicTeam.view.Profile'));
-        Ext.Viewport.setActiveItem('loginpanel');
     }
 
 });

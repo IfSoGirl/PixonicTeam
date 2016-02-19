@@ -6,7 +6,8 @@
     },
     "codeClass": null,
     "userConfig": {
-        "designer|userAlias": "loginpanel",
+        "designer|initialView": true,
+        "designer|userAlias": "loginPanel",
         "designer|userClassName": "LoginPanel",
         "id": "loginPanel"
     },
@@ -22,6 +23,8 @@
             "codeClass": null,
             "userConfig": {
                 "container|align": "center",
+                "id": "loginContainer",
+                "itemId": "loginController",
                 "layout": "vbox"
             },
             "name": "MyContainer",
@@ -35,10 +38,11 @@
                     },
                     "codeClass": null,
                     "userConfig": {
-                        "html": "Добро пожаловать в PixonicTeam! Войдите, используя аккаунт @pixonic.ru",
+                        "html": "Добро пожаловать в PixonicTeam! ",
                         "id": "helloLabel",
                         "padding": "50 0 50 0",
-                        "style": "text-align: center"
+                        "style": "text-align: center",
+                        "width": 300
                     },
                     "name": "MyLabel",
                     "designerId": "cdbac9f0-5bf6-42f3-a486-e5d371dcec45"
@@ -67,17 +71,25 @@
                     },
                     "codeClass": null,
                     "userConfig": {
-                        "action": "confirm",
+                        "action": "login",
                         "baseCls": "google-button-active",
                         "height": 46,
+                        "hidden": true,
                         "id": "loginBtn",
                         "pressedCls": "google-button-pressed",
+                        "showAnimation": [
+                            "'fadeIn'",
+                            ""
+                        ],
                         "style": null,
                         "text": null,
                         "width": 191,
                         "zIndex": null
                     },
                     "name": "MyButton",
+                    "configAlternates": {
+                        "showAnimation": "object"
+                    },
                     "designerId": "3cfef5e8-87ab-4bc5-abd8-dd8f26026ac7",
                     "customConfigs": [
                         {

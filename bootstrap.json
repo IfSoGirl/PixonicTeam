@@ -4,4 +4,4 @@
  * combination of content from app.json, and all required package's package.json
  * files.  Customizations should be placed in app.json.
  */
-{"id":"b39a096f-8560-4ac6-9a69-a91a96c5aa80","js":[{"bootstrap":true,"isSdk":true,"path":"touch/sencha-touch.js"},{"bootstrap":true,"path":"bootstrap.js"},{"path":"app/utils/Login.js"},{"update":"delta","path":"app.js"}],"css":[{"path":"resources/css/main.css"},{"update":"delta","theme":"Default","platform":["phone","tablet","desktop"],"path":"resources/css/sencha-touch-6b5583b1-c53c-4b01-88be-de2fa3417650.css"}]}
+{"id":"b39a096f-8560-4ac6-9a69-a91a96c5aa80","js":[{"remote":true,"path":"cordova.js"},{"bootstrap":true,"isSdk":true,"path":"touch/sencha-touch.js"},{"bootstrap":true,"path":"bootstrap.js"},{"path":"app/utils/Login.js"},{"update":"delta","path":"app.js"}],"css":[{"path":"resources/css/main.css"},{"update":"delta","theme":"Default","platform":["phone","tablet","desktop"],"path":"resources/css/sencha-touch-6b5583b1-c53c-4b01-88be-de2fa3417650.css"}]}

@@ -6,10 +6,12 @@
     },
     "codeClass": null,
     "userConfig": {
+        "container|align": "center",
         "designer|userAlias": "profilePanel",
         "designer|userClassName": "Profile",
         "hidden": false,
         "id": "profilePanel",
+        "layout": "vbox",
         "showAnimation": null
     },
     "name": "MyPanel",
@@ -19,6 +21,22 @@
     "designerId": "c20fba9c-259a-464a-aa51-1502eeaf1da7",
     "cn": [
         {
+            "type": "Ext.Toolbar",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "docked": "top",
+                "html": "",
+                "id": "toolbar",
+                "title": "Профиль"
+            },
+            "name": "MyToolbar",
+            "designerId": "7c5250f3-d414-48ac-bb9a-3a35831ac0b3"
+        },
+        {
             "type": "Ext.Img",
             "reference": {
                 "name": "items",
@@ -26,8 +44,9 @@
             },
             "codeClass": null,
             "userConfig": {
-                "height": 201,
-                "src": "https://upload.wikimedia.org/wikipedia/en/0/05/Hello_kitty_character_portrait.png"
+                "height": 220,
+                "src": "https://upload.wikimedia.org/wikipedia/en/0/05/Hello_kitty_character_portrait.png",
+                "width": 312
             },
             "name": "MyImg",
             "designerId": "8369d28f-a6be-4c5a-bc9b-ffe5717feb28"
@@ -46,20 +65,42 @@
             "designerId": "f346b3ef-f823-4ca2-94ee-7c835387aaf2"
         },
         {
-            "type": "Ext.Toolbar",
+            "type": "Ext.Spacer",
             "reference": {
                 "name": "items",
                 "type": "array"
             },
             "codeClass": null,
             "userConfig": {
-                "docked": "top",
-                "html": "",
-                "id": "toolbar",
-                "title": "Профиль"
+                "height": 20,
+                "width": 20
             },
-            "name": "MyToolbar",
-            "designerId": "7c5250f3-d414-48ac-bb9a-3a35831ac0b3"
+            "name": "MySpacer",
+            "designerId": "54a757fe-7ad6-4880-8256-6c93e0a5e0b6"
+        },
+        {
+            "type": "Ext.Button",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "action": "logout",
+                "height": 40,
+                "padding": "",
+                "text": "LogOut",
+                "width": 150
+            },
+            "name": "MyButton1",
+            "designerId": "9afadd4c-dde9-477f-8afe-14c2af1cf1f9",
+            "customConfigs": [
+                {
+                    "group": "(Custom Properties)",
+                    "name": "action",
+                    "type": "string"
+                }
+            ]
         }
     ]
 }

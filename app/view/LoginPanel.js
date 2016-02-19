@@ -15,7 +15,7 @@
 
 Ext.define('PixonicTeam.view.LoginPanel', {
     extend: 'Ext.Panel',
-    alias: 'widget.loginpanel',
+    alias: 'widget.loginPanel',
 
     requires: [
         'Ext.Container',
@@ -28,6 +28,8 @@ Ext.define('PixonicTeam.view.LoginPanel', {
         items: [
             {
                 xtype: 'container',
+                id: 'loginContainer',
+                itemId: 'loginController',
                 layout: {
                     type: 'vbox',
                     align: 'center'
@@ -35,10 +37,11 @@ Ext.define('PixonicTeam.view.LoginPanel', {
                 items: [
                     {
                         xtype: 'label',
-                        html: 'Добро пожаловать в PixonicTeam! Войдите, используя аккаунт @pixonic.ru',
+                        html: 'Добро пожаловать в PixonicTeam! ',
                         id: 'helloLabel',
                         padding: '50 0 50 0',
-                        style: 'text-align: center'
+                        style: 'text-align: center',
+                        width: 300
                     },
                     {
                         xtype: 'label',
@@ -47,10 +50,12 @@ Ext.define('PixonicTeam.view.LoginPanel', {
                     },
                     {
                         xtype: 'button',
-                        action: 'confirm',
+                        action: 'login',
                         baseCls: 'google-button-active',
                         height: 46,
+                        hidden: true,
                         id: 'loginBtn',
+                        showAnimation: 'fadeIn',
                         width: 191,
                         pressedCls: 'google-button-pressed'
                     }

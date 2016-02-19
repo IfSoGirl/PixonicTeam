@@ -10,7 +10,8 @@
         "designer|userClassName": "LoginController",
         "requires": [
             "Ext.Ajax",
-            "PixonicTeam.view.Profile"
+            "PixonicTeam.view.Profile",
+            "PixonicTeam.store.CredentialsStore"
         ]
     },
     "name": "MyController",
@@ -24,235 +25,11 @@
             },
             "codeClass": null,
             "userConfig": {
-                "ref": "loginBtn",
-                "selector": "#loginBtn"
-            },
-            "name": "loginBtn",
-            "designerId": "8f5d01bd-d454-4c02-b65a-666c60f32dfc"
-        },
-        {
-            "type": "controlleraction",
-            "reference": {
-                "name": "listeners",
-                "type": "array"
-            },
-            "codeClass": null,
-            "userConfig": {
-                "designer|controlQuery": "[action=confirm]",
-                "designer|targetType": "Ext.Button",
-                "fn": "onButtonTap",
-                "implHandler": [
-                    "    var params = 'client_id=' + encodeURIComponent(clientId);",
-                    "    params += '&redirect_uri='+encodeURIComponent(redirectUri);",
-                    "    params += '&response_type=code';",
-                    "    params += '&access_type=offline';",
-                    "    params += '&scope=' + encodeURIComponent(scopes);",
-                    "    var authUrl = 'https://accounts.google.com/o/oauth2/v2/auth?' + params;",
-                    "    var win = window.open(authUrl, '_blank', 'location=no,toolbar=no,width=800, height=800');",
-                    "    gwin = win;",
-                    "    var context = this, url;",
-                    "    var controller = this;",
-                    "",
-                    "",
-                    "    if ((Ext.os.is.Android) || (Ext.os.is.iOS)) {",
-                    "        win.addEventListener('loadstart', function (data) {",
-                    "            var pos =  data.url.indexOf(redirectUri);",
-                    "            if (pos === 0) {",
-                    "                win.close();",
-                    "                url = data.url;",
-                    "                controller.getTokenFromUrl(url);",
-                    "            }",
-                    "        });",
-                    "    }",
-                    "    else {",
-                    "        var repeat = setInterval(function () {",
-                    "            var pos = -1;",
-                    "            if(!win || !win.document){",
-                    "                return;",
-                    "            }",
-                    "            if (win)",
-                    "               pos =  win.document.URL.indexOf(redirectUri);",
-                    "",
-                    "            if (pos === 0) {",
-                    "                url = win.document.URL;",
-                    "                win.close();",
-                    "                clearInterval(repeat);",
-                    "                controller.getTokenFromUrl(url);",
-                    "            }",
-                    "        }, 100);",
-                    "    }",
-                    ""
-                ],
-                "name": "tap"
-            },
-            "name": "onButtonTap",
-            "designerId": "a65220c2-bf42-477e-8476-7376c2c124d4"
-        },
-        {
-            "type": "controllerref",
-            "reference": {
-                "name": "items",
-                "type": "array"
-            },
-            "codeClass": null,
-            "userConfig": {
                 "ref": "loginPanel",
                 "selector": "#loginPanel"
             },
             "name": "loginPanel",
             "designerId": "543354b3-f72b-4e2b-909b-c03eaab579c0"
-        },
-        {
-            "type": "basicfunction",
-            "reference": {
-                "name": "items",
-                "type": "array"
-            },
-            "codeClass": null,
-            "userConfig": {
-                "designer|params": [
-                    "accessCode"
-                ],
-                "fn": "getToken",
-                "implHandler": [
-                    "var controller = this;",
-                    "Ext.Ajax.request({",
-                    "    url: 'https://www.googleapis.com/oauth2/v4/token',",
-                    "    headers: {",
-                    "        \"Content-Type\": \"application/x-www-form-urlencoded\"",
-                    "    },",
-                    "    method: 'POST',",
-                    "    params: {",
-                    "        code: accessCode,",
-                    "        client_id: clientId,",
-                    "        client_secret: clientSecret,",
-                    "        redirect_uri: redirectUri,",
-                    "        grant_type: 'authorization_code'",
-                    "    },",
-                    "",
-                    "    callback: function(options, success, response) {",
-                    "        console.log('Get token response '+response.status);",
-                    "        if (response.status != 200) {",
-                    "            console.log(response.responseText);",
-                    "        }",
-                    "        ",
-                    "        if (response.responseText) {",
-                    "            var json = Ext.util.JSON.decode(response.responseText);",
-                    "            accessToken = json['access_token'];",
-                    "            controller.getUserInfo(accessToken);",
-                    "        }",
-                    "    }",
-                    "});"
-                ]
-            },
-            "name": "getToken",
-            "designerId": "fdb9da38-a019-4d5c-aa31-27c03dc07bb2"
-        },
-        {
-            "type": "basicfunction",
-            "reference": {
-                "name": "items",
-                "type": "array"
-            },
-            "codeClass": null,
-            "userConfig": {
-                "designer|params": [
-                    "accessToken"
-                ],
-                "fn": "getUserInfo",
-                "implHandler": [
-                    "var controller = this;",
-                    "Ext.Ajax.request({",
-                    "    url: 'https://www.googleapis.com/oauth2/v3/userinfo',",
-                    "    method: 'GET',",
-                    "    headers: {",
-                    "        \"Content-Type\": \"application/json\"",
-                    "    },",
-                    "    params: {",
-                    "        access_token : accessToken",
-                    "    },",
-                    "",
-                    "    callback: function(options, success, response) {",
-                    "        var json = Ext.util.JSON.decode(response.responseText);",
-                    "        controller.onLoginSuccess(json['email']);",
-                    "    }",
-                    "});"
-                ]
-            },
-            "name": "getUserInfo",
-            "designerId": "e3e76b6c-db00-401e-b5bc-aeaa629d48b7"
-        },
-        {
-            "type": "controllerref",
-            "reference": {
-                "name": "items",
-                "type": "array"
-            },
-            "codeClass": null,
-            "userConfig": {
-                "ref": "successAuth",
-                "selector": "#successAuthLabel"
-            },
-            "name": "successAuth",
-            "designerId": "e5c1e553-6120-4092-a761-3b1de85226e6"
-        },
-        {
-            "type": "controllerref",
-            "reference": {
-                "name": "items",
-                "type": "array"
-            },
-            "codeClass": null,
-            "userConfig": {
-                "ref": "errorLabel",
-                "selector": "#errorLabel"
-            },
-            "name": "errorLabel",
-            "designerId": "e38b5820-e6c7-4790-83ee-70f7f851f1bf"
-        },
-        {
-            "type": "basicfunction",
-            "reference": {
-                "name": "items",
-                "type": "array"
-            },
-            "codeClass": null,
-            "userConfig": {
-                "designer|params": [
-                    "url"
-                ],
-                "fn": "getTokenFromUrl",
-                "implHandler": [
-                    "    var access_code = /\\?code=(.+)$/.exec(url)[1];",
-                    "    var error = /\\?error=(.+)$/.exec(url);",
-                    "    if (access_code) {",
-                    "        this.getToken(access_code);",
-                    "    }"
-                ]
-            },
-            "name": "getTokenFromUrl",
-            "designerId": "63b747e1-f4b3-45b5-b9da-74c7ff3022d6"
-        },
-        {
-            "type": "basicfunction",
-            "reference": {
-                "name": "items",
-                "type": "array"
-            },
-            "codeClass": null,
-            "userConfig": {
-                "designer|params": [
-                    "email"
-                ],
-                "fn": "onLoginSuccess",
-                "implHandler": [
-                    "",
-                    " Ext.Viewport.setActiveItem('profilePanel');",
-                    "//var profile = Ext.Create({})"
-                ]
-            },
-            "name": "onLoginSuccess",
-            "designerId": "e2f94bcc-5c8e-4c82-82de-efc32f0c891f"
         },
         {
             "type": "controllerref",
@@ -278,12 +55,416 @@
             "userConfig": {
                 "fn": "launch",
                 "implHandler": [
-                    "Ext.Viewport.add(Ext.create('PixonicTeam.view.Profile'));",
-                    "Ext.Viewport.setActiveItem('loginpanel');"
+                    "    Ext.Viewport.add(Ext.create('PixonicTeam.view.Profile'));",
+                    "    var controller = this;",
+                    "    console.log('run controller');",
+                    "    Ext.Viewport.setMasked({xtype:'loadmask',message:'Загружаемся...'});",
+                    "    setTimeout(function() {",
+                    "        var token = localStorage['access_token'];",
+                    "        console.log('Check for exisisting token');",
+                    "        if (token) {",
+                    "            console.log('Token exist, going to validate' + token);",
+                    "            controller.validateToken(token);",
+                    "        }",
+                    "        else {",
+                    "            Ext.Viewport.setMasked(false);",
+                    "            Ext.getCmp('errorLabel').setHtml('You dont have a token. Please login to Google!');",
+                    "            controller.showLoginElements();",
+                    "        }",
+                    "",
+                    "    }, 3000);",
+                    "",
+                    ""
                 ]
             },
             "name": "launch",
             "designerId": "eeaa9db2-5b6d-4000-b80f-7bd6d4a3bbf9"
+        },
+        {
+            "type": "basicfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|params": [
+                    "token"
+                ],
+                "fn": "validateToken",
+                "implHandler": [
+                    "    var controller = this;",
+                    "        Ext.Ajax.request({",
+                    "        url: 'https://www.googleapis.com/oauth2/v3/tokeninfo',",
+                    "        method: 'GET',",
+                    "        headers: {",
+                    "            \"Content-Type\": \"application/x-www-form-urlencoded\"",
+                    "        },",
+                    "        params: {",
+                    "            access_token : token",
+                    "        },",
+                    "        disableCaching : false,",
+                    "        callback: function(options, success, response) {",
+                    "            console.log('Validating token ' + token);",
+                    "            var json = Ext.util.JSON.decode(response.responseText);",
+                    "            console.log(response.status);",
+                    "            console.log(json);",
+                    "            if (response.status == 200) {",
+                    "                controller.onLoginSuccess();",
+                    "                Ext.Viewport.setMasked(false);",
+                    "            }",
+                    "            else  {",
+                    "                console.log('Validating token failed, going to refresh  '+ token + ' '+ response.responsetext);",
+                    "                controller.refreshToken();",
+                    "               }",
+                    "        }",
+                    "    });"
+                ]
+            },
+            "name": "validateToken",
+            "designerId": "0e520279-84fe-43c2-8626-2de3ab0d0c66"
+        },
+        {
+            "type": "basicfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "fn": "refreshToken",
+                "implHandler": [
+                    "var refresh_token = localStorage['refresh_token'];",
+                    "var controller = this;",
+                    "Ext.Ajax.request({",
+                    "    url: 'https://www.googleapis.com/oauth2/v4/token',",
+                    "    method: 'POST',",
+                    "    headers: {",
+                    "        \"Content-Type\": \"application/x-www-form-urlencoded\"",
+                    "    },",
+                    "    disableCaching : false,",
+                    "    params: {",
+                    "        refresh_token : refresh_token,",
+                    "        client_id: clientId,",
+                    "        client_secret: clientSecret,",
+                    "        grant_type: 'refresh_token'",
+                    "",
+                    "    },",
+                    "",
+                    "    callback: function(options, success, response) {",
+                    "        console.log('Refreshed token ' + refresh_token);",
+                    "        if (response.status == 200) {",
+                    "            var json = Ext.util.JSON.decode(response.responseText);",
+                    "            console.log('Successfully refreshed token, got new '+ json);",
+                    "            localStorage.setItem('access_token',json['access_token']);",
+                    "            Ext.Viewport.setMasked(false);",
+                    "            controller.onLoginSuccess();",
+                    "        }",
+                    "        else {",
+                    "            Ext.getCmp('errorLabel').setHtml('Validating Token Failed');",
+                    "            console.log(response.responseText);",
+                    "            Ext.Viewport.setMasked(false);",
+                    "            controller.showLoginElements();",
+                    "",
+                    "        }",
+                    "    }",
+                    "});"
+                ]
+            },
+            "name": "refreshToken",
+            "designerId": "643bc983-f403-455d-a013-1de336a8c5f0"
+        },
+        {
+            "type": "controlleraction",
+            "reference": {
+                "name": "listeners",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|controlQuery": "[action=login]",
+                "designer|targetType": "Ext.Button",
+                "fn": "onLoginButtonTap",
+                "implHandler": [
+                    "this.startLoginFlow();"
+                ],
+                "name": "tap"
+            },
+            "name": "onLoginButtonTap",
+            "designerId": "a65220c2-bf42-477e-8476-7376c2c124d4"
+        },
+        {
+            "type": "basicfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "fn": "startLoginFlow",
+                "implHandler": [
+                    "            console.log('Start login flow');",
+                    "            localStorage.clear();",
+                    "            var params = 'client_id=' + encodeURIComponent(clientId);",
+                    "            params += '&redirect_uri='+encodeURIComponent(redirectUri);",
+                    "            params += '&response_type=code';",
+                    "            params += '&access_type=offline';",
+                    "            params += '&scope=' + encodeURIComponent(scopes);",
+                    "            var authUrl = 'https://accounts.google.com/o/oauth2/v2/auth?' + params;",
+                    "            var win = window.open(authUrl, '_blank', 'location=no,toolbar=no,width=800, height=800');",
+                    "            gwin = win;",
+                    "            var context = this, url;",
+                    "            var controller = this;",
+                    "",
+                    "",
+                    "            if ((Ext.os.is.Android) || (Ext.os.is.iOS)) {",
+                    "                var callback = function(data) {",
+                    "                    var pos =  data.url.indexOf(redirectUri);",
+                    "                    if (pos === 0) {",
+                    "                        console.log(data.url);",
+                    "                        win.removeEventListener('loadstart', callback);",
+                    "                        win.close();",
+                    "                        url = data.url;",
+                    "                        console.log('Get access code from url device');",
+                    "                        controller.getAccessCodeFromUrl(url);",
+                    "                    }",
+                    "                };",
+                    "                ",
+                    "                win.addEventListener('loadstart', callback);",
+                    "            }",
+                    "            else {",
+                    "                var repeat = setInterval(function () {",
+                    "                    var pos = -1;",
+                    "                    if(!win || !win.document){",
+                    "                        return;",
+                    "                    }",
+                    "                    if (win)",
+                    "                       pos =  win.document.URL.indexOf(redirectUri);",
+                    "",
+                    "                    if (pos === 0) {",
+                    "                        url = win.document.URL;",
+                    "                        win.close();",
+                    "                        clearInterval(repeat);",
+                    "                        console.log('Get access code from url browser');",
+                    "                        controller.getAccessCodeFromUrl(url);",
+                    "                    }",
+                    "                }, 100);",
+                    "            }"
+                ]
+            },
+            "name": "startLoginFlow",
+            "designerId": "372c5e3e-3200-4ab3-b9f6-2f1608617818"
+        },
+        {
+            "type": "basicfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|params": [
+                    "url"
+                ],
+                "fn": "getAccessCodeFromUrl",
+                "implHandler": [
+                    "    var access_code = /\\?code=(.+)$/.exec(url)[1];",
+                    "    var error = /\\?error=(.+)$/.exec(url);",
+                    "    if (access_code) {",
+                    "        console.log('Got access code = ' + access_code);",
+                    "        this.getToken(access_code);",
+                    "    }"
+                ]
+            },
+            "name": "getAccessCodeFromUrl",
+            "designerId": "63b747e1-f4b3-45b5-b9da-74c7ff3022d6"
+        },
+        {
+            "type": "basicfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|params": [
+                    "accessCode"
+                ],
+                "fn": "getToken",
+                "implHandler": [
+                    "var controller = this;",
+                    "Ext.Ajax.request({",
+                    "    url: 'https://www.googleapis.com/oauth2/v4/token',",
+                    "    headers: {",
+                    "        \"Content-Type\": \"application/x-www-form-urlencoded\"",
+                    "    },",
+                    "    method: 'POST',",
+                    "     disableCaching : false,",
+                    "    params: {",
+                    "        code: accessCode,",
+                    "        client_id: clientId,",
+                    "        client_secret: clientSecret,",
+                    "        redirect_uri: redirectUri,",
+                    "        grant_type: 'authorization_code'",
+                    "    },",
+                    "",
+                    "    callback: function(options, success, response) {",
+                    "        console.log('Get token code, response '+accessCode + \" \" +response.status);",
+                    "        if (response.status != 200) {",
+                    "            console.log(response.responseText);",
+                    "        }",
+                    "",
+                    "        if (response.status == 200 && response.responseText) {",
+                    "            var json = Ext.util.JSON.decode(response.responseText);",
+                    "            var accessToken = json['access_token'];",
+                    "            var refreshToken = json['refresh_token'];",
+                    "            console.log(\"Got token \" + accessToken );",
+                    "            localStorage.setItem('access_token',accessToken);",
+                    "            localStorage.setItem('refresh_token',refreshToken);",
+                    "            controller.getUserInfo(accessToken, refreshToken);",
+                    "        }",
+                    "    }",
+                    "});"
+                ]
+            },
+            "name": "getToken",
+            "designerId": "fdb9da38-a019-4d5c-aa31-27c03dc07bb2"
+        },
+        {
+            "type": "basicfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|params": [
+                    "accessToken",
+                    "refreshToken"
+                ],
+                "fn": "getUserInfo",
+                "implHandler": [
+                    "var controller = this;",
+                    "Ext.Ajax.request({",
+                    "    url: 'https://www.googleapis.com/oauth2/v3/userinfo',",
+                    "    method: 'GET',",
+                    "    headers: {",
+                    "        \"Content-Type\": \"application/json\"",
+                    "    },",
+                    "    params: {",
+                    "        access_token : accessToken",
+                    "    },",
+                    "     disableCaching : false,",
+                    "    callback: function(options, success, response) {",
+                    "        var json = Ext.util.JSON.decode(response.responseText); ",
+                    "        localStorage.setItem('email', json['email']);",
+                    "        controller.onLoginSuccess();",
+                    "    }",
+                    "});"
+                ]
+            },
+            "name": "getUserInfo",
+            "designerId": "e3e76b6c-db00-401e-b5bc-aeaa629d48b7"
+        },
+        {
+            "type": "basicfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "fn": "onLoginSuccess",
+                "implHandler": [
+                    "Ext.Viewport.setActiveItem('profilePanel');"
+                ]
+            },
+            "name": "onLoginSuccess",
+            "designerId": "e2f94bcc-5c8e-4c82-82de-efc32f0c891f"
+        },
+        {
+            "type": "basicfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "fn": "showLoginElements",
+                "implHandler": [
+                    " Ext.Viewport.setActiveItem('loginPanel');    ",
+                    "    var btn = Ext.getCmp('loginBtn');",
+                    "    btn.show();",
+                    "    var helloLabel = Ext.getCmp('helloLabel');",
+                    "    helloLabel.setHtml('Добро пожаловать в PixonicTeam! Войдите, используя аккаунт @pixonic.ru');",
+                    ""
+                ]
+            },
+            "name": "showLoginElements",
+            "designerId": "b05725cd-c12e-41c4-989a-ad7ccdd81897"
+        },
+        {
+            "type": "controlleraction",
+            "reference": {
+                "name": "listeners",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|controlQuery": "[action=logout]",
+                "designer|targetType": "Ext.Button",
+                "fn": "onLogOutButtonTap",
+                "implHandler": [
+                    "this.revokeToken();"
+                ],
+                "name": "tap"
+            },
+            "name": "onLogOutButtonTap",
+            "designerId": "eefccbbd-de44-43cf-ae00-8553fbc2fabc"
+        },
+        {
+            "type": "basicfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "fn": "revokeToken",
+                "implHandler": [
+                    "    var controller = this;",
+                    "    localStorage.clear();",
+                    "    controller.showLoginElements();",
+                    "    /*Ext.Ajax.request({",
+                    "    url: 'https://accounts.google.com/o/oauth2/revoke',",
+                    "    headers: {",
+                    "        \"Content-Type\": \"application/x-www-form-urlencoded\"",
+                    "    },",
+                    "    method: 'POST',",
+                    "",
+                    "    disableCaching : false,",
+                    "",
+                    "    params: {",
+                    "        token: localStorage['access_token']",
+                    "    },",
+                    "",
+                    "    callback: function(options, success, response) {",
+                    "        console.log('Revoking token: '+ localStorage['access_token'] + \" \" +response.status);",
+                    "        if (response.status != 200) {",
+                    "            console.log(response.responseText);",
+                    "        }",
+                    "",
+                    "        else {",
+                    "            localStorage.clear();",
+                    "            controller.showLoginElements();",
+                    "        }",
+                    "    }",
+                    "    });*/",
+                    ""
+                ]
+            },
+            "name": "revokeToken",
+            "designerId": "90bbb99c-dca2-40c0-9782-071d1ca9b598"
         }
     ]
 }
