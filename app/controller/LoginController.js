@@ -19,8 +19,7 @@ Ext.define('PixonicTeam.controller.LoginController', {
 
     requires: [
         'Ext.Ajax',
-        'PixonicTeam.view.Profile',
-        'PixonicTeam.store.CredentialsStore'
+        'PixonicTeam.view.ProfilePanel'
     ],
 
     config: {
@@ -48,24 +47,18 @@ Ext.define('PixonicTeam.controller.LoginController', {
     },
 
     launch: function() {
-            Ext.Viewport.add(Ext.create('PixonicTeam.view.Profile'));
             var controller = this;
-            console.log('run controller');
             Ext.Viewport.setMasked({xtype:'loadmask',message:'Загружаемся...'});
-            setTimeout(function() {
-                var token = localStorage['access_token'];
-                console.log('Check for exisisting token');
-                if (token) {
-                    console.log('Token exist, going to validate' + token);
-                    controller.validateToken(token);
-                }
-                else {
-                    Ext.Viewport.setMasked(false);
-                    Ext.getCmp('errorLabel').setHtml('You dont have a token. Please login to Google!');
-                    controller.showLoginElements();
-                }
-
-            }, 3000);
+            var token = localStorage['access_token'];
+            console.log('Check for exisisting token');
+            if (token) {
+                controller.validateToken(token);
+            }
+            else {
+                Ext.Viewport.setMasked(false);
+                Ext.getCmp('errorLabel').setHtml('You dont have a token. Please login to Google!');
+                controller.showLoginElements();
+            }
 
 
     },
@@ -83,16 +76,12 @@ Ext.define('PixonicTeam.controller.LoginController', {
                 },
                 disableCaching : false,
                 callback: function(options, success, response) {
-                    console.log('Validating token ' + token);
                     var json = Ext.util.JSON.decode(response.responseText);
-                    console.log(response.status);
-                    console.log(json);
                     if (response.status == 200) {
                         Ext.Viewport.setMasked(false);
                         controller.onLoginSuccess();
                     }
                     else  {
-                        console.log('Validating token failed, going to refresh  '+ token + ' '+ response.responsetext);
                         controller.refreshToken();
                        }
                 }
@@ -121,14 +110,13 @@ Ext.define('PixonicTeam.controller.LoginController', {
                 console.log('Refreshed token ' + refresh_token);
                 if (response.status == 200) {
                     var json = Ext.util.JSON.decode(response.responseText);
-                    console.log('Successfully refreshed token, got new '+ json);
+                    console.log('Successfully refreshed token, got new');
                     localStorage.setItem('access_token',json['access_token']);
                     Ext.Viewport.setMasked(false);
                     controller.onLoginSuccess();
                 }
                 else {
                     Ext.getCmp('errorLabel').setHtml('Validating Token Failed');
-                    console.log(response.responseText);
                     Ext.Viewport.setMasked(false);
                     controller.showLoginElements();
 
@@ -138,7 +126,6 @@ Ext.define('PixonicTeam.controller.LoginController', {
     },
 
     startLoginFlow: function() {
-                    console.log('Start login flow');
                     localStorage.clear();
                     var params = 'client_id=' + encodeURIComponent(clientId);
                     params += '&redirect_uri='+encodeURIComponent(redirectUri);
@@ -155,11 +142,9 @@ Ext.define('PixonicTeam.controller.LoginController', {
                         var callback = function(data) {
                             var pos =  data.url.indexOf(redirectUri);
                             if (pos === 0) {
-                                console.log(data.url);
                                 win.removeEventListener('loadstart', callback);
                                 win.close();
                                 url = data.url;
-                                console.log('Get access code from url device');
                                 controller.getAccessCodeFromUrl(url);
                             }
                         };
@@ -179,7 +164,6 @@ Ext.define('PixonicTeam.controller.LoginController', {
                                 url = win.document.URL;
                                 win.close();
                                 clearInterval(repeat);
-                                console.log('Get access code from url browser');
                                 controller.getAccessCodeFromUrl(url);
                             }
                         }, 100);
@@ -190,7 +174,6 @@ Ext.define('PixonicTeam.controller.LoginController', {
             var access_code = /\?code=(.+)$/.exec(url)[1];
             var error = /\?error=(.+)$/.exec(url);
             if (access_code) {
-                console.log('Got access code = ' + access_code);
                 this.getToken(access_code);
             }
     },
@@ -213,7 +196,6 @@ Ext.define('PixonicTeam.controller.LoginController', {
             },
 
             callback: function(options, success, response) {
-                console.log('Get token code, response '+accessCode + " " +response.status);
                 if (response.status != 200) {
                     console.log(response.responseText);
                 }
@@ -222,7 +204,6 @@ Ext.define('PixonicTeam.controller.LoginController', {
                     var json = Ext.util.JSON.decode(response.responseText);
                     var accessToken = json['access_token'];
                     var refreshToken = json['refresh_token'];
-                    console.log("Got token " + accessToken );
                     localStorage.setItem('access_token',accessToken);
                     localStorage.setItem('refresh_token',refreshToken);
                     controller.getUserInfo(accessToken, refreshToken);
@@ -252,12 +233,17 @@ Ext.define('PixonicTeam.controller.LoginController', {
     },
 
     onLoginSuccess: function() {
+            //var profileTab = Ext.getCmp('profilePanel');
+
             Ext.Viewport.setActiveItem('profilePanel');
+            var bar = Ext.getCmp('mainToolbar');
+            bar.show();
+            bar.setTitle('Профиль');
+            var calendarFrame  = Ext.getCmp('calendarFrame');
             var email = localStorage['email'];
             var local = email.split('@')[0];
             var calendarURL = personalCalendarHTML.replace("SETHEREUSERNAME",local);
-            var win = window.open(calendarURL, '_blank', 'location=no,toolbar=no,width=800, height=800');
-            gwin = win;
+            calendarFrame.setHtml(calendarURL);
     },
 
     showLoginElements: function() {

@@ -1,0 +1,199 @@
+{
+    "type": "Ext.app.Controller",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "designer|userClassName": "MainController",
+        "requires": [
+            "PixonicTeam.view.SlidingMenu",
+            "PixonicTeam.view.ProfilePanel",
+            "PixonicTeam.view.CalendarPanel"
+        ]
+    },
+    "name": "MyController",
+    "designerId": "c6b4a3d3-8f82-47c1-832e-7246d1f602d7",
+    "cn": [
+        {
+            "type": "controlleraction",
+            "reference": {
+                "name": "listeners",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|controlQuery": "[action=menuButtonPressed]",
+                "designer|targetType": "Ext.Button",
+                "fn": "onMenuButtonTap",
+                "implHandler": [
+                    "var menus = Ext.Viewport.getMenus();",
+                    "if (Ext.Viewport.getMenus().left.isHidden()){",
+                    "    Ext.Viewport.showMenu('left');",
+                    "}",
+                    "else {",
+                    "    Ext.Viewport.hideMenu('left');",
+                    "}",
+                    ""
+                ],
+                "name": "tap"
+            },
+            "name": "onMenuButtonTap",
+            "designerId": "d5e7b2bd-6403-49b4-aed9-27822a8859e9"
+        },
+        {
+            "type": "fixedfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "fn": "launch",
+                "implHandler": [
+                    "    console.log('creating menu');",
+                    "    mainController = this;",
+                    "    var toolbar = Ext.create('PixonicTeam.view.MainToolbar');",
+                    "    toolbar.hide();",
+                    "    Ext.Viewport.add(toolbar);",
+                    "",
+                    "    Ext.Viewport.setMenu(Ext.create('PixonicTeam.view.SlidingMenu'), {",
+                    "        side: 'left',",
+                    "        reveal: false",
+                    "    });",
+                    "",
+                    "    Ext.Viewport.add(Ext.create('PixonicTeam.view.ProfilePanel'));",
+                    "    Ext.Viewport.add(Ext.create('PixonicTeam.view.CalendarPanel'));",
+                    "",
+                    "    Ext.Viewport.add(Ext.create('PixonicTeam.view.EmployeesNav'));",
+                    ""
+                ]
+            },
+            "name": "launch",
+            "designerId": "6d5eb034-5b6d-4540-9848-30288c927899"
+        },
+        {
+            "type": "controlleraction",
+            "reference": {
+                "name": "listeners",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|controlQuery": "[action=menuItemPressed]",
+                "designer|targetType": "Ext.Button",
+                "fn": "onMenuItemPressed",
+                "implHandler": [
+                    "    this.showPanel(button.id);"
+                ],
+                "name": "tap"
+            },
+            "name": "onMenuItemPressed",
+            "designerId": "ea94f3cc-6f4a-4611-99d0-bf8f9953ba98"
+        },
+        {
+            "type": "basicfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|params": [
+                    "panelName"
+                ],
+                "fn": "showPanel",
+                "implHandler": [
+                    "    console.log('menu item pressed ' + panelName);",
+                    "    var tab, title;",
+                    "    var bar = Ext.getCmp('mainToolbar');",
+                    "    switch(panelName){",
+                    "        case 'profileMenuItem': {",
+                    "            title = 'Профиль';",
+                    "            tab = Ext.getCmp('profilePanel');",
+                    "            bar.show();",
+                    "            break;",
+                    "        }",
+                    "        case 'calendarMenuItem': {",
+                    "            title = 'Календарь';",
+                    "            tab = Ext.getCmp('calendarPanel');",
+                    "            bar.show();",
+                    "            break;",
+                    "        }",
+                    "        case 'employeesMenuItem': {",
+                    "            title = 'Сотрудники';",
+                    "            tab = Ext.getCmp('employeeNav');",
+                    "            bar.hide();",
+                    "            break;",
+                    "        }",
+                    "",
+                    "        case 'colleaguePanel': {",
+                    "            title = 'Сотрудники';",
+                    "            bar.hide();",
+                    "            tab = Ext.getCmp('colleaguePanel');",
+                    "            break;",
+                    "        }",
+                    "        default:",
+                    "            break;",
+                    "    }",
+                    "",
+                    "    bar.setTitle(title);",
+                    "    Ext.Viewport.hideMenu('left');",
+                    "    Ext.Viewport.setActiveItem(tab);"
+                ]
+            },
+            "name": "showPanel",
+            "designerId": "f821057b-c762-4439-87b0-f9a386e07901"
+        },
+        {
+            "type": "controlleraction",
+            "reference": {
+                "name": "listeners",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|controlQuery": "listitem",
+                "designer|params": [
+                    "listitem"
+                ],
+                "designer|targetType": "Ext.dataview.component.ListItem",
+                "fn": "OnListItemTap",
+                "implHandler": [
+                    ""
+                ],
+                "name": "onListItemTap"
+            },
+            "name": "OnListItemTap",
+            "designerId": "248b8076-ee8a-4b4c-b840-3900306eaab9"
+        },
+        {
+            "type": "controlleraction",
+            "reference": {
+                "name": "listeners",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|controlQuery": "[action /=/(?:menu)/]",
+                "designer|targetType": "Ext.Button",
+                "fn": "onButtonTap",
+                "implHandler": [
+                    "    console.log('Its not menu opening button');",
+                    "    Ext.Viewport.hideMenu('left');"
+                ],
+                "name": "tap"
+            },
+            "name": "onButtonTap",
+            "designerId": "7815d5de-2576-4926-a113-363bb40c12f0",
+            "customConfigs": [
+                {
+                    "group": "(Custom Properties)",
+                    "name": "ac",
+                    "type": "string"
+                }
+            ]
+        }
+    ]
+}

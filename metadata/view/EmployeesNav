@@ -1,0 +1,233 @@
+{
+    "type": "Ext.navigation.View",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "designer|userClassName": "EmployeesNav",
+        "id": "employeeNav"
+    },
+    "name": "MyNavigationView",
+    "designerId": "84b0444e-349a-4fdb-a99a-1a69587f590e",
+    "cn": [
+        {
+            "type": "Ext.navigation.Bar",
+            "reference": {
+                "name": "navigationBar",
+                "type": "object"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "docked": "top",
+                "id": "navBar",
+                "itemId": "navBar"
+            },
+            "name": "MyNavigationBar",
+            "designerId": "29a18810-dd94-46f6-85ce-5df022d09c87",
+            "cn": [
+                {
+                    "type": "Ext.Button",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "action": "menuButtonPressed",
+                        "id": "menuBtnNav",
+                        "itemId": "menuBtnNav",
+                        "text": "Меню"
+                    },
+                    "name": "MyButton5",
+                    "designerId": "1defdf70-d0f4-4364-b7bc-68256e8b30ea",
+                    "customConfigs": [
+                        {
+                            "group": "(Custom Properties)",
+                            "name": "action",
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "type": "basiceventbinding",
+                    "reference": {
+                        "name": "listeners",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "fn": "onMynavigationbarBack",
+                        "implHandler": [
+                            "    var menuBtn = Ext.getCmp('menuBtnNav');",
+                            "    menuBtn.show();"
+                        ],
+                        "name": "back"
+                    },
+                    "name": "onMynavigationbarBack",
+                    "designerId": "962f8d97-41e3-4b93-b27b-a9c0d0d40ee1"
+                }
+            ]
+        },
+        {
+            "type": "Ext.Container",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "id": "searchContainer",
+                "layout": "vbox",
+                "title": "Сотрудники"
+            },
+            "name": "MyContainer2",
+            "designerId": "2afb605e-01c8-4f5c-bc42-a10d010e87cc",
+            "cn": [
+                {
+                    "type": "Ext.field.Search",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|createAlias": null,
+                        "height": "40px",
+                        "id": "employeeSearch",
+                        "itemId": "employeeSearch",
+                        "label": null,
+                        "placeHolder": "Поиск"
+                    },
+                    "name": "MySearchField",
+                    "designerId": "fe0cb6fe-1148-4093-8245-e684cf4daa75",
+                    "cn": [
+                        {
+                            "type": "delegateeventbinding",
+                            "reference": {
+                                "name": "listeners",
+                                "type": "array"
+                            },
+                            "codeClass": null,
+                            "userConfig": {
+                                "designer|targetType": "Ext.field.Search",
+                                "fn": "onSearchfieldKeyup",
+                                "implHandler": [
+                                    "    var searchString = textfield.getValue();",
+                                    "    var store = Ext.getStore('EmployeeStore');",
+                                    "    store.clearFilter();",
+                                    "    if(searchString){",
+                                    "        var thisRegEx = new RegExp(searchString, \"i\");",
+                                    "        store.filterBy(function(record) {",
+                                    "            return (thisRegEx.test(record.get('lastname')));",
+                                    "        });",
+                                    "    }"
+                                ],
+                                "name": "keyup"
+                            },
+                            "name": "onSearchfieldKeyup",
+                            "designerId": "ea252029-32bf-49ac-820d-8b040b2e3fc7"
+                        },
+                        {
+                            "type": "basiceventbinding",
+                            "reference": {
+                                "name": "listeners",
+                                "type": "array"
+                            },
+                            "codeClass": null,
+                            "userConfig": {
+                                "fn": "onEmployeeSearchClearicontap",
+                                "implHandler": [
+                                    "        Ext.getStore('EmployeeStore').clearFilter();"
+                                ],
+                                "name": "clearicontap"
+                            },
+                            "name": "onEmployeeSearchClearicontap",
+                            "designerId": "0660737d-e164-4cc7-9ed8-9ceb3a51789a"
+                        }
+                    ]
+                },
+                {
+                    "type": "Ext.Label",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "height": "40px",
+                        "html": "По алфавиту"
+                    },
+                    "name": "MyLabel3",
+                    "designerId": "b6cfabb9-84ea-4a31-b238-c57b381512db"
+                },
+                {
+                    "type": "Ext.dataview.List",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "data": null,
+                        "docked": null,
+                        "grouped": true,
+                        "height": null,
+                        "id": "employeeList1",
+                        "itemId": "mylist1",
+                        "layout|flex": 1,
+                        "store": "EmployeeStore",
+                        "striped": true,
+                        "width": null
+                    },
+                    "name": "MyList1",
+                    "designerId": "475e92d9-f3fa-41e8-9910-4e8249b6854e",
+                    "cn": [
+                        {
+                            "type": "Ext.XTemplate",
+                            "reference": {
+                                "name": "itemTpl",
+                                "type": "object"
+                            },
+                            "codeClass": null,
+                            "userConfig": {
+                                "designer|displayName": "itemTpl",
+                                "implHandler": [
+                                    "<div>{lastname}</div>"
+                                ]
+                            },
+                            "name": "itemTpl",
+                            "designerId": "344abd9a-9a01-4db6-aeff-d7c2d30feaf5"
+                        },
+                        {
+                            "type": "basiceventbinding",
+                            "reference": {
+                                "name": "listeners",
+                                "type": "array"
+                            },
+                            "codeClass": null,
+                            "userConfig": {
+                                "fn": "onEmployeeListItemTap1",
+                                "implHandler": [
+                                    "    var menuBtn = Ext.getCmp('menuBtnNav');",
+                                    "    menuBtn.hide();",
+                                    "     setTimeout(function(){dataview.deselect(index);},500);",
+                                    "    var panel = Ext.create('PixonicTeam.view.ColleaguePanel', {",
+                                    "        title: 'Сотрудники'",
+                                    "    });",
+                                    "",
+                                    "    panel.setInfo(record);",
+                                    "    this.push(panel);"
+                                ],
+                                "name": "itemtap"
+                            },
+                            "name": "onEmployeeListItemTap1",
+                            "designerId": "a12b52e2-5ea6-431a-8a49-401697bd35bd"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -7,18 +7,23 @@
     "codeClass": null,
     "userConfig": {
         "controllers": [
-            "LoginController"
+            "LoginController",
+            "MainController"
         ],
         "models": [
-            "LoginCredentials"
+            "Employee"
         ],
         "name": "PixonicTeam",
         "stores": [
-            "CredentialsStore"
+            "EmployeeStore"
         ],
         "views": [
             "LoginPanel",
-            "Profile"
+            "CalendarPanel",
+            "ProfilePanel",
+            "MainToolbar",
+            "EmployeesNav",
+            "ColleaguePanel"
         ]
     },
     "name": "Application",
@@ -33,7 +38,8 @@
             "codeClass": null,
             "userConfig": {
                 "container|animation": "slide",
-                "container|animation.direction": "right"
+                "container|animation.direction": "right",
+                "container|animation.duration": 500
             },
             "name": "Viewport",
             "designerId": "8dfcbe04-64fa-40b0-b7ed-a70ca5caa97d"
@@ -58,7 +64,7 @@
             "userConfig": {
                 "fn": "launch",
                 "implHandler": [
-                    ""
+                    "Ext.Ajax.cors = true;"
                 ]
             },
             "name": "launch",

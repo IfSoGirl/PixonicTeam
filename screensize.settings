@@ -1,0 +1,11 @@
+{
+    "profiles": [
+        {
+            "name": "IPhone 5s",
+            "width": 640,
+            "height": 1136,
+            "builtIn": false,
+            "fw": "touch"
+        }
+    ]
+}

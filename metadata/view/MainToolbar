@@ -1,0 +1,40 @@
+{
+    "type": "Ext.Toolbar",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "designer|userAlias": "mainToolbar",
+        "designer|userClassName": "MainToolbar",
+        "docked": "top",
+        "id": "mainToolbar"
+    },
+    "name": "MyToolbar2",
+    "designerId": "5cbe9912-2834-4b1c-a1c3-5b9c3e17bc30",
+    "cn": [
+        {
+            "type": "Ext.Button",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "action": "menuButtonPressed",
+                "id": "menuBtn",
+                "text": "Меню"
+            },
+            "name": "MyButton2",
+            "designerId": "e4fcf71e-7d5f-4021-8123-76390b1b2c71",
+            "customConfigs": [
+                {
+                    "group": "(Custom Properties)",
+                    "name": "action",
+                    "type": "string"
+                }
+            ]
+        }
+    ]
+}

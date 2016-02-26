@@ -29,27 +29,33 @@ Ext.application({
         layout: {
             type: 'card',
             animation: 'slide',
-            'animation.direction': 'right'
+            'animation.direction': 'right',
+            'animation.duration': 500
         }
     },
 
     models: [
-        'LoginCredentials'
+        'Employee'
     ],
     stores: [
-        'CredentialsStore'
+        'EmployeeStore'
     ],
     views: [
         'LoginPanel',
-        'Profile'
+        'CalendarPanel',
+        'ProfilePanel',
+        'MainToolbar',
+        'EmployeesNav',
+        'ColleaguePanel'
     ],
     controllers: [
-        'LoginController'
+        'LoginController',
+        'MainController'
     ],
     name: 'PixonicTeam',
 
     launch: function() {
-
+        Ext.Ajax.cors = true;
         Ext.create('PixonicTeam.view.LoginPanel', {fullscreen: true});
     }
 

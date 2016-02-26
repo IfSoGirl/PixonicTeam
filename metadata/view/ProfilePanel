@@ -8,7 +8,7 @@
     "userConfig": {
         "container|align": "center",
         "designer|userAlias": "profilePanel",
-        "designer|userClassName": "Profile",
+        "designer|userClassName": "ProfilePanel",
         "hidden": false,
         "id": "profilePanel",
         "layout": "vbox",
@@ -18,37 +18,8 @@
     "configAlternates": {
         "showAnimation": "object"
     },
-    "designerId": "c20fba9c-259a-464a-aa51-1502eeaf1da7",
+    "designerId": "f9bd5738-6292-4119-bc34-f679e9160b41",
     "cn": [
-        {
-            "type": "Ext.Toolbar",
-            "reference": {
-                "name": "items",
-                "type": "array"
-            },
-            "codeClass": null,
-            "userConfig": {
-                "docked": "top",
-                "html": "",
-                "id": "toolbar",
-                "title": "Профиль"
-            },
-            "name": "MyToolbar",
-            "designerId": "7c5250f3-d414-48ac-bb9a-3a35831ac0b3"
-        },
-        {
-            "type": "Ext.Label",
-            "reference": {
-                "name": "items",
-                "type": "array"
-            },
-            "codeClass": null,
-            "userConfig": {
-                "id": "successAuthLabel"
-            },
-            "name": "MyLabel1",
-            "designerId": "f346b3ef-f823-4ca2-94ee-7c835387aaf2"
-        },
         {
             "type": "Ext.Spacer",
             "reference": {
@@ -74,7 +45,7 @@
                 "action": "logout",
                 "height": 40,
                 "padding": "",
-                "text": "LogOut",
+                "text": "Выйти",
                 "width": 150
             },
             "name": "MyButton1",
@@ -86,23 +57,6 @@
                     "type": "string"
                 }
             ]
-        },
-        {
-            "type": "Ext.Panel",
-            "reference": {
-                "name": "items",
-                "type": "array"
-            },
-            "codeClass": null,
-            "userConfig": {
-                "height": 500,
-                "html": "",
-                "id": "calendarPanel",
-                "scrollable": true,
-                "width": 500
-            },
-            "name": "MyPanel1",
-            "designerId": "e9420d7d-b880-4221-9555-d3d6b9bf5045"
         }
     ]
 }

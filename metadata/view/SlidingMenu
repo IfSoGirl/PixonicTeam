@@ -1,0 +1,121 @@
+{
+    "type": "Ext.Menu",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "designer|userClassName": "SlidingMenu",
+        "layout": "vbox",
+        "scrollable": null,
+        "style": [
+            "bodyStyle:'background-color:red !important;'"
+        ],
+        "width": 250
+    },
+    "configAlternates": {
+        "style": "object"
+    },
+    "designerId": "696368aa-3fee-43c7-bbe8-014d16586e53",
+    "cn": [
+        {
+            "type": "Ext.Button",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "action": "menuItemPressed",
+                "baseCls": null,
+                "cls": [
+                    "menu-button"
+                ],
+                "docked": null,
+                "height": "65px",
+                "html": null,
+                "icon": "resources/css/images/icon.profile.png",
+                "iconCls": "profile-icon",
+                "id": "profileMenuItem",
+                "labelCls": "menu-label",
+                "left": null,
+                "text": "ПРОФИЛЬ",
+                "width": null
+            },
+            "name": "MyButton4",
+            "designerId": "c5a62589-6936-484f-bd01-090c7be79060",
+            "customConfigs": [
+                {
+                    "group": "(Custom Properties)",
+                    "name": "action",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "type": "Ext.Button",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "action": "menuItemPressed",
+                "baseCls": null,
+                "cls": [
+                    "menu-button"
+                ],
+                "height": "60px",
+                "icon": "resources/css/images/icon.calendar.png",
+                "iconCls": "profile-icon",
+                "id": "calendarMenuItem",
+                "labelCls": "menu-label",
+                "left": null,
+                "text": "КАЛЕНДАРЬ",
+                "width": null
+            },
+            "name": "MyButton3",
+            "designerId": "5cef545b-6649-42f7-891d-3743f1f10b6f",
+            "customConfigs": [
+                {
+                    "group": "(Custom Properties)",
+                    "name": "action",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "type": "Ext.Button",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "action": "menuItemPressed",
+                "baseCls": null,
+                "cls": [
+                    "menu-button"
+                ],
+                "height": "60px",
+                "icon": "resources/css/images/icon.calendar.png",
+                "iconCls": "profile-icon",
+                "id": "employeesMenuItem",
+                "labelCls": "menu-label",
+                "left": null,
+                "text": "СОТРУДНИКИ",
+                "width": null
+            },
+            "name": "MyButton2",
+            "designerId": "1a760087-f65b-499b-af2a-75f8c5f8492a",
+            "customConfigs": [
+                {
+                    "group": "(Custom Properties)",
+                    "name": "action",
+                    "type": "string"
+                }
+            ]
+        }
+    ]
+}

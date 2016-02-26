@@ -2470,10 +2470,16 @@ Ext.ClassManager.addNameAlternateMappings({
     "Ext.viewport.WP"
   ],
   "PixonicTeam.controller.LoginController": [],
-  "PixonicTeam.model.LoginCredentials": [],
-  "PixonicTeam.store.CredentialsStore": [],
+  "PixonicTeam.controller.MainController": [],
+  "PixonicTeam.model.Employee": [],
+  "PixonicTeam.store.EmployeeStore": [],
+  "PixonicTeam.view.CalendarPanel": [],
+  "PixonicTeam.view.ColleaguePanel": [],
+  "PixonicTeam.view.EmployeesNav": [],
   "PixonicTeam.view.LoginPanel": [],
-  "PixonicTeam.view.Profile": []
+  "PixonicTeam.view.MainToolbar": [],
+  "PixonicTeam.view.ProfilePanel": [],
+  "PixonicTeam.view.SlidingMenu": []
 });
 
 Ext.ClassManager.addNameAliasMappings({
@@ -3205,16 +3211,26 @@ Ext.ClassManager.addNameAliasMappings({
   "PixonicTeam.controller.LoginController": [
     "controller.loginController"
   ],
-  "PixonicTeam.model.LoginCredentials": [],
-  "PixonicTeam.store.CredentialsStore": [
-    "store.credentialsStore"
+  "PixonicTeam.controller.MainController": [],
+  "PixonicTeam.model.Employee": [],
+  "PixonicTeam.store.EmployeeStore": [],
+  "PixonicTeam.view.CalendarPanel": [
+    "widget.calendarPanel"
   ],
+  "PixonicTeam.view.ColleaguePanel": [
+    "widget.colleaguepanel"
+  ],
+  "PixonicTeam.view.EmployeesNav": [],
   "PixonicTeam.view.LoginPanel": [
     "widget.loginPanel"
   ],
-  "PixonicTeam.view.Profile": [
+  "PixonicTeam.view.MainToolbar": [
+    "widget.mainToolbar"
+  ],
+  "PixonicTeam.view.ProfilePanel": [
     "widget.profilePanel"
-  ]
+  ],
+  "PixonicTeam.view.SlidingMenu": []
 });
 
 

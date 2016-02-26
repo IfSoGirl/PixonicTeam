@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>03EA8F4C-AA0A-4715-9838-C0481E5CC07A</string>
+	<key>IDESourceControlProjectName</key>
+	<string>PixonicTeam</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>1C175C7A1A0CF3FB7F2105B04BB28A1020CB9678</key>
+		<string>https://github.com/IfSoGirl/PixonicTeam.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>cordova/platforms/ios/PixonicTeam.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>1C175C7A1A0CF3FB7F2105B04BB28A1020CB9678</key>
+		<string>../../../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/IfSoGirl/PixonicTeam.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>1C175C7A1A0CF3FB7F2105B04BB28A1020CB9678</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>1C175C7A1A0CF3FB7F2105B04BB28A1020CB9678</string>
+			<key>IDESourceControlWCCName</key>
+			<string>PTeam</string>
+		</dict>
+	</array>
+</dict>
+</plist>

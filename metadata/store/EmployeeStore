@@ -1,0 +1,83 @@
+{
+    "type": "arraystore",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "autoLoad": true,
+        "data": [
+            "[",
+            "            {\"lastname\": \"Kansas\"},",
+            "            {\"lastname\": \"Kelly\"},",
+            "            {\"lastname\": \"Potter Lake\"},",
+            "            {\"lastname\": \"University\"},",
+            "            {\"lastname\": \"Uta\"},",
+            "            {\"lastname\": \"Lawrence\"},",
+            "            {\"lastname\": \"Leon\"},",
+            "            {\"lastname\": \"Lion\"}",
+            "",
+            "]"
+        ],
+        "designer|userClassName": "EmployeeStore",
+        "model": "Employee",
+        "storeId": "EmployeeStore"
+    },
+    "name": "MyArrayStore",
+    "designerId": "7392025e-0ef9-45c3-b771-0298f410465b",
+    "cn": [
+        {
+            "type": "Ext.util.Grouper",
+            "reference": {
+                "name": "grouper",
+                "type": "object"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "sortProperty": "lastname"
+            },
+            "name": "MyGrouper",
+            "designerId": "43733aec-a197-461c-90c5-b89bc6276141",
+            "cn": [
+                {
+                    "type": "fixedfunction",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|params": [
+                            "item"
+                        ],
+                        "fn": "groupFn",
+                        "implHandler": [
+                            "    return item.get('lastname').substr(0, 1);"
+                        ]
+                    },
+                    "name": "groupFn",
+                    "designerId": "7075d107-6bea-4dbb-a194-b1cc0ca4e59c"
+                }
+            ]
+        },
+        {
+            "type": "basiceventbinding",
+            "reference": {
+                "name": "listeners",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "fn": "onArraystoreLoad",
+                "implHandler": [
+                    "    console.log(\"Store load success? \" + successful );",
+                    "    console.log(operation);"
+                ],
+                "name": "load"
+            },
+            "name": "onArraystoreLoad",
+            "designerId": "799032d8-d995-4682-a2ae-611d54248a13"
+        }
+    ]
+}

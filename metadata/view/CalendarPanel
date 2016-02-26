@@ -1,0 +1,38 @@
+{
+    "type": "Ext.Panel",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "designer|userAlias": "calendarPanel",
+        "designer|userClassName": "CalendarPanel",
+        "hidden": false,
+        "id": "calendarPanel",
+        "showAnimation": null
+    },
+    "name": "MyPanel",
+    "configAlternates": {
+        "showAnimation": "object"
+    },
+    "designerId": "990b5b30-99c7-4b9d-b59e-57970d0ace14",
+    "cn": [
+        {
+            "type": "Ext.Container",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "centered": true,
+                "height": 300,
+                "id": "calendarFrame",
+                "width": 300
+            },
+            "name": "MyContainer1",
+            "designerId": "b4865a17-5974-46bd-bada-56f87c221a70"
+        }
+    ]
+}

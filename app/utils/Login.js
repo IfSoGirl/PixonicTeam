@@ -4,5 +4,5 @@ var clientSecret = 'T5SYCngU3cRhhUxvF2zldrz3';
 var apiKey = 'AIzaSyA7jTupE0WjhL4yqvQEsy3wHZ9ONK8bgcw';
 var redirectUri = 'http://localhost:1841';
 
-var personalCalendarHTML = 'https://calendar.google.com/calendar/embed?src=SETYOUREMAILHERE%40pixonic.ru&ctz=Europe/Moscow';
+var personalCalendarHTML = '<iframe src="https://calendar.google.com/calendar/embed?showPrint=0&amp;showTabs=0&amp;height=320&amp;wkst=2&amp;bgcolor=%23FFFFFF&amp;src=SETHEREUSERNAME%40pixonic.ru&amp;color=%2329527A&amp;ctz=Europe%2FMoscow" style="border-width:0&output=embed" width="420" height="420" frameborder="0" scrolling="yes"/>';
 
