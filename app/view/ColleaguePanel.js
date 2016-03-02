@@ -29,30 +29,21 @@ Ext.define('PixonicTeam.view.ColleaguePanel', {
         fullscreen: true,
         hidden: false,
         id: 'colleaguePanel',
-        scrollable: 'vertical',
-        layout: {
-            type: 'vbox',
-            align: 'center'
-        },
+        layout: 'fit',
+        scrollable: false,
         items: [
             {
                 xtype: 'panel',
-                docked: 'top',
                 id: 'mainCnt',
-                scrollable: true,
-                layout: {
-                    type: 'vbox',
-                    pack: 'center'
-                },
+                layout: 'vbox',
+                scrollable: 'vertical',
                 items: [
                     {
                         xtype: 'container',
-                        docked: 'top',
                         height: '241px',
                         layout: {
                             type: 'vbox',
-                            align: 'center',
-                            pack: 'center'
+                            align: 'center'
                         },
                         items: [
                             {

@@ -372,8 +372,8 @@
         "topInstance": "396d328f-060a-4373-8381-3a17369e0915"
     },
     "inspectorState": {
-        "topInstance": "396d328f-060a-4373-8381-3a17369e0915",
-        "selectedInstance": "396d328f-060a-4373-8381-3a17369e0915"
+        "topInstance": null,
+        "selectedInstance": null
     },
     "editMode": "design",
     "userSettings": {

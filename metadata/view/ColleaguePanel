@@ -6,15 +6,14 @@
     },
     "codeClass": null,
     "userConfig": {
-        "container|align": "center",
         "designer|userAlias": "colleaguepanel",
         "designer|userClassName": "ColleaguePanel",
         "fullscreen": true,
         "hidden": false,
         "hideAnimation": null,
         "id": "colleaguePanel",
-        "layout": "vbox",
-        "scrollable": "vertical",
+        "layout": "fit",
+        "scrollable": false,
         "showAnimation": null,
         "style": null
     },
@@ -64,13 +63,11 @@
             },
             "codeClass": null,
             "userConfig": {
-                "container|pack": "center",
-                "docked": "top",
+                "docked": null,
                 "height": null,
                 "id": "mainCnt",
                 "layout": "vbox",
-                "layout|flex": null,
-                "scrollable": true
+                "scrollable": "vertical"
             },
             "name": "MyPanel",
             "designerId": "a90262b9-09c9-441c-84a9-001331be2a80",
@@ -84,8 +81,7 @@
                     "codeClass": null,
                     "userConfig": {
                         "container|align": "center",
-                        "container|pack": "center",
-                        "docked": "top",
+                        "docked": null,
                         "height": "241px",
                         "layout": "vbox",
                         "layout|flex": null,

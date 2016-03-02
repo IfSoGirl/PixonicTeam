@@ -3,6 +3,20 @@
 <html manifest="" lang="en-US">
 <head>
     <meta charset="UTF-8">
+       <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self' data: gap:
+    *;
+    script-src 'self' 'unsafe-inline' 'unsafe-eval'
+    *;
+    style-src 'self' 'unsafe-inline' 'unsafe-eval'
+    *;
+    media-src 'self' 'unsafe-inline' 'unsafe-eval'
+    *;
+    img-src 'self' 'unsafe-inline' 'unsafe-eval'
+    *;
+    connect-src 'self' 'unsafe-inline' 'unsafe-eval'
+    *
+    ">
     <title>PTeam</title>
     <style type="text/css">
         /**
