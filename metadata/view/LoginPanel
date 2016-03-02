@@ -9,7 +9,8 @@
         "designer|initialView": true,
         "designer|userAlias": "loginPanel",
         "designer|userClassName": "LoginPanel",
-        "id": "loginPanel"
+        "id": "loginPanel",
+        "style": "text-align: center"
     },
     "name": "MyPanel",
     "designerId": "4d875df0-20ec-4b9e-9ede-5bd27bbf1943",
@@ -58,6 +59,7 @@
                         "cls": [
                             "x-label-error"
                         ],
+                        "html": "Пожалуйста, подождите. Мы получаем актуальные данные о стордуниках",
                         "id": "errorLabel"
                     },
                     "name": "MyLabel2",
@@ -72,7 +74,10 @@
                     "codeClass": null,
                     "userConfig": {
                         "action": "login",
-                        "baseCls": "google-button-active",
+                        "baseCls": null,
+                        "cls": [
+                            "google-button-active"
+                        ],
                         "height": 46,
                         "hidden": true,
                         "id": "loginBtn",

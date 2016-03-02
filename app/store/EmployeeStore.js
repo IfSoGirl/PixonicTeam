@@ -25,37 +25,176 @@ Ext.define('PixonicTeam.store.EmployeeStore', {
         autoLoad: true,
         data: [
             {
-                lastname: 'Kansas'
+                name: 'Ананьев Александр',
+                email: 'email@pixonic.ru',
+                office: 'Москва',
+                post: '2D концепт-художник',
+                phone: '(933) 045-1869',
+                skype: 'necessitatibus',
+                photo: 'http://aimed.spb.ru/images/cms/thumbs/142e21f5603e46b2330254502ddbcabba75dc90f/sperm_80_80_5_80.png?key=api',
+                idFacebook: 'aliquam',
+                idInstagram: 'et',
+                idTwitter: 'assumenda',
+                idVKontakte: 'velit',
+                holidayBegin: 'est',
+                holidayEnd: 'alias',
+                regDate: 'saepe',
+                info: 'О себе!'
             },
             {
-                lastname: 'Kelly'
+                name: 'Холин Роман',
+                email: 'email@pixonic.ru',
+                office: 'Белгород',
+                post: 'Гейм-дизайнер',
+                phone: '(234) 642-3689',
+                skype: 'similique',
+                photo: 'http://aimed.spb.ru/images/cms/thumbs/142e21f5603e46b2330254502ddbcabba75dc90f/sperm_80_80_5_80.png?key=api',
+                idFacebook: 'architecto',
+                idInstagram: 'eos',
+                idTwitter: 'praesentium',
+                idVKontakte: 'aut',
+                holidayBegin: 'ratione',
+                holidayEnd: 'commodi',
+                regDate: 'aut',
+                info: 'О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!'
             },
             {
-                lastname: 'Potter Lake'
+                name: 'Матюха Дарья',
+                email: 'email@pixonic.ru',
+                office: 'Белгород',
+                post: 'Программист',
+                phone: '(234) 642-4989',
+                skype: 'similique',
+                photo: 'http://aimed.spb.ru/images/cms/thumbs/142e21f5603e46b2330254502ddbcabba75dc90f/sperm_80_80_5_80.png?key=api',
+                idFacebook: 'architecto',
+                idInstagram: 'eos',
+                idTwitter: 'praesentium',
+                idVKontakte: 'aut',
+                holidayBegin: 'ratione',
+                holidayEnd: 'commodi',
+                regDate: 'aut',
+                info: 'О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!'
             },
             {
-                lastname: 'University'
+                name: 'Ананьев Александр',
+                email: 'email@pixonic.ru',
+                office: 'Москва',
+                post: '2D концепт-художник',
+                phone: '(933) 045-1869',
+                skype: 'necessitatibus',
+                photo: 'http://aimed.spb.ru/images/cms/thumbs/142e21f5603e46b2330254502ddbcabba75dc90f/sperm_80_80_5_80.png?key=api',
+                idFacebook: 'aliquam',
+                idInstagram: 'et',
+                idTwitter: 'assumenda',
+                idVKontakte: 'velit',
+                holidayBegin: 'est',
+                holidayEnd: 'alias',
+                regDate: 'saepe'
             },
             {
-                lastname: 'Uta'
+                name: 'Холин Роман',
+                email: 'email@pixonic.ru',
+                office: 'Белгород',
+                post: 'Гейм-дизайнер',
+                phone: '(234) 642-3689',
+                skype: 'similique',
+                photo: 'http://aimed.spb.ru/images/cms/thumbs/142e21f5603e46b2330254502ddbcabba75dc90f/sperm_80_80_5_80.png?key=api',
+                idFacebook: 'architecto',
+                idInstagram: 'eos',
+                idTwitter: 'praesentium',
+                idVKontakte: 'aut',
+                holidayBegin: 'ratione',
+                holidayEnd: 'commodi',
+                regDate: 'aut'
             },
             {
-                lastname: 'Lawrence'
+                name: 'Матюха Дарья',
+                email: 'email@pixonic.ru',
+                office: 'Белгород',
+                post: 'Программист',
+                phone: '(234) 642-4989',
+                skype: 'similique',
+                photo: 'http://aimed.spb.ru/images/cms/thumbs/142e21f5603e46b2330254502ddbcabba75dc90f/sperm_80_80_5_80.png?key=api',
+                idFacebook: 'architecto',
+                idInstagram: 'eos',
+                idTwitter: 'praesentium',
+                idVKontakte: 'aut',
+                holidayBegin: 'ratione',
+                holidayEnd: 'commodi',
+                regDate: 'aut'
             },
             {
-                lastname: 'Leon'
+                name: 'Ананьев Александр',
+                email: 'email@pixonic.ru',
+                office: 'Москва',
+                post: '2D концепт-художник',
+                phone: '(933) 045-1869',
+                skype: 'necessitatibus',
+                photo: 'http://aimed.spb.ru/images/cms/thumbs/142e21f5603e46b2330254502ddbcabba75dc90f/sperm_80_80_5_80.png?key=api',
+                idFacebook: 'aliquam',
+                idInstagram: 'et',
+                idTwitter: 'assumenda',
+                idVKontakte: 'velit',
+                holidayBegin: 'est',
+                holidayEnd: 'alias',
+                regDate: 'saepe'
             },
             {
-                lastname: 'Lion'
+                name: 'Ананьев Александр',
+                email: 'email@pixonic.ru',
+                office: 'Москва',
+                post: '2D концепт-художник',
+                phone: '(933) 045-1869',
+                skype: 'necessitatibus',
+                photo: 'http://aimed.spb.ru/images/cms/thumbs/142e21f5603e46b2330254502ddbcabba75dc90f/sperm_80_80_5_80.png?key=api',
+                idFacebook: 'aliquam',
+                idInstagram: 'et',
+                idTwitter: 'assumenda',
+                idVKontakte: 'velit',
+                holidayBegin: 'est',
+                holidayEnd: 'alias',
+                regDate: 'saepe'
+            },
+            {
+                name: 'Холин Роман',
+                email: 'email@pixonic.ru',
+                office: 'Белгород',
+                post: 'Гейм-дизайнер',
+                phone: '(234) 642-3689',
+                skype: 'similique',
+                photo: 'http://aimed.spb.ru/images/cms/thumbs/142e21f5603e46b2330254502ddbcabba75dc90f/sperm_80_80_5_80.png?key=api',
+                idFacebook: 'architecto',
+                idInstagram: 'eos',
+                idTwitter: 'praesentium',
+                idVKontakte: 'aut',
+                holidayBegin: 'ratione',
+                holidayEnd: 'commodi',
+                regDate: 'aut'
+            },
+            {
+                name: 'Матюха Дарья',
+                email: 'email@pixonic.ru',
+                office: 'Белгород',
+                post: 'Программист',
+                phone: '(234) 642-4989',
+                skype: 'similique',
+                photo: 'http://aimed.spb.ru/images/cms/thumbs/142e21f5603e46b2330254502ddbcabba75dc90f/sperm_80_80_5_80.png?key=api',
+                idFacebook: 'architecto',
+                idInstagram: 'eos',
+                idTwitter: 'praesentium',
+                idVKontakte: 'aut',
+                holidayBegin: 'ratione',
+                holidayEnd: 'commodi',
+                regDate: 'aut'
             }
         ],
         model: 'PixonicTeam.model.Employee',
         storeId: 'EmployeeStore',
         grouper: {
             groupFn: function(item) {
-                return item.get('lastname').substr(0, 1);
+                return item.get('name').substr(0, 1);
             },
-            sortProperty: 'lastname'
+            sortProperty: 'name'
         },
         listeners: [
             {
@@ -66,8 +205,8 @@ Ext.define('PixonicTeam.store.EmployeeStore', {
     },
 
     onArraystoreLoad: function(store, records, successful, operation, eOpts) {
-            console.log("Store load success? " + successful );
-            console.log(operation);
+            //console.log("Store load success? " + successful );
+           // console.log(operation);
     }
 
 });

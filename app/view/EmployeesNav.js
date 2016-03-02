@@ -20,17 +20,24 @@ Ext.define('PixonicTeam.view.EmployeesNav', {
         'Ext.navigation.Bar',
         'Ext.Button',
         'Ext.field.Search',
-        'Ext.Label',
         'Ext.dataview.List',
         'Ext.XTemplate'
     ],
 
     config: {
         id: 'employeeNav',
+        defaultBackButtonText: 'Назад',
         navigationBar: {
+            cls: 'toolbar',
             docked: 'top',
+            height: '60px',
             id: 'navBar',
             itemId: 'navBar',
+            ui: 'light',
+            layout: {
+                type: 'hbox',
+                align: 'end'
+            },
             items: [
                 {
                     xtype: 'button',
@@ -50,26 +57,68 @@ Ext.define('PixonicTeam.view.EmployeesNav', {
                 items: [
                     {
                         xtype: 'searchfield',
+                        cls: 'search-label',
                         height: '40px',
                         id: 'employeeSearch',
                         itemId: 'employeeSearch',
-                        placeHolder: 'Поиск'
+                        placeHolder: 'ПОИСК'
                     },
                     {
-                        xtype: 'label',
-                        height: '40px',
-                        html: 'По алфавиту'
+                        xtype: 'container',
+                        height: '35px',
+                        id: 'labelsContainer',
+                        layout: {
+                            type: 'hbox',
+                            align: 'stretchmax'
+                        },
+                        items: [
+                            {
+                                xtype: 'button',
+                                handler: function(button, e) {
+                                    button.setLabelCls('alphabet-underline');
+                                    var officeBtn = Ext.getCmp('officeButton');
+                                    officeBtn.setLabelCls('alphabet-label');
+                                },
+                                cls: 'transparent',
+                                id: 'alphabetButton',
+                                labelCls: 'alphabet-underline',
+                                text: 'ПО АЛФАВИТУ'
+                            },
+                            {
+                                xtype: 'button',
+                                handler: function(button, e) {
+                                    button.setLabelCls('alphabet-underline');
+                                    var alphabetBtn = Ext.getCmp('alphabetButton');
+                                    alphabetBtn.setLabelCls('alphabet-label');
+                                },
+                                cls: 'transparent',
+                                docked: 'right',
+                                id: 'officeButton',
+                                labelCls: 'alphabet-label',
+                                text: 'ПО ОФИСАМ'
+                            }
+                        ]
                     },
                     {
                         xtype: 'list',
                         flex: 1,
-                        id: 'employeeList1',
+                        cls: 'tpl-ylovd7t6',
+                        id: 'employeeList',
                         itemId: 'mylist1',
                         itemTpl: [
-                            '<div>{lastname}</div>'
+                            '<div style = "height:80px;"> ',
+                            '    <div style = "float:left; margin-right: 10px;">',
+                            '      <img src = {photo}; style="height:80px; width: 80px" />    ',
+                            '    </div>',
+                            '    <h3 class="list-item-header">{name}</h3>',
+                            '    <span class="post">{post}</span><br>',
+                            '    <span style = "font-size: 14px"> Тел. <a href="tel:+79803870801"> {phone}</a></span><br>',
+                            '    <span style = "font-size: 14px"> Skype <a href="skype:ripenemy?call"> {skype}</a></span>',
+                            '</div>'
                         ],
                         store: 'EmployeeStore',
                         grouped: true,
+                        itemHeight: 80,
                         striped: true
                     }
                 ]
@@ -94,7 +143,7 @@ Ext.define('PixonicTeam.view.EmployeesNav', {
             {
                 fn: 'onEmployeeListItemTap1',
                 event: 'itemtap',
-                delegate: '#employeeList1'
+                delegate: '#employeeList'
             }
         ]
     },
@@ -105,13 +154,13 @@ Ext.define('PixonicTeam.view.EmployeesNav', {
     },
 
     onSearchfieldKeyup: function(textfield, e, eOpts) {
-            var searchString = textfield.getValue();
+            var searchString = textfield.getValue().toLowerCase();
             var store = Ext.getStore('EmployeeStore');
             store.clearFilter();
             if(searchString){
-                var thisRegEx = new RegExp(searchString, "i");
                 store.filterBy(function(record) {
-                    return (thisRegEx.test(record.get('lastname')));
+                    var name =  record.get('name').toLowerCase();
+                    return (name.indexOf(searchString)  >= 0);
                 });
             }
     },

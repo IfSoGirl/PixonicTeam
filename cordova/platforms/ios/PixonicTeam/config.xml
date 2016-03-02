@@ -43,6 +43,7 @@
     <content src="index.html" />
     <allow-navigation href="http://*/*" />
     <allow-navigation href="https://*/*" />
+    <allow-navigation href="data:*" />
     <allow-navigation href="about:*" />
     <access origin="*" />
     <allow-intent href="http://*/*" />

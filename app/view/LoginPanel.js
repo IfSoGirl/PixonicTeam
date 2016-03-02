@@ -25,6 +25,7 @@ Ext.define('PixonicTeam.view.LoginPanel', {
 
     config: {
         id: 'loginPanel',
+        style: 'text-align: center',
         items: [
             {
                 xtype: 'container',
@@ -46,12 +47,13 @@ Ext.define('PixonicTeam.view.LoginPanel', {
                     {
                         xtype: 'label',
                         cls: 'x-label-error',
+                        html: 'Пожалуйста, подождите. Мы получаем актуальные данные о стордуниках',
                         id: 'errorLabel'
                     },
                     {
                         xtype: 'button',
                         action: 'login',
-                        baseCls: 'google-button-active',
+                        cls: 'google-button-active',
                         height: 46,
                         hidden: true,
                         id: 'loginBtn',

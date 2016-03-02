@@ -18,35 +18,185 @@ Ext.define('PixonicTeam.view.ColleaguePanel', {
     alias: 'widget.colleaguepanel',
 
     requires: [
+        'Ext.Panel',
         'Ext.Spacer',
-        'Ext.Label'
+        'Ext.Img',
+        'Ext.Label',
+        'Ext.XTemplate'
     ],
 
     config: {
+        fullscreen: true,
         hidden: false,
         id: 'colleaguePanel',
+        scrollable: 'vertical',
         layout: {
             type: 'vbox',
             align: 'center'
         },
         items: [
             {
-                xtype: 'spacer',
-                height: 20,
-                width: 20
-            },
-            {
-                xtype: 'label',
-                html: 'Details!',
-                id: 'myLabel2',
-                itemId: 'myLabel2'
+                xtype: 'panel',
+                docked: 'top',
+                id: 'mainCnt',
+                scrollable: true,
+                layout: {
+                    type: 'vbox',
+                    pack: 'center'
+                },
+                items: [
+                    {
+                        xtype: 'container',
+                        docked: 'top',
+                        height: '241px',
+                        layout: {
+                            type: 'vbox',
+                            align: 'center',
+                            pack: 'center'
+                        },
+                        items: [
+                            {
+                                xtype: 'spacer',
+                                height: 20,
+                                id: 'spacer1',
+                                width: 50
+                            },
+                            {
+                                xtype: 'image',
+                                height: 150,
+                                id: 'profilePhoto',
+                                width: 150,
+                                src: 'http://alphachan.org/b/thumb/132656219997.png?key=api'
+                            },
+                            {
+                                xtype: 'container',
+                                id: 'profileName',
+                                layout: {
+                                    type: 'vbox',
+                                    align: 'center'
+                                },
+                                items: [
+                                    {
+                                        xtype: 'spacer',
+                                        height: '20px',
+                                        id: 'spacer2',
+                                        width: 20
+                                    },
+                                    {
+                                        xtype: 'label',
+                                        cls: 'list-item-header',
+                                        height: '30px',
+                                        html: 'Холин Роман',
+                                        id: 'nameLabel',
+                                        style: 'line-height:30px'
+                                    },
+                                    {
+                                        xtype: 'label',
+                                        cls: [
+                                            'post',
+                                            'halign-center'
+                                        ],
+                                        height: '30px',
+                                        html: 'Гейм-дизайнер',
+                                        id: 'postLabel'
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        xtype: 'container',
+                        height: '90px',
+                        id: 'contactsCnt',
+                        style: 'border-top: 2px solid rgb(195,195,195); border-bottom: 2px solid rgb(195,195,195);',
+                        layout: 'hbox',
+                        items: [
+                            {
+                                xtype: 'label',
+                                data: {
+                                    phone: '1245',
+                                    skype: 'dfj'
+                                },
+                                id: 'contactsLabel',
+                                tpl: [
+                                    '<div style="padding:5px 0px 5px 0px; font-size: 16px">',
+                                    '    <span style = "font-weight: bold; padding-left: 10px"> E-mail: <a href="mailto:{email}?call" style = "font-weight: normal"> {email}</a></span><br>',
+                                    '    <span style = "font-weight: bold; padding-left: 10px"> Телефон: <a href="tel:{phone}" style = "font-weight: normal"> {phone}</a></span><br>',
+                                    '    <span style = "font-weight: bold; padding-left: 10px"> Skype: <a href="skype:{skype}?call" style = "font-weight: normal"> {skype}</a></span><br>',
+                                    '    <span style = "font-weight: bold; padding-left: 10px"> Офис: <span style = "font-weight: normal; color: rgb(140,140,140)"> {office}</span></span>',
+                                    '</div>'
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        xtype: 'label',
+                        height: '',
+                        id: 'infoLabel',
+                        minHeight: '50px'
+                    },
+                    {
+                        xtype: 'container',
+                        height: '80px',
+                        id: 'socialsCnt',
+                        style: 'border-top: 2px solid rgb(195,195,195)',
+                        layout: {
+                            type: 'hbox',
+                            pack: 'center'
+                        },
+                        items: [
+                            {
+                                xtype: 'image',
+                                height: 75,
+                                id: 'instagramBtn',
+                                width: 75,
+                                src: 'resources/css/images/buttons/insta.active.png'
+                            },
+                            {
+                                xtype: 'image',
+                                height: 75,
+                                id: 'facebookBtn',
+                                width: 75,
+                                src: 'resources/css/images/buttons/fb.active.png'
+                            },
+                            {
+                                xtype: 'image',
+                                height: 75,
+                                id: 'vkBtn',
+                                itemId: 'myimg4',
+                                width: 75,
+                                src: 'resources/css/images/buttons/vk.active.png'
+                            },
+                            {
+                                xtype: 'image',
+                                height: 75,
+                                id: 'twitterBtn',
+                                itemId: 'myimg3',
+                                style: 'background-repeat: no-repeat',
+                                width: 75,
+                                src: 'resources/css/images/buttons/twitter.active.png'
+                            }
+                        ]
+                    }
+                ]
             }
         ]
     },
 
     setInfo: function(record) {
-            var label = this.getComponent('myLabel2');
-            label.setHtml(record.data.lastname);
+            var contactsLabel = Ext.getCmp('contactsLabel');
+            String.prototype.replaceAll = function(search, replacement) {
+                var target = this;
+                return target.replace(new RegExp(search, 'g'), replacement);
+            };
+            var nameLabel =this.down('#profileName').down('#nameLabel');
+            nameLabel.setHtml(record.data.name);
+            var postLabel =this.down('#profileName').down('#postLabel');
+            postLabel.setHtml(record.data.post);
+            contactsLabel.setData(record.data);
+            var infoLabel = Ext.getCmp('infoLabel');
+            var infoHtml = '<span style = "font-weight: bold; padding-left: 10px">Доп. информация: <span style = "font-weight: normal; font-size: 14px"> {info}';
+            infoLabel.setHtml(infoHtml.replace("{info}",record.data.info));
     }
 
 });

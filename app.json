@@ -65,8 +65,7 @@
       "resources/icons",
       "resources/startup",
       "resources/css/main.css",
-      "app/utils",
-      "data"
+      "app/utils"
    ],
    "ignore": [
       ".svn$"

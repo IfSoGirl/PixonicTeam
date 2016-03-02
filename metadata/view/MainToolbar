@@ -6,12 +6,23 @@
     },
     "codeClass": null,
     "userConfig": {
+        "cls": [
+            "toolbar"
+        ],
+        "container|align": "end",
+        "designer|uiInterfaceName": "light",
         "designer|userAlias": "mainToolbar",
         "designer|userClassName": "MainToolbar",
         "docked": "top",
-        "id": "mainToolbar"
+        "height": "60px",
+        "id": "mainToolbar",
+        "title": null,
+        "ui": "light"
     },
     "name": "MyToolbar2",
+    "configAlternates": {
+        "title": "object"
+    },
     "designerId": "5cbe9912-2834-4b1c-a1c3-5b9c3e17bc30",
     "cn": [
         {
@@ -23,7 +34,9 @@
             "codeClass": null,
             "userConfig": {
                 "action": "menuButtonPressed",
+                "docked": null,
                 "id": "menuBtn",
+                "style": null,
                 "text": "Меню"
             },
             "name": "MyButton2",

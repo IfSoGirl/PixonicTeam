@@ -23,7 +23,63 @@ Ext.define('PixonicTeam.model.Employee', {
     config: {
         fields: [
             {
-                name: 'lastname',
+                name: 'name',
+                type: 'string'
+            },
+            {
+                name: 'email',
+                type: 'string'
+            },
+            {
+                name: 'office',
+                type: 'string'
+            },
+            {
+                name: 'post',
+                type: 'string'
+            },
+            {
+                name: 'phone',
+                type: 'string'
+            },
+            {
+                name: 'skype',
+                type: 'string'
+            },
+            {
+                name: 'photo',
+                type: 'string'
+            },
+            {
+                name: 'idFacebook',
+                type: 'string'
+            },
+            {
+                name: 'idInstagram',
+                type: 'string'
+            },
+            {
+                name: 'idTwitter',
+                type: 'string'
+            },
+            {
+                name: 'idVKontakte',
+                type: 'string'
+            },
+            {
+                name: 'holidayBegin',
+                type: 'string'
+            },
+            {
+                name: 'holidayEnd',
+                type: 'string'
+            },
+            {
+                name: 'regDate',
+                type: 'string'
+            },
+            {
+                name: 'info',
                 type: 'string'
             }
         ]

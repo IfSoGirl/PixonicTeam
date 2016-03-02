@@ -6,6 +6,7 @@
     },
     "codeClass": null,
     "userConfig": {
+        "defaultBackButtonText": "Назад",
         "designer|userClassName": "EmployeesNav",
         "id": "employeeNav"
     },
@@ -20,9 +21,16 @@
             },
             "codeClass": null,
             "userConfig": {
+                "cls": [
+                    "toolbar"
+                ],
+                "container|align": "end",
+                "designer|uiInterfaceName": "light",
                 "docked": "top",
+                "height": "60px",
                 "id": "navBar",
-                "itemId": "navBar"
+                "itemId": "navBar",
+                "ui": "light"
             },
             "name": "MyNavigationBar",
             "designerId": "29a18810-dd94-46f6-85ce-5df022d09c87",
@@ -93,12 +101,17 @@
                     },
                     "codeClass": null,
                     "userConfig": {
+                        "cls": [
+                            "search-label"
+                        ],
                         "designer|createAlias": null,
                         "height": "40px",
                         "id": "employeeSearch",
                         "itemId": "employeeSearch",
                         "label": null,
-                        "placeHolder": "Поиск"
+                        "labelCls": null,
+                        "placeHolder": "ПОИСК",
+                        "style": null
                     },
                     "name": "MySearchField",
                     "designerId": "fe0cb6fe-1148-4093-8245-e684cf4daa75",
@@ -114,13 +127,13 @@
                                 "designer|targetType": "Ext.field.Search",
                                 "fn": "onSearchfieldKeyup",
                                 "implHandler": [
-                                    "    var searchString = textfield.getValue();",
+                                    "    var searchString = textfield.getValue().toLowerCase();",
                                     "    var store = Ext.getStore('EmployeeStore');",
                                     "    store.clearFilter();",
                                     "    if(searchString){",
-                                    "        var thisRegEx = new RegExp(searchString, \"i\");",
                                     "        store.filterBy(function(record) {",
-                                    "            return (thisRegEx.test(record.get('lastname')));",
+                                    "            var name =  record.get('name').toLowerCase();",
+                                    "            return (name.indexOf(searchString)  >= 0);",
                                     "        });",
                                     "    }"
                                 ],
@@ -149,18 +162,108 @@
                     ]
                 },
                 {
-                    "type": "Ext.Label",
+                    "type": "Ext.Container",
                     "reference": {
                         "name": "items",
                         "type": "array"
                     },
                     "codeClass": null,
                     "userConfig": {
-                        "height": "40px",
-                        "html": "По алфавиту"
+                        "container|align": "stretchmax",
+                        "height": "35px",
+                        "id": "labelsContainer",
+                        "layout": "hbox"
                     },
-                    "name": "MyLabel3",
-                    "designerId": "b6cfabb9-84ea-4a31-b238-c57b381512db"
+                    "name": "MyContainer3",
+                    "designerId": "22f52c80-a5c3-422d-9177-eb63f4c75487",
+                    "cn": [
+                        {
+                            "type": "Ext.Button",
+                            "reference": {
+                                "name": "items",
+                                "type": "array"
+                            },
+                            "codeClass": null,
+                            "userConfig": {
+                                "cls": [
+                                    "transparent"
+                                ],
+                                "id": "alphabetButton",
+                                "labelCls": "alphabet-underline",
+                                "style": null,
+                                "text": "ПО АЛФАВИТУ"
+                            },
+                            "name": "MyButton6",
+                            "designerId": "5a137174-54e2-425e-94db-4a00b212bc69",
+                            "cn": [
+                                {
+                                    "type": "fixedfunction",
+                                    "reference": {
+                                        "name": "items",
+                                        "type": "array"
+                                    },
+                                    "codeClass": null,
+                                    "userConfig": {
+                                        "designer|params": [
+                                            "button",
+                                            "e"
+                                        ],
+                                        "fn": "handler",
+                                        "implHandler": [
+                                            "                                    button.setLabelCls('alphabet-underline');",
+                                            "                                    var officeBtn = Ext.getCmp('officeButton');",
+                                            "                                    officeBtn.setLabelCls('alphabet-label');"
+                                        ]
+                                    },
+                                    "name": "handler",
+                                    "designerId": "0e413d93-86e0-4b15-ae95-87687c1b6869"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Ext.Button",
+                            "reference": {
+                                "name": "items",
+                                "type": "array"
+                            },
+                            "codeClass": null,
+                            "userConfig": {
+                                "cls": [
+                                    "transparent"
+                                ],
+                                "docked": "right",
+                                "id": "officeButton",
+                                "labelCls": "alphabet-label",
+                                "text": "ПО ОФИСАМ"
+                            },
+                            "name": "MyButton7",
+                            "designerId": "e57fcb9b-3700-48a3-9009-e67cd538dd50",
+                            "cn": [
+                                {
+                                    "type": "fixedfunction",
+                                    "reference": {
+                                        "name": "items",
+                                        "type": "array"
+                                    },
+                                    "codeClass": null,
+                                    "userConfig": {
+                                        "designer|params": [
+                                            "button",
+                                            "e"
+                                        ],
+                                        "fn": "handler",
+                                        "implHandler": [
+                                            "                                    button.setLabelCls('alphabet-underline');",
+                                            "                                    var alphabetBtn = Ext.getCmp('alphabetButton');",
+                                            "                                    alphabetBtn.setLabelCls('alphabet-label');"
+                                        ]
+                                    },
+                                    "name": "handler",
+                                    "designerId": "f497d80e-5bdf-44ab-949a-fb1ff6d2e1c8"
+                                }
+                            ]
+                        }
+                    ]
                 },
                 {
                     "type": "Ext.dataview.List",
@@ -170,36 +273,28 @@
                     },
                     "codeClass": null,
                     "userConfig": {
+                        "cls": [
+                            "tpl-ylovd7t6"
+                        ],
                         "data": null,
                         "docked": null,
                         "grouped": true,
                         "height": null,
-                        "id": "employeeList1",
+                        "id": "employeeList",
+                        "itemHeight": 80,
                         "itemId": "mylist1",
                         "layout|flex": 1,
+                        "onItemDisclosure": null,
                         "store": "EmployeeStore",
                         "striped": true,
                         "width": null
                     },
                     "name": "MyList1",
+                    "configAlternates": {
+                        "onItemDisclosure": "object"
+                    },
                     "designerId": "475e92d9-f3fa-41e8-9910-4e8249b6854e",
                     "cn": [
-                        {
-                            "type": "Ext.XTemplate",
-                            "reference": {
-                                "name": "itemTpl",
-                                "type": "object"
-                            },
-                            "codeClass": null,
-                            "userConfig": {
-                                "designer|displayName": "itemTpl",
-                                "implHandler": [
-                                    "<div>{lastname}</div>"
-                                ]
-                            },
-                            "name": "itemTpl",
-                            "designerId": "344abd9a-9a01-4db6-aeff-d7c2d30feaf5"
-                        },
                         {
                             "type": "basiceventbinding",
                             "reference": {
@@ -224,6 +319,30 @@
                             },
                             "name": "onEmployeeListItemTap1",
                             "designerId": "a12b52e2-5ea6-431a-8a49-401697bd35bd"
+                        },
+                        {
+                            "type": "Ext.XTemplate",
+                            "reference": {
+                                "name": "itemTpl",
+                                "type": "object"
+                            },
+                            "codeClass": null,
+                            "userConfig": {
+                                "designer|displayName": "itemTpl",
+                                "implHandler": [
+                                    "<div style = \"height:80px;\"> ",
+                                    "    <div style = \"float:left; margin-right: 10px;\">",
+                                    "      <img src = {photo}; style=\"height:80px; width: 80px\" />    ",
+                                    "    </div>",
+                                    "    <h3 class=\"list-item-header\">{name}</h3>",
+                                    "    <span class=\"post\">{post}</span><br>",
+                                    "    <span style = \"font-size: 14px\"> Тел. <a href=\"tel:+79803870801\"> {phone}</a></span><br>",
+                                    "    <span style = \"font-size: 14px\"> Skype <a href=\"skype:ripenemy?call\"> {skype}</a></span>",
+                                    "</div>"
+                                ]
+                            },
+                            "name": "itemTpl",
+                            "designerId": "3858750a-4f41-4b9f-813b-9bbee31ebb23"
                         }
                     ]
                 }

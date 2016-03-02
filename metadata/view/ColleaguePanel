@@ -9,11 +9,14 @@
         "container|align": "center",
         "designer|userAlias": "colleaguepanel",
         "designer|userClassName": "ColleaguePanel",
+        "fullscreen": true,
         "hidden": false,
         "hideAnimation": null,
         "id": "colleaguePanel",
         "layout": "vbox",
-        "showAnimation": null
+        "scrollable": "vertical",
+        "showAnimation": null,
+        "style": null
     },
     "name": "ProfilePanel1",
     "configAlternates": {
@@ -22,35 +25,6 @@
     },
     "designerId": "396d328f-060a-4373-8381-3a17369e0915",
     "cn": [
-        {
-            "type": "Ext.Spacer",
-            "reference": {
-                "name": "items",
-                "type": "array"
-            },
-            "codeClass": null,
-            "userConfig": {
-                "height": 20,
-                "width": 20
-            },
-            "name": "MySpacer",
-            "designerId": "c516d992-3b23-4066-a152-85d6b38bde2e"
-        },
-        {
-            "type": "Ext.Label",
-            "reference": {
-                "name": "items",
-                "type": "array"
-            },
-            "codeClass": null,
-            "userConfig": {
-                "html": "Details!",
-                "id": "myLabel2",
-                "itemId": "myLabel2"
-            },
-            "name": "MyLabel1",
-            "designerId": "11e9c93d-bd92-4c36-bd73-9e0eea189cba"
-        },
         {
             "type": "basicfunction",
             "reference": {
@@ -64,12 +38,337 @@
                 ],
                 "fn": "setInfo",
                 "implHandler": [
-                    "    var label = this.getComponent('myLabel2');",
-                    "    label.setHtml(record.data.lastname);"
+                    "    var contactsLabel = Ext.getCmp('contactsLabel');",
+                    "    String.prototype.replaceAll = function(search, replacement) {",
+                    "        var target = this;",
+                    "        return target.replace(new RegExp(search, 'g'), replacement);",
+                    "    };",
+                    "    var nameLabel =this.down('#profileName').down('#nameLabel');",
+                    "    nameLabel.setHtml(record.data.name);",
+                    "    var postLabel =this.down('#profileName').down('#postLabel');",
+                    "    postLabel.setHtml(record.data.post);",
+                    "    contactsLabel.setData(record.data);",
+                    "    var infoLabel = Ext.getCmp('infoLabel');",
+                    "    var infoHtml = '<span style = \"font-weight: bold; padding-left: 10px\">Доп. информация: <span style = \"font-weight: normal; font-size: 14px\"> {info}';",
+                    "    infoLabel.setHtml(infoHtml.replace(\"{info}\",record.data.info));"
                 ]
             },
             "name": "setInfo",
             "designerId": "5f230744-c145-41ff-bee8-7e28a7c36b4e"
+        },
+        {
+            "type": "Ext.Panel",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "container|pack": "center",
+                "docked": "top",
+                "height": null,
+                "id": "mainCnt",
+                "layout": "vbox",
+                "layout|flex": null,
+                "scrollable": true
+            },
+            "name": "MyPanel",
+            "designerId": "a90262b9-09c9-441c-84a9-001331be2a80",
+            "cn": [
+                {
+                    "type": "Ext.Container",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "container|align": "center",
+                        "container|pack": "center",
+                        "docked": "top",
+                        "height": "241px",
+                        "layout": "vbox",
+                        "layout|flex": null,
+                        "scrollable": null
+                    },
+                    "name": "MyContainer4",
+                    "designerId": "6362fa49-ff4a-4cdc-ab47-b9a8fb7689ce",
+                    "cn": [
+                        {
+                            "type": "Ext.Spacer",
+                            "reference": {
+                                "name": "items",
+                                "type": "array"
+                            },
+                            "codeClass": null,
+                            "userConfig": {
+                                "height": 20,
+                                "id": "spacer1",
+                                "width": 50
+                            },
+                            "name": "MySpacer1",
+                            "designerId": "1e750957-5f41-4041-a315-1cd13a929d9d"
+                        },
+                        {
+                            "type": "Ext.Img",
+                            "reference": {
+                                "name": "items",
+                                "type": "array"
+                            },
+                            "codeClass": null,
+                            "userConfig": {
+                                "docked": null,
+                                "height": 150,
+                                "id": "profilePhoto",
+                                "padding": null,
+                                "src": "http://alphachan.org/b/thumb/132656219997.png?key=api",
+                                "style": null,
+                                "width": 150
+                            },
+                            "name": "MyImg",
+                            "designerId": "7c60573a-fe6f-4e90-9fde-220ac6f280a3"
+                        },
+                        {
+                            "type": "Ext.Container",
+                            "reference": {
+                                "name": "items",
+                                "type": "array"
+                            },
+                            "codeClass": null,
+                            "userConfig": {
+                                "container|align": "center",
+                                "id": "profileName",
+                                "layout": "vbox",
+                                "padding": null
+                            },
+                            "name": "MyContainer",
+                            "designerId": "aa4355c8-3835-4fab-9877-8e25f5d22ced",
+                            "cn": [
+                                {
+                                    "type": "Ext.Spacer",
+                                    "reference": {
+                                        "name": "items",
+                                        "type": "array"
+                                    },
+                                    "codeClass": null,
+                                    "userConfig": {
+                                        "height": "20px",
+                                        "id": "spacer2",
+                                        "width": 20
+                                    },
+                                    "name": "MySpacer2",
+                                    "designerId": "332d252c-ec0b-4d65-97f4-cf7f29b51fb5"
+                                },
+                                {
+                                    "type": "Ext.Label",
+                                    "reference": {
+                                        "name": "items",
+                                        "type": "array"
+                                    },
+                                    "codeClass": null,
+                                    "userConfig": {
+                                        "cls": [
+                                            "list-item-header"
+                                        ],
+                                        "height": "30px",
+                                        "html": "Холин Роман",
+                                        "id": "nameLabel",
+                                        "padding": null,
+                                        "style": "line-height:30px"
+                                    },
+                                    "name": "MyLabel",
+                                    "designerId": "af275a31-56f9-4dd3-bc15-86b97dfafc08"
+                                },
+                                {
+                                    "type": "Ext.Label",
+                                    "reference": {
+                                        "name": "items",
+                                        "type": "array"
+                                    },
+                                    "codeClass": null,
+                                    "userConfig": {
+                                        "cls": [
+                                            "post",
+                                            "halign-center"
+                                        ],
+                                        "height": "30px",
+                                        "html": "Гейм-дизайнер",
+                                        "id": "postLabel"
+                                    },
+                                    "name": "MyLabel1",
+                                    "designerId": "181c7425-240d-4a4c-b996-6256dbd27249"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "Ext.Container",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "docked": null,
+                        "height": "90px",
+                        "id": "contactsCnt",
+                        "layout": "hbox",
+                        "layout|flex": null,
+                        "style": "border-top: 2px solid rgb(195,195,195); border-bottom: 2px solid rgb(195,195,195);"
+                    },
+                    "name": "MyContainer1",
+                    "designerId": "447786c4-c9f3-4bc4-b28b-e66a9b6debfd",
+                    "cn": [
+                        {
+                            "type": "Ext.Label",
+                            "reference": {
+                                "name": "items",
+                                "type": "array"
+                            },
+                            "codeClass": null,
+                            "userConfig": {
+                                "data": [
+                                    "{",
+                                    "    phone: \"1245\",",
+                                    "    skype: \"dfj\"",
+                                    "}"
+                                ],
+                                "id": "contactsLabel"
+                            },
+                            "name": "MyLabel3",
+                            "designerId": "63123841-9f3a-43f4-b8ba-1ace2fb17fc8",
+                            "cn": [
+                                {
+                                    "type": "Ext.XTemplate",
+                                    "reference": {
+                                        "name": "tpl",
+                                        "type": "object"
+                                    },
+                                    "codeClass": null,
+                                    "userConfig": {
+                                        "designer|displayName": "tpl",
+                                        "implHandler": [
+                                            "<div style=\"padding:5px 0px 5px 0px; font-size: 16px\">",
+                                            "    <span style = \"font-weight: bold; padding-left: 10px\"> E-mail: <a href=\"mailto:{email}?call\" style = \"font-weight: normal\"> {email}</a></span><br>",
+                                            "    <span style = \"font-weight: bold; padding-left: 10px\"> Телефон: <a href=\"tel:{phone}\" style = \"font-weight: normal\"> {phone}</a></span><br>",
+                                            "    <span style = \"font-weight: bold; padding-left: 10px\"> Skype: <a href=\"skype:{skype}?call\" style = \"font-weight: normal\"> {skype}</a></span><br>",
+                                            "    <span style = \"font-weight: bold; padding-left: 10px\"> Офис: <span style = \"font-weight: normal; color: rgb(140,140,140)\"> {office}</span></span>",
+                                            "</div>"
+                                        ]
+                                    },
+                                    "name": "tpl",
+                                    "designerId": "fbbc445c-177b-4024-b22d-ef9471d4c22b"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "Ext.Label",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "height": "",
+                        "html": null,
+                        "id": "infoLabel",
+                        "minHeight": "50px"
+                    },
+                    "name": "MyLabel4",
+                    "designerId": "07fb2afc-38d0-49f3-9ca8-b425347ca8dc"
+                },
+                {
+                    "type": "Ext.Container",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "container|pack": "center",
+                        "docked": null,
+                        "height": "80px",
+                        "id": "socialsCnt",
+                        "layout": "hbox",
+                        "style": "border-top: 2px solid rgb(195,195,195)"
+                    },
+                    "name": "MyContainer5",
+                    "designerId": "fb0918ca-169a-49a4-a17c-087dc5964fd2",
+                    "cn": [
+                        {
+                            "type": "Ext.Img",
+                            "reference": {
+                                "name": "items",
+                                "type": "array"
+                            },
+                            "codeClass": null,
+                            "userConfig": {
+                                "height": 75,
+                                "id": "instagramBtn",
+                                "src": "resources/css/images/buttons/insta.active.png",
+                                "width": 75
+                            },
+                            "name": "MyImg1",
+                            "designerId": "fd9103ef-8c73-4310-954a-1ec40e6debca"
+                        },
+                        {
+                            "type": "Ext.Img",
+                            "reference": {
+                                "name": "items",
+                                "type": "array"
+                            },
+                            "codeClass": null,
+                            "userConfig": {
+                                "height": 75,
+                                "id": "facebookBtn",
+                                "src": "resources/css/images/buttons/fb.active.png",
+                                "width": 75
+                            },
+                            "name": "MyImg2",
+                            "designerId": "f35adc39-a5f8-4eb9-8c0f-e565b54518ab"
+                        },
+                        {
+                            "type": "Ext.Img",
+                            "reference": {
+                                "name": "items",
+                                "type": "array"
+                            },
+                            "codeClass": null,
+                            "userConfig": {
+                                "height": 75,
+                                "id": "vkBtn",
+                                "itemId": "myimg4",
+                                "src": "resources/css/images/buttons/vk.active.png",
+                                "width": 75
+                            },
+                            "name": "MyImg4",
+                            "designerId": "5f64523f-a48c-4ca0-80aa-7dee7b1691fe"
+                        },
+                        {
+                            "type": "Ext.Img",
+                            "reference": {
+                                "name": "items",
+                                "type": "array"
+                            },
+                            "codeClass": null,
+                            "userConfig": {
+                                "backgroundCls": null,
+                                "height": 75,
+                                "id": "twitterBtn",
+                                "itemId": "myimg3",
+                                "src": "resources/css/images/buttons/twitter.active.png",
+                                "style": "background-repeat: no-repeat",
+                                "width": 75
+                            },
+                            "name": "MyImg3",
+                            "designerId": "717c124a-2817-49af-b4de-5e987e3be3ce"
+                        }
+                    ]
+                }
+            ]
         }
     ]
 }

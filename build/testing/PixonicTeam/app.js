@@ -32053,6 +32053,208 @@ Ext.define('Ext.Decorator', {
 });
 
 /**
+ * This is a simple way to add an image of any size to your application and have it participate in the layout system
+ * like any other component. This component typically takes between 1 and 3 configurations - a {@link #src}, and
+ * optionally a {@link #height} and a {@link #width}:
+ *
+ *     @example miniphone
+ *     var img = Ext.create('Ext.Img', {
+ *         src: 'http://www.sencha.com/assets/images/sencha-avatar-64x64.png',
+ *         height: 64,
+ *         width: 64
+ *     });
+ *     Ext.Viewport.add(img);
+ *
+ * It's also easy to add an image into a panel or other container using its xtype:
+ *
+ *     @example miniphone
+ *     Ext.create('Ext.Panel', {
+ *         fullscreen: true,
+ *         layout: 'hbox',
+ *         items: [
+ *             {
+ *                 xtype: 'image',
+ *                 src: 'http://www.sencha.com/assets/images/sencha-avatar-64x64.png',
+ *                 flex: 1
+ *             },
+ *             {
+ *                 xtype: 'panel',
+ *                 flex: 2,
+ *                 html: 'Sencha Inc.<br/>1700 Seaport Boulevard Suite 120, Redwood City, CA'
+ *             }
+ *         ]
+ *     });
+ *
+ * Here we created a panel which contains an image (a profile picture in this case) and a text area to allow the user
+ * to enter profile information about themselves. In this case we used an {@link Ext.layout.HBox hbox layout} and
+ * flexed the image to take up one third of the width and the text area to take two thirds of the width. See the
+ * {@link Ext.layout.HBox hbox docs} for more information on flexing items.
+ */
+Ext.define('Ext.Img', {
+    extend: Ext.Component,
+    xtype: [
+        'image',
+        'img'
+    ],
+    /**
+     * @event tap
+     * Fires whenever the component is tapped
+     * @param {Ext.Img} this The Image instance
+     * @param {Ext.EventObject} e The event object
+     */
+    /**
+     * @event load
+     * Fires when the image is loaded
+     * @param {Ext.Img} this The Image instance
+     * @param {Ext.EventObject} e The event object
+     */
+    /**
+     * @event error
+     * Fires if an error occured when trying to load the image
+     * @param {Ext.Img} this The Image instance
+     * @param {Ext.EventObject} e The event object
+     */
+    config: {
+        /**
+         * @cfg {String} src The source of this image
+         * @accessor
+         */
+        src: null,
+        /**
+         * @cfg
+         * @inheritdoc
+         */
+        baseCls: Ext.baseCSSPrefix + 'img',
+        /**
+         * @cfg {String} imageCls The CSS class to be used when {@link #mode} is not set to 'background'
+         * @accessor
+         */
+        imageCls: Ext.baseCSSPrefix + 'img-image',
+        /**
+         * @cfg {String} backgroundCls The CSS class to be used when {@link #mode} is set to 'background'
+         * @accessor
+         */
+        backgroundCls: Ext.baseCSSPrefix + 'img-background',
+        /**
+         * @cfg {String} mode If set to 'background', uses a background-image CSS property instead of an
+         * `<img>` tag to display the image.
+         */
+        mode: 'background'
+    },
+    beforeInitialize: function() {
+        var me = this;
+        me.onLoad = Ext.Function.bind(me.onLoad, me);
+        me.onError = Ext.Function.bind(me.onError, me);
+    },
+    initialize: function() {
+        var me = this;
+        me.callParent();
+        me.relayEvents(me.renderElement, '*');
+        me.element.on({
+            tap: 'onTap',
+            scope: me
+        });
+    },
+    hide: function() {
+        this.callParent(arguments);
+        this.hiddenSrc = this.hiddenSrc || this.getSrc();
+        this.setSrc(null);
+    },
+    show: function() {
+        this.callParent(arguments);
+        if (this.hiddenSrc) {
+            this.setSrc(this.hiddenSrc);
+            delete this.hiddenSrc;
+        }
+    },
+    updateMode: function(mode) {
+        var me = this,
+            imageCls = me.getImageCls(),
+            backgroundCls = me.getBackgroundCls();
+        if (mode === 'background') {
+            if (me.imageElement) {
+                me.imageElement.destroy();
+                delete me.imageElement;
+                me.updateSrc(me.getSrc());
+            }
+            me.replaceCls(imageCls, backgroundCls);
+        } else {
+            me.imageElement = me.element.createChild({
+                tag: 'img'
+            });
+            me.replaceCls(backgroundCls, imageCls);
+        }
+    },
+    updateImageCls: function(newCls, oldCls) {
+        this.replaceCls(oldCls, newCls);
+    },
+    updateBackgroundCls: function(newCls, oldCls) {
+        this.replaceCls(oldCls, newCls);
+    },
+    onTap: function(e) {
+        this.fireEvent('tap', this, e);
+    },
+    onAfterRender: function() {
+        this.updateSrc(this.getSrc());
+    },
+    /**
+     * @private
+     */
+    updateSrc: function(newSrc) {
+        var me = this,
+            dom;
+        if (me.getMode() === 'background') {
+            dom = this.imageObject || new Image();
+        } else {
+            dom = me.imageElement.dom;
+        }
+        this.imageObject = dom;
+        dom.setAttribute('src', Ext.isString(newSrc) ? newSrc : '');
+        dom.addEventListener('load', me.onLoad, false);
+        dom.addEventListener('error', me.onError, false);
+    },
+    detachListeners: function() {
+        var dom = this.imageObject;
+        if (dom) {
+            dom.removeEventListener('load', this.onLoad, false);
+            dom.removeEventListener('error', this.onError, false);
+        }
+    },
+    onLoad: function(e) {
+        this.detachListeners();
+        if (this.getMode() === 'background') {
+            this.element.dom.style.backgroundImage = 'url("' + this.imageObject.src + '")';
+        }
+        this.fireEvent('load', this, e);
+    },
+    onError: function(e) {
+        this.detachListeners();
+        // Attempt to set the src even though the error event fired.
+        if (this.getMode() === 'background') {
+            this.element.dom.style.backgroundImage = 'url("' + this.imageObject.src + '")';
+        }
+        this.fireEvent('error', this, e);
+    },
+    doSetWidth: function(width) {
+        var sizingElement = (this.getMode() === 'background') ? this.element : this.imageElement;
+        sizingElement.setWidth(width);
+        this.callParent(arguments);
+    },
+    doSetHeight: function(height) {
+        var sizingElement = (this.getMode() === 'background') ? this.element : this.imageElement;
+        sizingElement.setHeight(height);
+        this.callParent(arguments);
+    },
+    destroy: function() {
+        this.detachListeners();
+        Ext.destroy(this.imageObject, this.imageElement);
+        delete this.imageObject;
+        delete this.imageElement;
+        this.callParent();
+    }
+});
+
+/**
  * A simple label component which allows you to insert content using {@link #html} configuration.
  *
  *     @example miniphone
@@ -59402,23 +59604,25 @@ Ext.define('PixonicTeam.controller.LoginController', {
         this.revokeToken();
     },
     launch: function() {
-        var controller = this;
+        loginController = this;
         Ext.Viewport.setMasked({
             xtype: 'loadmask',
             message: 'Загружаемся...'
         });
         var token = localStorage['access_token'];
-        console.log('Check for exisisting token');
+        console.log('Login controller launch. Storage: access_token., refresh token');
+        console.log(localStorage['access_token']);
+        console.log(localStorage['refresh_token']);
         if (token) {
-            controller.validateToken(token);
+            console.log("token exist, validate");
+            this.validateToken(token);
         } else {
             Ext.Viewport.setMasked(false);
             Ext.getCmp('errorLabel').setHtml('You dont have a token. Please login to Google!');
-            controller.showLoginElements();
+            this.showLoginElements();
         }
     },
     validateToken: function(token) {
-        var controller = this;
         Ext.Ajax.request({
             url: 'https://www.googleapis.com/oauth2/v3/tokeninfo',
             method: 'GET',
@@ -59433,16 +59637,17 @@ Ext.define('PixonicTeam.controller.LoginController', {
                 var json = Ext.util.JSON.decode(response.responseText);
                 if (response.status == 200) {
                     Ext.Viewport.setMasked(false);
-                    controller.onLoginSuccess();
+                    loginController.onLoginSuccess();
+                    console.log("Validating token success ");
                 } else {
-                    controller.refreshToken();
+                    console.log("Validating token failed, need refresh, refresh token = " + localStorage['refresh_token']);
+                    loginController.refreshToken();
                 }
             }
         });
     },
     refreshToken: function() {
         var refresh_token = localStorage['refresh_token'];
-        var controller = this;
         Ext.Ajax.request({
             url: 'https://www.googleapis.com/oauth2/v4/token',
             method: 'POST',
@@ -59457,17 +59662,17 @@ Ext.define('PixonicTeam.controller.LoginController', {
                 grant_type: 'refresh_token'
             },
             callback: function(options, success, response) {
-                console.log('Refreshed token ' + refresh_token);
+                console.log('trying to refresh token ' + localStorage['refresh_token']);
                 if (response.status == 200) {
                     var json = Ext.util.JSON.decode(response.responseText);
                     console.log('Successfully refreshed token, got new');
                     localStorage.setItem('access_token', json['access_token']);
                     Ext.Viewport.setMasked(false);
-                    controller.onLoginSuccess();
+                    loginController.onLoginSuccess();
                 } else {
-                    Ext.getCmp('errorLabel').setHtml('Validating Token Failed');
+                    Ext.getCmp('errorLabel').setHtml('Refreshing token ' + localStorage['refresh_token'] + ' failed');
                     Ext.Viewport.setMasked(false);
-                    controller.showLoginElements();
+                    loginController.showLoginElements();
                 }
             }
         });
@@ -59480,18 +59685,19 @@ Ext.define('PixonicTeam.controller.LoginController', {
         params += '&access_type=offline';
         params += '&scope=' + encodeURIComponent(scopes);
         var authUrl = 'https://accounts.google.com/o/oauth2/v2/auth?' + params;
+        console.log('open google window');
         var win = window.open(authUrl, '_blank', 'location=no,toolbar=no,width=800, height=800');
         var context = this,
             url;
-        var controller = this;
         if ((Ext.os.is.Android) || (Ext.os.is.iOS)) {
             var callback = function(data) {
                     var pos = data.url.indexOf(redirectUri);
                     if (pos === 0) {
+                        console.log('Close google window');
                         win.removeEventListener('loadstart', callback);
                         win.close();
                         url = data.url;
-                        controller.getAccessCodeFromUrl(url);
+                        loginController.getAccessCodeFromUrl(url);
                     }
                 };
             win.addEventListener('loadstart', callback);
@@ -59509,7 +59715,7 @@ Ext.define('PixonicTeam.controller.LoginController', {
                         url = win.document.URL;
                         win.close();
                         clearInterval(repeat);
-                        controller.getAccessCodeFromUrl(url);
+                        loginController.getAccessCodeFromUrl(url);
                     }
                 }, 100);
         }
@@ -59522,7 +59728,6 @@ Ext.define('PixonicTeam.controller.LoginController', {
         }
     },
     getToken: function(accessCode) {
-        var controller = this;
         Ext.Ajax.request({
             url: 'https://www.googleapis.com/oauth2/v4/token',
             headers: {
@@ -59547,13 +59752,12 @@ Ext.define('PixonicTeam.controller.LoginController', {
                     var refreshToken = json['refresh_token'];
                     localStorage.setItem('access_token', accessToken);
                     localStorage.setItem('refresh_token', refreshToken);
-                    controller.getUserInfo(accessToken, refreshToken);
+                    loginController.getUserInfo(accessToken, refreshToken);
                 }
             }
         });
     },
     getUserInfo: function(accessToken, refreshToken) {
-        var controller = this;
         Ext.Ajax.request({
             url: 'https://www.googleapis.com/oauth2/v3/userinfo',
             method: 'GET',
@@ -59567,36 +59771,25 @@ Ext.define('PixonicTeam.controller.LoginController', {
             callback: function(options, success, response) {
                 var json = Ext.util.JSON.decode(response.responseText);
                 localStorage.setItem('email', json['email']);
-                controller.onLoginSuccess();
+                loginController.onLoginSuccess();
             }
         });
     },
     onLoginSuccess: function() {
-        //var profileTab = Ext.getCmp('profilePanel');
-        Ext.Viewport.setActiveItem('profilePanel');
-        var bar = Ext.getCmp('mainToolbar');
-        bar.show();
-        bar.setTitle('Профиль');
+        console.log('Login successful, login call main');
+        mainController.showPanel('profilePanel');
         var calendarFrame = Ext.getCmp('calendarFrame');
         var email = localStorage['email'];
         var local = email.split('@')[0];
         var calendarURL = personalCalendarHTML.replace("SETHEREUSERNAME", local);
         calendarFrame.setHtml(calendarURL);
     },
-    showLoginElements: function() {
-        Ext.Viewport.setActiveItem('loginPanel');
-        var btn = Ext.getCmp('loginBtn');
-        btn.show();
-        var helloLabel = Ext.getCmp('helloLabel');
-        helloLabel.setHtml('Добро пожаловать в PixonicTeam! Войдите, используя аккаунт @pixonic.ru');
-    },
     revokeToken: function() {
         var controller = this;
         localStorage.clear();
-        controller.showLoginElements();
-    }
-});
-/*Ext.Ajax.request({
+        mainController.showPanel('loginPanel');
+    },
+    /*Ext.Ajax.request({
             url: 'https://accounts.google.com/o/oauth2/revoke',
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
@@ -59621,6 +59814,15 @@ Ext.define('PixonicTeam.controller.LoginController', {
                 }
             }
             });*/
+    showLoginElements: function() {
+        var btn = Ext.getCmp('loginBtn');
+        btn.show();
+        var errorLabel = Ext.getCmp('errorLabel');
+        errorLabel.hide();
+        var helloLabel = Ext.getCmp('helloLabel');
+        helloLabel.setHtml('Добро пожаловать в PixonicTeam! Войдите, используя аккаунт @pixonic.ru');
+    }
+});
 
 /*
  * File: app/view/SlidingMenu.js
@@ -59753,7 +59955,27 @@ Ext.define('PixonicTeam.controller.MainController', {
         }
     },
     onMenuItemPressed: function(button, e, eOpts) {
-        this.showPanel(button.id);
+        var targetPanel;
+        switch (button.id) {
+            case 'profileMenuItem':
+                {
+                    targetPanel = 'profilePanel';
+                    break;
+                };
+            case 'calendarMenuItem':
+                {
+                    targetPanel = 'calendarPanel';
+                    break;
+                };
+            case 'employeesMenuItem':
+                {
+                    targetPanel = 'employeePanel';
+                    break;
+                };
+            default:
+                break;
+        }
+        this.showPanel(targetPanel);
     },
     OnListItemTap: function(listitem) {},
     onButtonTap: function(button, e, eOpts) {
@@ -59761,7 +59983,7 @@ Ext.define('PixonicTeam.controller.MainController', {
         Ext.Viewport.hideMenu('left');
     },
     launch: function() {
-        console.log('creating menu');
+        console.log('Main controller launch');
         mainController = this;
         var toolbar = Ext.create('PixonicTeam.view.MainToolbar');
         toolbar.hide();
@@ -59776,41 +59998,55 @@ Ext.define('PixonicTeam.controller.MainController', {
     },
     showPanel: function(panelName) {
         console.log('menu item pressed ' + panelName);
-        var tab, title;
+        var tab, title, enableToolbar;
         var bar = Ext.getCmp('mainToolbar');
         switch (panelName) {
-            case 'profileMenuItem':
+            case 'profilePanel':
                 {
                     title = 'Профиль';
                     tab = Ext.getCmp('profilePanel');
-                    bar.show();
+                    enableToolbar = true;
                     break;
                 };
-            case 'calendarMenuItem':
+            case 'calendarPanel':
                 {
                     title = 'Календарь';
                     tab = Ext.getCmp('calendarPanel');
-                    bar.show();
+                    enableToolbar = true;
                     break;
                 };
-            case 'employeesMenuItem':
+            case 'employeePanel':
                 {
                     title = 'Сотрудники';
                     tab = Ext.getCmp('employeeNav');
-                    bar.hide();
+                    enableToolbar = false;
                     break;
                 };
             case 'colleaguePanel':
                 {
                     title = 'Сотрудники';
-                    bar.hide();
+                    enableToolbar = false;
                     tab = Ext.getCmp('colleaguePanel');
+                    break;
+                };
+            case 'loginPanel':
+                {
+                    enableToolbar = false;
+                    tab = Ext.getCmp('loginPanel');
+                    loginController.showLoginElements();
                     break;
                 };
             default:
                 break;
         }
         bar.setTitle(title);
+        if (enableToolbar)  {
+            bar.show();
+        }
+        else  {
+            bar.hide();
+        }
+        
         Ext.Viewport.hideMenu('left');
         Ext.Viewport.setActiveItem(tab);
     }
@@ -59835,7 +60071,63 @@ Ext.define('PixonicTeam.model.Employee', {
     config: {
         fields: [
             {
-                name: 'lastname',
+                name: 'name',
+                type: 'string'
+            },
+            {
+                name: 'email',
+                type: 'string'
+            },
+            {
+                name: 'office',
+                type: 'string'
+            },
+            {
+                name: 'post',
+                type: 'string'
+            },
+            {
+                name: 'phone',
+                type: 'string'
+            },
+            {
+                name: 'skype',
+                type: 'string'
+            },
+            {
+                name: 'photo',
+                type: 'string'
+            },
+            {
+                name: 'idFacebook',
+                type: 'string'
+            },
+            {
+                name: 'idInstagram',
+                type: 'string'
+            },
+            {
+                name: 'idTwitter',
+                type: 'string'
+            },
+            {
+                name: 'idVKontakte',
+                type: 'string'
+            },
+            {
+                name: 'holidayBegin',
+                type: 'string'
+            },
+            {
+                name: 'holidayEnd',
+                type: 'string'
+            },
+            {
+                name: 'regDate',
+                type: 'string'
+            },
+            {
+                name: 'info',
                 type: 'string'
             }
         ]
@@ -59862,37 +60154,176 @@ Ext.define('PixonicTeam.store.EmployeeStore', {
         autoLoad: true,
         data: [
             {
-                lastname: 'Kansas'
+                name: 'Ананьев Александр',
+                email: 'email@pixonic.ru',
+                office: 'Москва',
+                post: '2D концепт-художник',
+                phone: '(933) 045-1869',
+                skype: 'necessitatibus',
+                photo: 'http://aimed.spb.ru/images/cms/thumbs/142e21f5603e46b2330254502ddbcabba75dc90f/sperm_80_80_5_80.png?key=api',
+                idFacebook: 'aliquam',
+                idInstagram: 'et',
+                idTwitter: 'assumenda',
+                idVKontakte: 'velit',
+                holidayBegin: 'est',
+                holidayEnd: 'alias',
+                regDate: 'saepe',
+                info: 'О себе!'
             },
             {
-                lastname: 'Kelly'
+                name: 'Холин Роман',
+                email: 'email@pixonic.ru',
+                office: 'Белгород',
+                post: 'Гейм-дизайнер',
+                phone: '(234) 642-3689',
+                skype: 'similique',
+                photo: 'http://aimed.spb.ru/images/cms/thumbs/142e21f5603e46b2330254502ddbcabba75dc90f/sperm_80_80_5_80.png?key=api',
+                idFacebook: 'architecto',
+                idInstagram: 'eos',
+                idTwitter: 'praesentium',
+                idVKontakte: 'aut',
+                holidayBegin: 'ratione',
+                holidayEnd: 'commodi',
+                regDate: 'aut',
+                info: 'О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!'
             },
             {
-                lastname: 'Potter Lake'
+                name: 'Матюха Дарья',
+                email: 'email@pixonic.ru',
+                office: 'Белгород',
+                post: 'Программист',
+                phone: '(234) 642-4989',
+                skype: 'similique',
+                photo: 'http://aimed.spb.ru/images/cms/thumbs/142e21f5603e46b2330254502ddbcabba75dc90f/sperm_80_80_5_80.png?key=api',
+                idFacebook: 'architecto',
+                idInstagram: 'eos',
+                idTwitter: 'praesentium',
+                idVKontakte: 'aut',
+                holidayBegin: 'ratione',
+                holidayEnd: 'commodi',
+                regDate: 'aut',
+                info: 'О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!'
             },
             {
-                lastname: 'University'
+                name: 'Ананьев Александр',
+                email: 'email@pixonic.ru',
+                office: 'Москва',
+                post: '2D концепт-художник',
+                phone: '(933) 045-1869',
+                skype: 'necessitatibus',
+                photo: 'http://aimed.spb.ru/images/cms/thumbs/142e21f5603e46b2330254502ddbcabba75dc90f/sperm_80_80_5_80.png?key=api',
+                idFacebook: 'aliquam',
+                idInstagram: 'et',
+                idTwitter: 'assumenda',
+                idVKontakte: 'velit',
+                holidayBegin: 'est',
+                holidayEnd: 'alias',
+                regDate: 'saepe'
             },
             {
-                lastname: 'Uta'
+                name: 'Холин Роман',
+                email: 'email@pixonic.ru',
+                office: 'Белгород',
+                post: 'Гейм-дизайнер',
+                phone: '(234) 642-3689',
+                skype: 'similique',
+                photo: 'http://aimed.spb.ru/images/cms/thumbs/142e21f5603e46b2330254502ddbcabba75dc90f/sperm_80_80_5_80.png?key=api',
+                idFacebook: 'architecto',
+                idInstagram: 'eos',
+                idTwitter: 'praesentium',
+                idVKontakte: 'aut',
+                holidayBegin: 'ratione',
+                holidayEnd: 'commodi',
+                regDate: 'aut'
             },
             {
-                lastname: 'Lawrence'
+                name: 'Матюха Дарья',
+                email: 'email@pixonic.ru',
+                office: 'Белгород',
+                post: 'Программист',
+                phone: '(234) 642-4989',
+                skype: 'similique',
+                photo: 'http://aimed.spb.ru/images/cms/thumbs/142e21f5603e46b2330254502ddbcabba75dc90f/sperm_80_80_5_80.png?key=api',
+                idFacebook: 'architecto',
+                idInstagram: 'eos',
+                idTwitter: 'praesentium',
+                idVKontakte: 'aut',
+                holidayBegin: 'ratione',
+                holidayEnd: 'commodi',
+                regDate: 'aut'
             },
             {
-                lastname: 'Leon'
+                name: 'Ананьев Александр',
+                email: 'email@pixonic.ru',
+                office: 'Москва',
+                post: '2D концепт-художник',
+                phone: '(933) 045-1869',
+                skype: 'necessitatibus',
+                photo: 'http://aimed.spb.ru/images/cms/thumbs/142e21f5603e46b2330254502ddbcabba75dc90f/sperm_80_80_5_80.png?key=api',
+                idFacebook: 'aliquam',
+                idInstagram: 'et',
+                idTwitter: 'assumenda',
+                idVKontakte: 'velit',
+                holidayBegin: 'est',
+                holidayEnd: 'alias',
+                regDate: 'saepe'
             },
             {
-                lastname: 'Lion'
+                name: 'Ананьев Александр',
+                email: 'email@pixonic.ru',
+                office: 'Москва',
+                post: '2D концепт-художник',
+                phone: '(933) 045-1869',
+                skype: 'necessitatibus',
+                photo: 'http://aimed.spb.ru/images/cms/thumbs/142e21f5603e46b2330254502ddbcabba75dc90f/sperm_80_80_5_80.png?key=api',
+                idFacebook: 'aliquam',
+                idInstagram: 'et',
+                idTwitter: 'assumenda',
+                idVKontakte: 'velit',
+                holidayBegin: 'est',
+                holidayEnd: 'alias',
+                regDate: 'saepe'
+            },
+            {
+                name: 'Холин Роман',
+                email: 'email@pixonic.ru',
+                office: 'Белгород',
+                post: 'Гейм-дизайнер',
+                phone: '(234) 642-3689',
+                skype: 'similique',
+                photo: 'http://aimed.spb.ru/images/cms/thumbs/142e21f5603e46b2330254502ddbcabba75dc90f/sperm_80_80_5_80.png?key=api',
+                idFacebook: 'architecto',
+                idInstagram: 'eos',
+                idTwitter: 'praesentium',
+                idVKontakte: 'aut',
+                holidayBegin: 'ratione',
+                holidayEnd: 'commodi',
+                regDate: 'aut'
+            },
+            {
+                name: 'Матюха Дарья',
+                email: 'email@pixonic.ru',
+                office: 'Белгород',
+                post: 'Программист',
+                phone: '(234) 642-4989',
+                skype: 'similique',
+                photo: 'http://aimed.spb.ru/images/cms/thumbs/142e21f5603e46b2330254502ddbcabba75dc90f/sperm_80_80_5_80.png?key=api',
+                idFacebook: 'architecto',
+                idInstagram: 'eos',
+                idTwitter: 'praesentium',
+                idVKontakte: 'aut',
+                holidayBegin: 'ratione',
+                holidayEnd: 'commodi',
+                regDate: 'aut'
             }
         ],
         model: 'PixonicTeam.model.Employee',
         storeId: 'EmployeeStore',
         grouper: {
             groupFn: function(item) {
-                return item.get('lastname').substr(0, 1);
+                return item.get('name').substr(0, 1);
             },
-            sortProperty: 'lastname'
+            sortProperty: 'name'
         },
         listeners: [
             {
@@ -59901,11 +60332,10 @@ Ext.define('PixonicTeam.store.EmployeeStore', {
             }
         ]
     },
-    onArraystoreLoad: function(store, records, successful, operation, eOpts) {
-        console.log("Store load success? " + successful);
-        console.log(operation);
-    }
+    onArraystoreLoad: function(store, records, successful, operation, eOpts) {}
 });
+//console.log("Store load success? " + successful );
+// console.log(operation);
 
 /*
  * File: app/view/ColleaguePanel.js
@@ -59925,29 +60355,176 @@ Ext.define('PixonicTeam.view.ColleaguePanel', {
     extend: Ext.Panel,
     alias: 'widget.colleaguepanel',
     config: {
+        fullscreen: true,
         hidden: false,
         id: 'colleaguePanel',
+        scrollable: 'vertical',
         layout: {
             type: 'vbox',
             align: 'center'
         },
         items: [
             {
-                xtype: 'spacer',
-                height: 20,
-                width: 20
-            },
-            {
-                xtype: 'label',
-                html: 'Details!',
-                id: 'myLabel2',
-                itemId: 'myLabel2'
+                xtype: 'panel',
+                docked: 'top',
+                id: 'mainCnt',
+                scrollable: true,
+                layout: {
+                    type: 'vbox',
+                    pack: 'center'
+                },
+                items: [
+                    {
+                        xtype: 'container',
+                        docked: 'top',
+                        height: '241px',
+                        layout: {
+                            type: 'vbox',
+                            align: 'center',
+                            pack: 'center'
+                        },
+                        items: [
+                            {
+                                xtype: 'spacer',
+                                height: 20,
+                                id: 'spacer1',
+                                width: 50
+                            },
+                            {
+                                xtype: 'image',
+                                height: 150,
+                                id: 'profilePhoto',
+                                width: 150,
+                                src: 'http://alphachan.org/b/thumb/132656219997.png?key=api'
+                            },
+                            {
+                                xtype: 'container',
+                                id: 'profileName',
+                                layout: {
+                                    type: 'vbox',
+                                    align: 'center'
+                                },
+                                items: [
+                                    {
+                                        xtype: 'spacer',
+                                        height: '20px',
+                                        id: 'spacer2',
+                                        width: 20
+                                    },
+                                    {
+                                        xtype: 'label',
+                                        cls: 'list-item-header',
+                                        height: '30px',
+                                        html: 'Холин Роман',
+                                        id: 'nameLabel',
+                                        style: 'line-height:30px'
+                                    },
+                                    {
+                                        xtype: 'label',
+                                        cls: [
+                                            'post',
+                                            'halign-center'
+                                        ],
+                                        height: '30px',
+                                        html: 'Гейм-дизайнер',
+                                        id: 'postLabel'
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        xtype: 'container',
+                        height: '90px',
+                        id: 'contactsCnt',
+                        style: 'border-top: 2px solid rgb(195,195,195); border-bottom: 2px solid rgb(195,195,195);',
+                        layout: 'hbox',
+                        items: [
+                            {
+                                xtype: 'label',
+                                data: {
+                                    phone: '1245',
+                                    skype: 'dfj'
+                                },
+                                id: 'contactsLabel',
+                                tpl: [
+                                    '<div style="padding:5px 0px 5px 0px; font-size: 16px">',
+                                    '    <span style = "font-weight: bold; padding-left: 10px"> E-mail: <a href="mailto:{email}?call" style = "font-weight: normal"> {email}</a></span><br>',
+                                    '    <span style = "font-weight: bold; padding-left: 10px"> Телефон: <a href="tel:{phone}" style = "font-weight: normal"> {phone}</a></span><br>',
+                                    '    <span style = "font-weight: bold; padding-left: 10px"> Skype: <a href="skype:{skype}?call" style = "font-weight: normal"> {skype}</a></span><br>',
+                                    '    <span style = "font-weight: bold; padding-left: 10px"> Офис: <span style = "font-weight: normal; color: rgb(140,140,140)"> {office}</span></span>',
+                                    '</div>'
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        xtype: 'label',
+                        height: '',
+                        id: 'infoLabel',
+                        minHeight: '50px'
+                    },
+                    {
+                        xtype: 'container',
+                        height: '80px',
+                        id: 'socialsCnt',
+                        style: 'border-top: 2px solid rgb(195,195,195)',
+                        layout: {
+                            type: 'hbox',
+                            pack: 'center'
+                        },
+                        items: [
+                            {
+                                xtype: 'image',
+                                height: 75,
+                                id: 'instagramBtn',
+                                width: 75,
+                                src: 'resources/css/images/buttons/insta.active.png'
+                            },
+                            {
+                                xtype: 'image',
+                                height: 75,
+                                id: 'facebookBtn',
+                                width: 75,
+                                src: 'resources/css/images/buttons/fb.active.png'
+                            },
+                            {
+                                xtype: 'image',
+                                height: 75,
+                                id: 'vkBtn',
+                                itemId: 'myimg4',
+                                width: 75,
+                                src: 'resources/css/images/buttons/vk.active.png'
+                            },
+                            {
+                                xtype: 'image',
+                                height: 75,
+                                id: 'twitterBtn',
+                                itemId: 'myimg3',
+                                style: 'background-repeat: no-repeat',
+                                width: 75,
+                                src: 'resources/css/images/buttons/twitter.active.png'
+                            }
+                        ]
+                    }
+                ]
             }
         ]
     },
     setInfo: function(record) {
-        var label = this.getComponent('myLabel2');
-        label.setHtml(record.data.lastname);
+        var contactsLabel = Ext.getCmp('contactsLabel');
+        String.prototype.replaceAll = function(search, replacement) {
+            var target = this;
+            return target.replace(new RegExp(search, 'g'), replacement);
+        };
+        var nameLabel = this.down('#profileName').down('#nameLabel');
+        nameLabel.setHtml(record.data.name);
+        var postLabel = this.down('#profileName').down('#postLabel');
+        postLabel.setHtml(record.data.post);
+        contactsLabel.setData(record.data);
+        var infoLabel = Ext.getCmp('infoLabel');
+        var infoHtml = '<span style = "font-weight: bold; padding-left: 10px">Доп. информация: <span style = "font-weight: normal; font-size: 14px"> {info}';
+        infoLabel.setHtml(infoHtml.replace("{info}", record.data.info));
     }
 });
 
@@ -59969,10 +60546,18 @@ Ext.define('PixonicTeam.view.EmployeesNav', {
     extend: Ext.navigation.View,
     config: {
         id: 'employeeNav',
+        defaultBackButtonText: 'Назад',
         navigationBar: {
+            cls: 'toolbar',
             docked: 'top',
+            height: '60px',
             id: 'navBar',
             itemId: 'navBar',
+            ui: 'light',
+            layout: {
+                type: 'hbox',
+                align: 'end'
+            },
             items: [
                 {
                     xtype: 'button',
@@ -59992,26 +60577,68 @@ Ext.define('PixonicTeam.view.EmployeesNav', {
                 items: [
                     {
                         xtype: 'searchfield',
+                        cls: 'search-label',
                         height: '40px',
                         id: 'employeeSearch',
                         itemId: 'employeeSearch',
-                        placeHolder: 'Поиск'
+                        placeHolder: 'ПОИСК'
                     },
                     {
-                        xtype: 'label',
-                        height: '40px',
-                        html: 'По алфавиту'
+                        xtype: 'container',
+                        height: '35px',
+                        id: 'labelsContainer',
+                        layout: {
+                            type: 'hbox',
+                            align: 'stretchmax'
+                        },
+                        items: [
+                            {
+                                xtype: 'button',
+                                handler: function(button, e) {
+                                    button.setLabelCls('alphabet-underline');
+                                    var officeBtn = Ext.getCmp('officeButton');
+                                    officeBtn.setLabelCls('alphabet-label');
+                                },
+                                cls: 'transparent',
+                                id: 'alphabetButton',
+                                labelCls: 'alphabet-underline',
+                                text: 'ПО АЛФАВИТУ'
+                            },
+                            {
+                                xtype: 'button',
+                                handler: function(button, e) {
+                                    button.setLabelCls('alphabet-underline');
+                                    var alphabetBtn = Ext.getCmp('alphabetButton');
+                                    alphabetBtn.setLabelCls('alphabet-label');
+                                },
+                                cls: 'transparent',
+                                docked: 'right',
+                                id: 'officeButton',
+                                labelCls: 'alphabet-label',
+                                text: 'ПО ОФИСАМ'
+                            }
+                        ]
                     },
                     {
                         xtype: 'list',
                         flex: 1,
-                        id: 'employeeList1',
+                        cls: 'tpl-ylovd7t6',
+                        id: 'employeeList',
                         itemId: 'mylist1',
                         itemTpl: [
-                            '<div>{lastname}</div>'
+                            '<div style = "height:80px;"> ',
+                            '    <div style = "float:left; margin-right: 10px;">',
+                            '      <img src = {photo}; style="height:80px; width: 80px" />    ',
+                            '    </div>',
+                            '    <h3 class="list-item-header">{name}</h3>',
+                            '    <span class="post">{post}</span><br>',
+                            '    <span style = "font-size: 14px"> Тел. <a href="tel:+79803870801"> {phone}</a></span><br>',
+                            '    <span style = "font-size: 14px"> Skype <a href="skype:ripenemy?call"> {skype}</a></span>',
+                            '</div>'
                         ],
                         store: 'EmployeeStore',
                         grouped: true,
+                        itemHeight: 80,
                         striped: true
                     }
                 ]
@@ -60036,7 +60663,7 @@ Ext.define('PixonicTeam.view.EmployeesNav', {
             {
                 fn: 'onEmployeeListItemTap1',
                 event: 'itemtap',
-                delegate: '#employeeList1'
+                delegate: '#employeeList'
             }
         ]
     },
@@ -60045,13 +60672,13 @@ Ext.define('PixonicTeam.view.EmployeesNav', {
         menuBtn.show();
     },
     onSearchfieldKeyup: function(textfield, e, eOpts) {
-        var searchString = textfield.getValue();
+        var searchString = textfield.getValue().toLowerCase();
         var store = Ext.getStore('EmployeeStore');
         store.clearFilter();
         if (searchString) {
-            var thisRegEx = new RegExp(searchString, "i");
             store.filterBy(function(record) {
-                return (thisRegEx.test(record.get('lastname')));
+                var name = record.get('name').toLowerCase();
+                return (name.indexOf(searchString) >= 0);
             });
         }
     },
@@ -60091,6 +60718,7 @@ Ext.define('PixonicTeam.view.LoginPanel', {
     alias: 'widget.loginPanel',
     config: {
         id: 'loginPanel',
+        style: 'text-align: center',
         items: [
             {
                 xtype: 'container',
@@ -60112,12 +60740,13 @@ Ext.define('PixonicTeam.view.LoginPanel', {
                     {
                         xtype: 'label',
                         cls: 'x-label-error',
+                        html: 'Пожалуйста, подождите. Мы получаем актуальные данные о стордуниках',
                         id: 'errorLabel'
                     },
                     {
                         xtype: 'button',
                         action: 'login',
-                        baseCls: 'google-button-active',
+                        cls: 'google-button-active',
                         height: 46,
                         hidden: true,
                         id: 'loginBtn',
@@ -60149,8 +60778,15 @@ Ext.define('PixonicTeam.view.MainToolbar', {
     extend: Ext.Toolbar,
     alias: 'widget.mainToolbar',
     config: {
+        cls: 'toolbar',
         docked: 'top',
+        height: '60px',
         id: 'mainToolbar',
+        ui: 'light',
+        layout: {
+            type: 'hbox',
+            align: 'end'
+        },
         items: [
             {
                 xtype: 'button',

@@ -22,8 +22,15 @@ Ext.define('PixonicTeam.view.MainToolbar', {
     ],
 
     config: {
+        cls: 'toolbar',
         docked: 'top',
+        height: '60px',
         id: 'mainToolbar',
+        ui: 'light',
+        layout: {
+            type: 'hbox',
+            align: 'end'
+        },
         items: [
             {
                 xtype: 'button',
