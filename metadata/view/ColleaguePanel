@@ -13,7 +13,7 @@
         "hideAnimation": null,
         "id": "colleaguePanel",
         "layout": "fit",
-        "scrollable": false,
+        "scrollable": null,
         "showAnimation": null,
         "style": null
     },
@@ -37,6 +37,7 @@
                 ],
                 "fn": "setInfo",
                 "implHandler": [
+                    "   this.setData(record);",
                     "    var contactsLabel = Ext.getCmp('contactsLabel');",
                     "    String.prototype.replaceAll = function(search, replacement) {",
                     "        var target = this;",
@@ -48,8 +49,9 @@
                     "    postLabel.setHtml(record.data.post);",
                     "    contactsLabel.setData(record.data);",
                     "    var infoLabel = Ext.getCmp('infoLabel');",
-                    "    var infoHtml = '<span style = \"font-weight: bold; padding-left: 10px\">Доп. информация: <span style = \"font-weight: normal; font-size: 14px\"> {info}';",
-                    "    infoLabel.setHtml(infoHtml.replace(\"{info}\",record.data.info));"
+                    "    var infoHtml = '<div style = \"padding: 0px 10px 0px 10px\"> <span style = \"font-weight: bold; \">Доп. информация: <span style = \"font-weight: normal; font-size: 14px\"> {info}</div>';",
+                    "    infoLabel.setHtml(infoHtml.replace(\"{info}\",record.data.info));",
+                    "    this.updateSocialButtons(record);"
                 ]
             },
             "name": "setInfo",
@@ -82,7 +84,7 @@
                     "userConfig": {
                         "container|align": "center",
                         "docked": null,
-                        "height": "241px",
+                        "height": "360px",
                         "layout": "vbox",
                         "layout|flex": null,
                         "scrollable": null
@@ -98,7 +100,7 @@
                             },
                             "codeClass": null,
                             "userConfig": {
-                                "height": 20,
+                                "height": 10,
                                 "id": "spacer1",
                                 "width": 50
                             },
@@ -114,12 +116,12 @@
                             "codeClass": null,
                             "userConfig": {
                                 "docked": null,
-                                "height": 150,
+                                "height": 300,
                                 "id": "profilePhoto",
                                 "padding": null,
                                 "src": "http://alphachan.org/b/thumb/132656219997.png?key=api",
                                 "style": null,
-                                "width": 150
+                                "width": 300
                             },
                             "name": "MyImg",
                             "designerId": "7c60573a-fe6f-4e90-9fde-220ac6f280a3"
@@ -148,9 +150,9 @@
                                     },
                                     "codeClass": null,
                                     "userConfig": {
-                                        "height": "20px",
+                                        "height": 10,
                                         "id": "spacer2",
-                                        "width": 20
+                                        "width": 10
                                     },
                                     "name": "MySpacer2",
                                     "designerId": "332d252c-ec0b-4d65-97f4-cf7f29b51fb5"
@@ -170,7 +172,7 @@
                                         "html": "Холин Роман",
                                         "id": "nameLabel",
                                         "padding": null,
-                                        "style": "line-height:30px"
+                                        "style": null
                                     },
                                     "name": "MyLabel",
                                     "designerId": "af275a31-56f9-4dd3-bc15-86b97dfafc08"
@@ -207,15 +209,36 @@
                     "codeClass": null,
                     "userConfig": {
                         "docked": null,
-                        "height": "90px",
+                        "height": "100px",
                         "id": "contactsCnt",
                         "layout": "hbox",
                         "layout|flex": null,
                         "style": "border-top: 2px solid rgb(195,195,195); border-bottom: 2px solid rgb(195,195,195);"
                     },
-                    "name": "MyContainer1",
+                    "name": "MyContainer6",
                     "designerId": "447786c4-c9f3-4bc4-b28b-e66a9b6debfd",
                     "cn": [
+                        {
+                            "type": "Ext.Button",
+                            "reference": {
+                                "name": "items",
+                                "type": "array"
+                            },
+                            "codeClass": null,
+                            "userConfig": {
+                                "cls": [
+                                    "transparent"
+                                ],
+                                "html": "<div> \t<span style = \"font-size: 16px; font-weight: bold\"> E-mail: <span class =\"mail-url\" style=\"color: blue\"> {email}</span> </span></br> \t<span style = \"font-size: 16px; font-weight: bold\"> Телефон: <span class =\"phone-url\" style=\"color: blue\"> {email}</span> </span></br> \t<span style = \"font-size: 16px; font-weight: bold\"> Skype: <span class =\"skype-url\" style=\"color: blue\"> {skype}</span> </span></br> \t<span style = \"font-size: 16px; font-weight: bold\">  Офис: <span style=\"font-weight: normal; color: rgb(140,140,140)\"> {office}</span> </span> </div>",
+                                "id": "contactsBtn",
+                                "labelCls": "contacts-label",
+                                "layout|flex": 1,
+                                "text": "MyButton10",
+                                "ui": null
+                            },
+                            "name": "MyButton10",
+                            "designerId": "1ed79e6b-f158-490e-a60c-bcd8cbb1ae03"
+                        },
                         {
                             "type": "Ext.Label",
                             "reference": {
@@ -224,12 +247,8 @@
                             },
                             "codeClass": null,
                             "userConfig": {
-                                "data": [
-                                    "{",
-                                    "    phone: \"1245\",",
-                                    "    skype: \"dfj\"",
-                                    "}"
-                                ],
+                                "data": null,
+                                "hidden": true,
                                 "id": "contactsLabel"
                             },
                             "name": "MyLabel3",
@@ -246,15 +265,40 @@
                                         "designer|displayName": "tpl",
                                         "implHandler": [
                                             "<div style=\"padding:5px 0px 5px 0px; font-size: 16px\">",
-                                            "    <span style = \"font-weight: bold; padding-left: 10px\"> E-mail: <a href=\"mailto:{email}?call\" style = \"font-weight: normal\"> {email}</a></span><br>",
-                                            "    <span style = \"font-weight: bold; padding-left: 10px\"> Телефон: <a href=\"tel:{phone}\" style = \"font-weight: normal\"> {phone}</a></span><br>",
-                                            "    <span style = \"font-weight: bold; padding-left: 10px\"> Skype: <a href=\"skype:{skype}?call\" style = \"font-weight: normal\"> {skype}</a></span><br>",
-                                            "    <span style = \"font-weight: bold; padding-left: 10px\"> Офис: <span style = \"font-weight: normal; color: rgb(140,140,140)\"> {office}</span></span>",
+                                            "    <span class=\"colleague-info\"> E-mail: <a href=\"mailto:{email}?call\" class = \"colleague-info-hyperlink\"> {email}</a></span><br>",
+                                            "    <span class=\"colleague-info\"> Телефон: <a href=\"tel:{[this.getNumbersFromPhone(values.phone)]}\" class = \"colleague-info-hyperlink\"> {phone}</a></span><br>",
+                                            "    <span class=\"colleague-info\"> Skype: <a href=\"skype:{skype}?call\" class = \"colleague-info-hyperlink\"> {skype}</a></span><br>",
+                                            "    <span class=\"colleague-info\"> Офис: <span style = \"font-weight: normal; color: rgb(140,140,140)\"> {office}</span></span>",
                                             "</div>"
                                         ]
                                     },
                                     "name": "tpl",
-                                    "designerId": "fbbc445c-177b-4024-b22d-ef9471d4c22b"
+                                    "designerId": "fbbc445c-177b-4024-b22d-ef9471d4c22b",
+                                    "cn": [
+                                        {
+                                            "type": "templatefunction",
+                                            "reference": {
+                                                "name": "items",
+                                                "type": "array"
+                                            },
+                                            "codeClass": null,
+                                            "userConfig": {
+                                                "designer|displayName": null,
+                                                "designer|params": [
+                                                    "phone"
+                                                ],
+                                                "fn": "getNumbersFromPhone",
+                                                "implHandler": [
+                                                    "var digits = mainController.parsePhoneForCall(phone);",
+                                                    "console.log('Parsed phone '+ digits);",
+                                                    "return digits;",
+                                                    ""
+                                                ]
+                                            },
+                                            "name": "getNumbersFromPhone",
+                                            "designerId": "c99d9be0-58ef-4410-b7ba-c3c2ffae957d"
+                                        }
+                                    ]
                                 }
                             ]
                         }
@@ -271,7 +315,8 @@
                         "height": "",
                         "html": null,
                         "id": "infoLabel",
-                        "minHeight": "50px"
+                        "minHeight": "30px",
+                        "style": null
                     },
                     "name": "MyLabel4",
                     "designerId": "07fb2afc-38d0-49f3-9ca8-b425347ca8dc"
@@ -304,11 +349,31 @@
                             "userConfig": {
                                 "height": 75,
                                 "id": "instagramBtn",
+                                "itemId": "myimg1",
                                 "src": "resources/css/images/buttons/insta.active.png",
                                 "width": 75
                             },
                             "name": "MyImg1",
-                            "designerId": "fd9103ef-8c73-4310-954a-1ec40e6debca"
+                            "designerId": "fd9103ef-8c73-4310-954a-1ec40e6debca",
+                            "cn": [
+                                {
+                                    "type": "basiceventbinding",
+                                    "reference": {
+                                        "name": "listeners",
+                                        "type": "array"
+                                    },
+                                    "codeClass": null,
+                                    "userConfig": {
+                                        "fn": "onInstagramBtnTap",
+                                        "implHandler": [
+                                            "    this.onSocialButtonTap(image.getData());"
+                                        ],
+                                        "name": "tap"
+                                    },
+                                    "name": "onInstagramBtnTap",
+                                    "designerId": "4cde1dc4-a9bd-4963-abb8-d937b5735d0b"
+                                }
+                            ]
                         },
                         {
                             "type": "Ext.Img",
@@ -320,11 +385,31 @@
                             "userConfig": {
                                 "height": 75,
                                 "id": "facebookBtn",
+                                "itemId": "myimg2",
                                 "src": "resources/css/images/buttons/fb.active.png",
                                 "width": 75
                             },
                             "name": "MyImg2",
-                            "designerId": "f35adc39-a5f8-4eb9-8c0f-e565b54518ab"
+                            "designerId": "f35adc39-a5f8-4eb9-8c0f-e565b54518ab",
+                            "cn": [
+                                {
+                                    "type": "basiceventbinding",
+                                    "reference": {
+                                        "name": "listeners",
+                                        "type": "array"
+                                    },
+                                    "codeClass": null,
+                                    "userConfig": {
+                                        "fn": "onFacebookBtnTap",
+                                        "implHandler": [
+                                            "    this.onSocialButtonTap(image.getData());"
+                                        ],
+                                        "name": "tap"
+                                    },
+                                    "name": "onFacebookBtnTap",
+                                    "designerId": "33536615-3a2f-4e7d-ab66-786c1def6b5a"
+                                }
+                            ]
                         },
                         {
                             "type": "Ext.Img",
@@ -341,7 +426,26 @@
                                 "width": 75
                             },
                             "name": "MyImg4",
-                            "designerId": "5f64523f-a48c-4ca0-80aa-7dee7b1691fe"
+                            "designerId": "5f64523f-a48c-4ca0-80aa-7dee7b1691fe",
+                            "cn": [
+                                {
+                                    "type": "basiceventbinding",
+                                    "reference": {
+                                        "name": "listeners",
+                                        "type": "array"
+                                    },
+                                    "codeClass": null,
+                                    "userConfig": {
+                                        "fn": "onVkBtnTap",
+                                        "implHandler": [
+                                            "    this.onSocialButtonTap(image.getData());"
+                                        ],
+                                        "name": "tap"
+                                    },
+                                    "name": "onVkBtnTap",
+                                    "designerId": "8aace960-3db7-4d8d-bd23-daeb385b89cd"
+                                }
+                            ]
                         },
                         {
                             "type": "Ext.Img",
@@ -360,11 +464,108 @@
                                 "width": 75
                             },
                             "name": "MyImg3",
-                            "designerId": "717c124a-2817-49af-b4de-5e987e3be3ce"
+                            "designerId": "717c124a-2817-49af-b4de-5e987e3be3ce",
+                            "cn": [
+                                {
+                                    "type": "basiceventbinding",
+                                    "reference": {
+                                        "name": "listeners",
+                                        "type": "array"
+                                    },
+                                    "codeClass": null,
+                                    "userConfig": {
+                                        "fn": "onTwitterBtnTap",
+                                        "implHandler": [
+                                            "        this.onSocialButtonTap(image.getData());"
+                                        ],
+                                        "name": "tap"
+                                    },
+                                    "name": "onTwitterBtnTap",
+                                    "designerId": "90d02994-9079-4059-98c1-6fcff158ece2"
+                                }
+                            ]
                         }
                     ]
                 }
             ]
+        },
+        {
+            "type": "basicfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|params": [
+                    "data"
+                ],
+                "fn": "onSocialButtonTap",
+                "implHandler": [
+                    "    if (!data)",
+                    "        return;",
+                    "",
+                    "    if (!data[\"id\"])",
+                    "        return;",
+                    "",
+                    "    var url =  data[\"id\"];",
+                    "    mainController.openUrl(url, true);"
+                ]
+            },
+            "name": "onSocialButtonTap",
+            "designerId": "e4923a1c-651a-48a3-8172-ab6fe482ba41"
+        },
+        {
+            "type": "basicfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|params": [
+                    "record"
+                ],
+                "fn": "updateSocialButtons",
+                "implHandler": [
+                    "    var twBtn = Ext.getCmp('twitterBtn');",
+                    "    twBtn.setData({\"id\" : record.data.idTwitter});",
+                    "    var twSrc = \"resources/css/images/buttons/twitter.active.png\"",
+                    "    if (!record.data.idTwitter)",
+                    "        twSrc = twSrc.replace(\"active\",\"disabled\");",
+                    "",
+                    "    twBtn.setSrc(twSrc);",
+                    "",
+                    "    var vkBtn = Ext.getCmp('vkBtn');",
+                    "    vkBtn.setData({\"id\" : record.data.idVKontakte});",
+                    "    var vkSrc = \"resources/css/images/buttons/vk.active.png\"",
+                    "    if (!record.data.idVKontakte)",
+                    "        vkSrc = vkSrc.replace(\"active\",\"disabled\");",
+                    "",
+                    "    vkBtn.setSrc(vkSrc);",
+                    "",
+                    "",
+                    "",
+                    "    var fbBtn = Ext.getCmp('facebookBtn');",
+                    "    fbBtn.setData({\"id\" : record.data.idFacebook});",
+                    "    var fbSrc = \"resources/css/images/buttons/fb.active.png\"",
+                    "    if (!record.data.idFacebook)",
+                    "        fbSrc = fbSrc.replace(\"active\",\"disabled\");",
+                    "",
+                    "    fbBtn.setSrc(fbSrc);",
+                    "",
+                    "    var instBtn = Ext.getCmp('instagramBtn');",
+                    "    instBtn.setData({\"id\" : record.data.idInstagram});",
+                    "    var instSrc = \"resources/css/images/buttons/insta.active.png\"",
+                    "    if (!record.data.idInstagram)",
+                    "        instSrc = instSrc.replace(\"active\",\"disabled\");",
+                    "",
+                    "    instBtn.setSrc(instSrc);",
+                    ""
+                ]
+            },
+            "name": "updateSocialButtons",
+            "designerId": "760525e7-5566-4e16-af36-a1ef6da2919b"
         }
     ]
 }

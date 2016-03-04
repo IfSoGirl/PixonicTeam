@@ -26,11 +26,11 @@ Ext.define('PixonicTeam.view.EmployeesNav', {
 
     config: {
         id: 'employeeNav',
+        autoDestroy: false,
         defaultBackButtonText: 'Назад',
         navigationBar: {
             cls: 'toolbar',
             docked: 'top',
-            height: '60px',
             id: 'navBar',
             itemId: 'navBar',
             ui: 'light',
@@ -112,10 +112,12 @@ Ext.define('PixonicTeam.view.EmployeesNav', {
                             '    </div>',
                             '    <h3 class="list-item-header">{name}</h3>',
                             '    <span class="post">{post}</span><br>',
-                            '    <span style = "font-size: 14px"> Тел. <a href="tel:+79803870801"> {phone}</a></span><br>',
-                            '    <span style = "font-size: 14px"> Skype <a href="skype:ripenemy?call"> {skype}</a></span>',
+                            '    <span style = "font-size: 16px"> Тел. <span class = "phone-url" style="color: blue" > {phone} </span></span><br>',
+                            '    <span style = "font-size: 16px"> Skype <span class = "skype-url" style="color: blue"> {skype}</span> </span>',
                             '</div>'
                         ],
+                        pressedCls: 'list-item-pressed',
+                        selectedCls: 'list-item-selected',
                         store: 'EmployeeStore',
                         grouped: true,
                         itemHeight: 80,
@@ -141,7 +143,7 @@ Ext.define('PixonicTeam.view.EmployeesNav', {
                 delegate: '#employeeSearch'
             },
             {
-                fn: 'onEmployeeListItemTap1',
+                fn: 'onListItemTap',
                 event: 'itemtap',
                 delegate: '#employeeList'
             }
@@ -149,8 +151,10 @@ Ext.define('PixonicTeam.view.EmployeesNav', {
     },
 
     onMynavigationbarBack: function(bar, eOpts) {
-            var menuBtn = Ext.getCmp('menuBtnNav');
-            menuBtn.show();
+            setTimeout(function() {
+                var menuBtn = Ext.getCmp('menuBtnNav');
+                menuBtn.show();},
+             350);
     },
 
     onSearchfieldKeyup: function(textfield, e, eOpts) {
@@ -169,16 +173,28 @@ Ext.define('PixonicTeam.view.EmployeesNav', {
                 Ext.getStore('EmployeeStore').clearFilter();
     },
 
-    onEmployeeListItemTap1: function(dataview, index, target, record, e, eOpts) {
+    onListItemTap: function(dataview, index, target, record, e, eOpts) {
+            e.stopEvent();
+            if (e.target.className == 'phone-url') {
+                mainController.openUrl("tel:" +mainController.parsePhoneForCall(record.data.phone),true);
+                return;
+            }
+
+            if (e.target.className == 'skype-url') {
+                mainController.openUrl("skype:"+record.data.skype+"?call",true);
+                return;
+            }
+
             var menuBtn = Ext.getCmp('menuBtnNav');
             menuBtn.hide();
-             setTimeout(function(){dataview.deselect(index);},500);
-            var panel = Ext.create('PixonicTeam.view.ColleaguePanel', {
-                title: 'Сотрудники'
-            });
+            setTimeout(function(){dataview.deselect(index);},500);
 
+
+            var panel = Ext.getCmp('colleaguePanel');
             panel.setInfo(record);
             this.push(panel);
+
+
     }
 
 });

@@ -18,8 +18,9 @@ Ext.define('PixonicTeam.view.ProfilePanel', {
     alias: 'widget.profilePanel',
 
     requires: [
-        'Ext.Spacer',
-        'Ext.Button'
+        'Ext.Toolbar',
+        'Ext.Button',
+        'Ext.Spacer'
     ],
 
     config: {
@@ -30,6 +31,25 @@ Ext.define('PixonicTeam.view.ProfilePanel', {
             align: 'center'
         },
         items: [
+            {
+                xtype: 'toolbar',
+                cls: 'toolbar',
+                docked: 'top',
+                id: 'profileToolbar',
+                ui: 'light',
+                title: 'Профиль',
+                layout: {
+                    type: 'hbox',
+                    align: 'end'
+                },
+                items: [
+                    {
+                        xtype: 'button',
+                        action: 'menuButtonPressed',
+                        text: 'Меню'
+                    }
+                ]
+            },
             {
                 xtype: 'spacer',
                 height: 20,

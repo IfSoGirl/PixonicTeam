@@ -21,6 +21,51 @@
     "designerId": "f9bd5738-6292-4119-bc34-f679e9160b41",
     "cn": [
         {
+            "type": "Ext.Toolbar",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "cls": [
+                    "toolbar"
+                ],
+                "container|align": "end",
+                "designer|uiInterfaceName": "light",
+                "docked": "top",
+                "id": "profileToolbar",
+                "title": "Профиль",
+                "ui": "light"
+            },
+            "name": "MyToolbar1",
+            "designerId": "9f58fbb2-7000-4ed7-804a-cd6456b98557",
+            "cn": [
+                {
+                    "type": "Ext.Button",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "action": "menuButtonPressed",
+                        "docked": null,
+                        "text": "Меню"
+                    },
+                    "name": "MyButton8",
+                    "designerId": "a4d190e4-7320-47a9-8ed5-68aded22a895",
+                    "customConfigs": [
+                        {
+                            "group": "(Custom Properties)",
+                            "name": "action",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
             "type": "Ext.Spacer",
             "reference": {
                 "name": "items",

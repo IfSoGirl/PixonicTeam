@@ -1822,7 +1822,6 @@ Ext.Loader.addClassPathMappings({
   "Ext.Element-static": "../../touch/src/dom/Element.static.js",
   "Ext.Element-style": "../../touch/src/dom/Element.style.js",
   "Ext.Element-traversal": "../../touch/src/dom/Element.traversal.js",
-  "Ext.cmd": "../../../bin/Sencha/Cmd/6.0.2.14/plugins/src",
   "Ext.core.DomQuery": "../../touch/src/dom/Query.js",
   "Ext.device.Purchases.Product": "../../touch/src/device/purchases/Sencha.js",
   "Ext.device.filesystem.DirectoryEntry": "../../touch/src/device/filesystem/Sencha.js",
@@ -2334,6 +2333,17 @@ Ext.ClassManager.addNameAlternateMappings({
   "Ext.layout.wrapper.BoxDock": [],
   "Ext.layout.wrapper.Dock": [],
   "Ext.layout.wrapper.Inner": [],
+  "Ext.log.Base": [],
+  "Ext.log.Logger": [],
+  "Ext.log.filter.Filter": [],
+  "Ext.log.filter.Priority": [],
+  "Ext.log.formatter.Default": [],
+  "Ext.log.formatter.Formatter": [],
+  "Ext.log.formatter.Identity": [],
+  "Ext.log.writer.Console": [],
+  "Ext.log.writer.DocumentTitle": [],
+  "Ext.log.writer.Remote": [],
+  "Ext.log.writer.Writer": [],
   "Ext.mixin.Bindable": [],
   "Ext.mixin.Filterable": [],
   "Ext.mixin.Mixin": [],
@@ -2465,9 +2475,9 @@ Ext.ClassManager.addNameAlternateMappings({
   "PixonicTeam.store.EmployeeStore": [],
   "PixonicTeam.view.CalendarPanel": [],
   "PixonicTeam.view.ColleaguePanel": [],
+  "PixonicTeam.view.ContactsTemplate": [],
   "PixonicTeam.view.EmployeesNav": [],
   "PixonicTeam.view.LoginPanel": [],
-  "PixonicTeam.view.MainToolbar": [],
   "PixonicTeam.view.ProfilePanel": [],
   "PixonicTeam.view.SlidingMenu": []
 });
@@ -3050,6 +3060,17 @@ Ext.ClassManager.addNameAliasMappings({
   "Ext.layout.wrapper.BoxDock": [],
   "Ext.layout.wrapper.Dock": [],
   "Ext.layout.wrapper.Inner": [],
+  "Ext.log.Base": [],
+  "Ext.log.Logger": [],
+  "Ext.log.filter.Filter": [],
+  "Ext.log.filter.Priority": [],
+  "Ext.log.formatter.Default": [],
+  "Ext.log.formatter.Formatter": [],
+  "Ext.log.formatter.Identity": [],
+  "Ext.log.writer.Console": [],
+  "Ext.log.writer.DocumentTitle": [],
+  "Ext.log.writer.Remote": [],
+  "Ext.log.writer.Writer": [],
   "Ext.mixin.Bindable": [],
   "Ext.mixin.Filterable": [],
   "Ext.mixin.Mixin": [],
@@ -3199,12 +3220,12 @@ Ext.ClassManager.addNameAliasMappings({
   "PixonicTeam.view.ColleaguePanel": [
     "widget.colleaguepanel"
   ],
+  "PixonicTeam.view.ContactsTemplate": [
+    "widget.contactstemplate"
+  ],
   "PixonicTeam.view.EmployeesNav": [],
   "PixonicTeam.view.LoginPanel": [
     "widget.loginPanel"
-  ],
-  "PixonicTeam.view.MainToolbar": [
-    "widget.mainToolbar"
   ],
   "PixonicTeam.view.ProfilePanel": [
     "widget.profilePanel"

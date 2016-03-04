@@ -52,12 +52,7 @@
             "userConfig": {
                 "fn": "launch",
                 "implHandler": [
-                    "    console.log('Main controller launch');",
                     "    mainController = this;",
-                    "    var toolbar = Ext.create('PixonicTeam.view.MainToolbar');",
-                    "    toolbar.hide();",
-                    "    Ext.Viewport.add(toolbar);",
-                    "",
                     "    Ext.Viewport.setMenu(Ext.create('PixonicTeam.view.SlidingMenu'), {",
                     "        side: 'left',",
                     "        reveal: false",
@@ -66,7 +61,11 @@
                     "    Ext.Viewport.add(Ext.create('PixonicTeam.view.ProfilePanel'));",
                     "    Ext.Viewport.add(Ext.create('PixonicTeam.view.CalendarPanel'));",
                     "",
-                    "    Ext.Viewport.add(Ext.create('PixonicTeam.view.EmployeesNav'));",
+                    "    var nav = Ext.create('PixonicTeam.view.EmployeesNav');",
+                    "    Ext.Viewport.add(nav);",
+                    "    Ext.create('PixonicTeam.view.ColleaguePanel', {",
+                    "        title: 'Сотрудники'",
+                    "    });",
                     ""
                 ]
             },
@@ -122,37 +121,26 @@
                 ],
                 "fn": "showPanel",
                 "implHandler": [
-                    "    console.log('menu item pressed ' + panelName);",
-                    "    var tab, title, enableToolbar;",
-                    "    var bar = Ext.getCmp('mainToolbar');",
+                    "    var tab, title;",
                     "    switch(panelName){",
                     "        case 'profilePanel': {",
-                    "            title = 'Профиль';",
                     "            tab = Ext.getCmp('profilePanel');",
-                    "            enableToolbar = true;",
                     "            break;",
                     "        }",
                     "        case 'calendarPanel': {",
-                    "            title = 'Календарь';",
                     "            tab = Ext.getCmp('calendarPanel');",
-                    "             enableToolbar = true;",
                     "            break;",
                     "        }",
                     "        case 'employeePanel': {",
-                    "            title = 'Сотрудники';",
                     "            tab = Ext.getCmp('employeeNav');",
-                    "             enableToolbar = false;",
                     "            break;",
                     "        }",
                     "",
                     "        case 'colleaguePanel': {",
-                    "            title = 'Сотрудники';",
-                    "             enableToolbar = false;",
                     "            tab = Ext.getCmp('colleaguePanel');",
                     "            break;",
                     "        }",
                     "        case 'loginPanel': {",
-                    "            enableToolbar = false;",
                     "            tab = Ext.getCmp('loginPanel');",
                     "            loginController.showLoginElements();",
                     "            break;",
@@ -161,12 +149,6 @@
                     "            break;",
                     "    }",
                     "",
-                    "    bar.setTitle(title);",
-                    "",
-                    "    if (enableToolbar)",
-                    "        bar.show();",
-                    "    else",
-                    "        bar.hide();",
                     "    Ext.Viewport.hideMenu('left');",
                     "    Ext.Viewport.setActiveItem(tab);"
                 ]
@@ -197,31 +179,52 @@
             "designerId": "248b8076-ee8a-4b4c-b840-3900306eaab9"
         },
         {
-            "type": "controlleraction",
+            "type": "basicfunction",
             "reference": {
-                "name": "listeners",
+                "name": "items",
                 "type": "array"
             },
             "codeClass": null,
             "userConfig": {
-                "designer|controlQuery": "[action /=/(?:menu)/]",
-                "designer|targetType": "Ext.Button",
-                "fn": "onButtonTap",
-                "implHandler": [
-                    "    console.log('Its not menu opening button');",
-                    "    Ext.Viewport.hideMenu('left');"
+                "designer|params": [
+                    "phone"
                 ],
-                "name": "tap"
+                "fn": "parsePhoneForCall",
+                "implHandler": [
+                    "    var regExp = /\\d+/g, phoneDigits = \"+7\";",
+                    "    while ((m = regExp.exec(phone)) !== null) {",
+                    "        phoneDigits += m[0];",
+                    "    }",
+                    "    return phoneDigits;"
+                ]
             },
-            "name": "onButtonTap",
-            "designerId": "7815d5de-2576-4926-a113-363bb40c12f0",
-            "customConfigs": [
-                {
-                    "group": "(Custom Properties)",
-                    "name": "ac",
-                    "type": "string"
-                }
-            ]
+            "name": "parsePhoneForCall",
+            "designerId": "a099ec3b-d6bf-4cdb-8827-cbd6df51dae3"
+        },
+        {
+            "type": "basicfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|params": [
+                    "url",
+                    "separateWindow"
+                ],
+                "fn": "openUrl",
+                "implHandler": [
+                    "    console.log(\"Controller open url!\" + url);",
+                    "    if (separateWindow)",
+                    "        window.open(url, '_system','location=yes,closebuttoncaption=Done');",
+                    "    else ",
+                    "    location.href = url;",
+                    ""
+                ]
+            },
+            "name": "openUrl",
+            "designerId": "9429291c-78f8-44d4-b63a-5e95925e2c87"
         }
     ]
 }

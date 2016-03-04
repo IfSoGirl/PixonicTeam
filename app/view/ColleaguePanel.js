@@ -22,6 +22,7 @@ Ext.define('PixonicTeam.view.ColleaguePanel', {
         'Ext.Spacer',
         'Ext.Img',
         'Ext.Label',
+        'Ext.Button',
         'Ext.XTemplate'
     ],
 
@@ -30,7 +31,6 @@ Ext.define('PixonicTeam.view.ColleaguePanel', {
         hidden: false,
         id: 'colleaguePanel',
         layout: 'fit',
-        scrollable: false,
         items: [
             {
                 xtype: 'panel',
@@ -40,7 +40,7 @@ Ext.define('PixonicTeam.view.ColleaguePanel', {
                 items: [
                     {
                         xtype: 'container',
-                        height: '241px',
+                        height: '360px',
                         layout: {
                             type: 'vbox',
                             align: 'center'
@@ -48,15 +48,15 @@ Ext.define('PixonicTeam.view.ColleaguePanel', {
                         items: [
                             {
                                 xtype: 'spacer',
-                                height: 20,
+                                height: 10,
                                 id: 'spacer1',
                                 width: 50
                             },
                             {
                                 xtype: 'image',
-                                height: 150,
+                                height: 300,
                                 id: 'profilePhoto',
-                                width: 150,
+                                width: 300,
                                 src: 'http://alphachan.org/b/thumb/132656219997.png?key=api'
                             },
                             {
@@ -69,17 +69,16 @@ Ext.define('PixonicTeam.view.ColleaguePanel', {
                                 items: [
                                     {
                                         xtype: 'spacer',
-                                        height: '20px',
+                                        height: 10,
                                         id: 'spacer2',
-                                        width: 20
+                                        width: 10
                                     },
                                     {
                                         xtype: 'label',
                                         cls: 'list-item-header',
                                         height: '30px',
                                         html: 'Холин Роман',
-                                        id: 'nameLabel',
-                                        style: 'line-height:30px'
+                                        id: 'nameLabel'
                                     },
                                     {
                                         xtype: 'label',
@@ -97,26 +96,40 @@ Ext.define('PixonicTeam.view.ColleaguePanel', {
                     },
                     {
                         xtype: 'container',
-                        height: '90px',
+                        height: '100px',
                         id: 'contactsCnt',
                         style: 'border-top: 2px solid rgb(195,195,195); border-bottom: 2px solid rgb(195,195,195);',
                         layout: 'hbox',
                         items: [
                             {
+                                xtype: 'button',
+                                flex: 1,
+                                cls: 'transparent',
+                                html: '<div> 	<span style = "font-size: 16px; font-weight: bold"> E-mail: <span class ="mail-url" style="color: blue"> {email}</span> </span></br> 	<span style = "font-size: 16px; font-weight: bold"> Телефон: <span class ="phone-url" style="color: blue"> {email}</span> </span></br> 	<span style = "font-size: 16px; font-weight: bold"> Skype: <span class ="skype-url" style="color: blue"> {skype}</span> </span></br> 	<span style = "font-size: 16px; font-weight: bold">  Офис: <span style="font-weight: normal; color: rgb(140,140,140)"> {office}</span> </span> </div>',
+                                id: 'contactsBtn',
+                                labelCls: 'contacts-label',
+                                text: 'MyButton10'
+                            },
+                            {
                                 xtype: 'label',
-                                data: {
-                                    phone: '1245',
-                                    skype: 'dfj'
-                                },
+                                hidden: true,
                                 id: 'contactsLabel',
-                                tpl: [
+                                tpl: Ext.create('Ext.XTemplate', 
                                     '<div style="padding:5px 0px 5px 0px; font-size: 16px">',
-                                    '    <span style = "font-weight: bold; padding-left: 10px"> E-mail: <a href="mailto:{email}?call" style = "font-weight: normal"> {email}</a></span><br>',
-                                    '    <span style = "font-weight: bold; padding-left: 10px"> Телефон: <a href="tel:{phone}" style = "font-weight: normal"> {phone}</a></span><br>',
-                                    '    <span style = "font-weight: bold; padding-left: 10px"> Skype: <a href="skype:{skype}?call" style = "font-weight: normal"> {skype}</a></span><br>',
-                                    '    <span style = "font-weight: bold; padding-left: 10px"> Офис: <span style = "font-weight: normal; color: rgb(140,140,140)"> {office}</span></span>',
-                                    '</div>'
-                                ]
+                                    '    <span class="colleague-info"> E-mail: <a href="mailto:{email}?call" class = "colleague-info-hyperlink"> {email}</a></span><br>',
+                                    '    <span class="colleague-info"> Телефон: <a href="tel:{[this.getNumbersFromPhone(values.phone)]}" class = "colleague-info-hyperlink"> {phone}</a></span><br>',
+                                    '    <span class="colleague-info"> Skype: <a href="skype:{skype}?call" class = "colleague-info-hyperlink"> {skype}</a></span><br>',
+                                    '    <span class="colleague-info"> Офис: <span style = "font-weight: normal; color: rgb(140,140,140)"> {office}</span></span>',
+                                    '</div>',
+                                    {
+                                        getNumbersFromPhone: function(phone) {
+                                            var digits = mainController.parsePhoneForCall(phone);
+                                            console.log('Parsed phone '+ digits);
+                                            return digits;
+
+                                        }
+                                    }
+                                )
                             }
                         ]
                     },
@@ -124,7 +137,7 @@ Ext.define('PixonicTeam.view.ColleaguePanel', {
                         xtype: 'label',
                         height: '',
                         id: 'infoLabel',
-                        minHeight: '50px'
+                        minHeight: '30px'
                     },
                     {
                         xtype: 'container',
@@ -140,6 +153,7 @@ Ext.define('PixonicTeam.view.ColleaguePanel', {
                                 xtype: 'image',
                                 height: 75,
                                 id: 'instagramBtn',
+                                itemId: 'myimg1',
                                 width: 75,
                                 src: 'resources/css/images/buttons/insta.active.png'
                             },
@@ -147,6 +161,7 @@ Ext.define('PixonicTeam.view.ColleaguePanel', {
                                 xtype: 'image',
                                 height: 75,
                                 id: 'facebookBtn',
+                                itemId: 'myimg2',
                                 width: 75,
                                 src: 'resources/css/images/buttons/fb.active.png'
                             },
@@ -171,10 +186,49 @@ Ext.define('PixonicTeam.view.ColleaguePanel', {
                     }
                 ]
             }
+        ],
+        listeners: [
+            {
+                fn: 'onInstagramBtnTap',
+                event: 'tap',
+                delegate: '#instagramBtn'
+            },
+            {
+                fn: 'onFacebookBtnTap',
+                event: 'tap',
+                delegate: '#facebookBtn'
+            },
+            {
+                fn: 'onVkBtnTap',
+                event: 'tap',
+                delegate: '#vkBtn'
+            },
+            {
+                fn: 'onTwitterBtnTap',
+                event: 'tap',
+                delegate: '#twitterBtn'
+            }
         ]
     },
 
+    onInstagramBtnTap: function(image, e, eOpts) {
+            this.onSocialButtonTap(image.getData());
+    },
+
+    onFacebookBtnTap: function(image, e, eOpts) {
+            this.onSocialButtonTap(image.getData());
+    },
+
+    onVkBtnTap: function(image, e, eOpts) {
+            this.onSocialButtonTap(image.getData());
+    },
+
+    onTwitterBtnTap: function(image, e, eOpts) {
+                this.onSocialButtonTap(image.getData());
+    },
+
     setInfo: function(record) {
+           this.setData(record);
             var contactsLabel = Ext.getCmp('contactsLabel');
             String.prototype.replaceAll = function(search, replacement) {
                 var target = this;
@@ -186,8 +240,57 @@ Ext.define('PixonicTeam.view.ColleaguePanel', {
             postLabel.setHtml(record.data.post);
             contactsLabel.setData(record.data);
             var infoLabel = Ext.getCmp('infoLabel');
-            var infoHtml = '<span style = "font-weight: bold; padding-left: 10px">Доп. информация: <span style = "font-weight: normal; font-size: 14px"> {info}';
+            var infoHtml = '<div style = "padding: 0px 10px 0px 10px"> <span style = "font-weight: bold; ">Доп. информация: <span style = "font-weight: normal; font-size: 14px"> {info}</div>';
             infoLabel.setHtml(infoHtml.replace("{info}",record.data.info));
+            this.updateSocialButtons(record);
+    },
+
+    onSocialButtonTap: function(data) {
+            if (!data)
+                return;
+
+            if (!data["id"])
+                return;
+
+            var url =  data["id"];
+            mainController.openUrl(url, true);
+    },
+
+    updateSocialButtons: function(record) {
+            var twBtn = Ext.getCmp('twitterBtn');
+            twBtn.setData({"id" : record.data.idTwitter});
+            var twSrc = "resources/css/images/buttons/twitter.active.png"
+            if (!record.data.idTwitter)
+                twSrc = twSrc.replace("active","disabled");
+
+            twBtn.setSrc(twSrc);
+
+            var vkBtn = Ext.getCmp('vkBtn');
+            vkBtn.setData({"id" : record.data.idVKontakte});
+            var vkSrc = "resources/css/images/buttons/vk.active.png"
+            if (!record.data.idVKontakte)
+                vkSrc = vkSrc.replace("active","disabled");
+
+            vkBtn.setSrc(vkSrc);
+
+
+
+            var fbBtn = Ext.getCmp('facebookBtn');
+            fbBtn.setData({"id" : record.data.idFacebook});
+            var fbSrc = "resources/css/images/buttons/fb.active.png"
+            if (!record.data.idFacebook)
+                fbSrc = fbSrc.replace("active","disabled");
+
+            fbBtn.setSrc(fbSrc);
+
+            var instBtn = Ext.getCmp('instagramBtn');
+            instBtn.setData({"id" : record.data.idInstagram});
+            var instSrc = "resources/css/images/buttons/insta.active.png"
+            if (!record.data.idInstagram)
+                instSrc = instSrc.replace("active","disabled");
+
+            instBtn.setSrc(instSrc);
+
     }
 
 });

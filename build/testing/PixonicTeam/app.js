@@ -59550,6 +59550,25 @@ Ext.define('PixonicTeam.view.ProfilePanel', {
         },
         items: [
             {
+                xtype: 'toolbar',
+                cls: 'toolbar',
+                docked: 'top',
+                id: 'profileToolbar',
+                ui: 'light',
+                title: 'Профиль',
+                layout: {
+                    type: 'hbox',
+                    align: 'end'
+                },
+                items: [
+                    {
+                        xtype: 'button',
+                        action: 'menuButtonPressed',
+                        text: 'Меню'
+                    }
+                ]
+            },
+            {
                 xtype: 'spacer',
                 height: 20,
                 width: 20
@@ -59776,7 +59795,6 @@ Ext.define('PixonicTeam.controller.LoginController', {
         });
     },
     onLoginSuccess: function() {
-        console.log('Login successful, login call main');
         mainController.showPanel('profilePanel');
         var calendarFrame = Ext.getCmp('calendarFrame');
         var email = localStorage['email'];
@@ -59904,6 +59922,25 @@ Ext.define('PixonicTeam.view.CalendarPanel', {
         id: 'calendarPanel',
         items: [
             {
+                xtype: 'toolbar',
+                cls: 'toolbar',
+                docked: 'top',
+                id: 'calendarToolbar',
+                ui: 'light',
+                title: 'Календарь',
+                layout: {
+                    type: 'hbox',
+                    align: 'end'
+                },
+                items: [
+                    {
+                        xtype: 'button',
+                        action: 'menuButtonPressed',
+                        text: 'Меню'
+                    }
+                ]
+            },
+            {
                 xtype: 'container',
                 centered: true,
                 height: 300,
@@ -59940,9 +59977,6 @@ Ext.define('PixonicTeam.controller.MainController', {
             },
             "listitem": {
                 onListItemTap: 'OnListItemTap'
-            },
-            "[action /=/(?:menu)/]": {
-                tap: 'onButtonTap'
             }
         }
     },
@@ -59978,60 +60012,45 @@ Ext.define('PixonicTeam.controller.MainController', {
         this.showPanel(targetPanel);
     },
     OnListItemTap: function(listitem) {},
-    onButtonTap: function(button, e, eOpts) {
-        console.log('Its not menu opening button');
-        Ext.Viewport.hideMenu('left');
-    },
     launch: function() {
-        console.log('Main controller launch');
         mainController = this;
-        var toolbar = Ext.create('PixonicTeam.view.MainToolbar');
-        toolbar.hide();
-        Ext.Viewport.add(toolbar);
         Ext.Viewport.setMenu(Ext.create('PixonicTeam.view.SlidingMenu'), {
             side: 'left',
             reveal: false
         });
         Ext.Viewport.add(Ext.create('PixonicTeam.view.ProfilePanel'));
         Ext.Viewport.add(Ext.create('PixonicTeam.view.CalendarPanel'));
-        Ext.Viewport.add(Ext.create('PixonicTeam.view.EmployeesNav'));
+        var nav = Ext.create('PixonicTeam.view.EmployeesNav');
+        Ext.Viewport.add(nav);
+        Ext.create('PixonicTeam.view.ColleaguePanel', {
+            title: 'Сотрудники'
+        });
     },
     showPanel: function(panelName) {
-        console.log('menu item pressed ' + panelName);
-        var tab, title, enableToolbar;
-        var bar = Ext.getCmp('mainToolbar');
+        var tab, title;
         switch (panelName) {
             case 'profilePanel':
                 {
-                    title = 'Профиль';
                     tab = Ext.getCmp('profilePanel');
-                    enableToolbar = true;
                     break;
                 };
             case 'calendarPanel':
                 {
-                    title = 'Календарь';
                     tab = Ext.getCmp('calendarPanel');
-                    enableToolbar = true;
                     break;
                 };
             case 'employeePanel':
                 {
-                    title = 'Сотрудники';
                     tab = Ext.getCmp('employeeNav');
-                    enableToolbar = false;
                     break;
                 };
             case 'colleaguePanel':
                 {
-                    title = 'Сотрудники';
-                    enableToolbar = false;
                     tab = Ext.getCmp('colleaguePanel');
                     break;
                 };
             case 'loginPanel':
                 {
-                    enableToolbar = false;
                     tab = Ext.getCmp('loginPanel');
                     loginController.showLoginElements();
                     break;
@@ -60039,16 +60058,26 @@ Ext.define('PixonicTeam.controller.MainController', {
             default:
                 break;
         }
-        bar.setTitle(title);
-        if (enableToolbar)  {
-            bar.show();
-        }
-        else  {
-            bar.hide();
-        }
-        
         Ext.Viewport.hideMenu('left');
         Ext.Viewport.setActiveItem(tab);
+    },
+    parsePhoneForCall: function(phone) {
+        var regExp = /\d+/g,
+            phoneDigits = "+7";
+        while ((m = regExp.exec(phone)) !== null) {
+            phoneDigits += m[0];
+        }
+        return phoneDigits;
+    },
+    openUrl: function(url, separateWindow) {
+        console.log("Controller open url!" + url);
+        if (separateWindow)  {
+            window.open(url, '_system', 'location=yes,closebuttoncaption=Done');
+        }
+        else  {
+            location.href = url;
+        }
+        
     }
 });
 
@@ -60161,10 +60190,10 @@ Ext.define('PixonicTeam.store.EmployeeStore', {
                 phone: '(933) 045-1869',
                 skype: 'necessitatibus',
                 photo: 'http://aimed.spb.ru/images/cms/thumbs/142e21f5603e46b2330254502ddbcabba75dc90f/sperm_80_80_5_80.png?key=api',
-                idFacebook: 'aliquam',
-                idInstagram: 'et',
-                idTwitter: 'assumenda',
-                idVKontakte: 'velit',
+                idFacebook: '',
+                idInstagram: '',
+                idTwitter: '',
+                idVKontakte: '',
                 holidayBegin: 'est',
                 holidayEnd: 'alias',
                 regDate: 'saepe',
@@ -60172,16 +60201,16 @@ Ext.define('PixonicTeam.store.EmployeeStore', {
             },
             {
                 name: 'Холин Роман',
-                email: 'email@pixonic.ru',
+                email: 'r.holin@pixonic.ru',
                 office: 'Белгород',
                 post: 'Гейм-дизайнер',
-                phone: '(234) 642-3689',
-                skype: 'similique',
+                phone: '(968) 921-48-37',
+                skype: 'ripenemy',
                 photo: 'http://aimed.spb.ru/images/cms/thumbs/142e21f5603e46b2330254502ddbcabba75dc90f/sperm_80_80_5_80.png?key=api',
-                idFacebook: 'architecto',
-                idInstagram: 'eos',
-                idTwitter: 'praesentium',
-                idVKontakte: 'aut',
+                idFacebook: 'https://www.facebook.com/roman.kholin.56',
+                idInstagram: 'https://www.instagram.com/ripenemy/',
+                idTwitter: 'https://twitter.com/RIPEnemy',
+                idVKontakte: 'http://vk.com/r.kholin',
                 holidayBegin: 'ratione',
                 holidayEnd: 'commodi',
                 regDate: 'aut',
@@ -60189,132 +60218,20 @@ Ext.define('PixonicTeam.store.EmployeeStore', {
             },
             {
                 name: 'Матюха Дарья',
-                email: 'email@pixonic.ru',
+                email: 'matyukha@pixonic.ru',
                 office: 'Белгород',
                 post: 'Программист',
-                phone: '(234) 642-4989',
-                skype: 'similique',
+                phone: '(980) 387-08-01',
+                skype: 'magnolia9102',
                 photo: 'http://aimed.spb.ru/images/cms/thumbs/142e21f5603e46b2330254502ddbcabba75dc90f/sperm_80_80_5_80.png?key=api',
-                idFacebook: 'architecto',
-                idInstagram: 'eos',
-                idTwitter: 'praesentium',
-                idVKontakte: 'aut',
+                idFacebook: 'https://www.facebook.com/profile.php?id=100006846364642',
+                idInstagram: 'https://www.instagram.com/ifsogirl91/',
+                idTwitter: '',
+                idVKontakte: 'https://vk.com/id5710116',
                 holidayBegin: 'ratione',
                 holidayEnd: 'commodi',
                 regDate: 'aut',
                 info: 'О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!'
-            },
-            {
-                name: 'Ананьев Александр',
-                email: 'email@pixonic.ru',
-                office: 'Москва',
-                post: '2D концепт-художник',
-                phone: '(933) 045-1869',
-                skype: 'necessitatibus',
-                photo: 'http://aimed.spb.ru/images/cms/thumbs/142e21f5603e46b2330254502ddbcabba75dc90f/sperm_80_80_5_80.png?key=api',
-                idFacebook: 'aliquam',
-                idInstagram: 'et',
-                idTwitter: 'assumenda',
-                idVKontakte: 'velit',
-                holidayBegin: 'est',
-                holidayEnd: 'alias',
-                regDate: 'saepe'
-            },
-            {
-                name: 'Холин Роман',
-                email: 'email@pixonic.ru',
-                office: 'Белгород',
-                post: 'Гейм-дизайнер',
-                phone: '(234) 642-3689',
-                skype: 'similique',
-                photo: 'http://aimed.spb.ru/images/cms/thumbs/142e21f5603e46b2330254502ddbcabba75dc90f/sperm_80_80_5_80.png?key=api',
-                idFacebook: 'architecto',
-                idInstagram: 'eos',
-                idTwitter: 'praesentium',
-                idVKontakte: 'aut',
-                holidayBegin: 'ratione',
-                holidayEnd: 'commodi',
-                regDate: 'aut'
-            },
-            {
-                name: 'Матюха Дарья',
-                email: 'email@pixonic.ru',
-                office: 'Белгород',
-                post: 'Программист',
-                phone: '(234) 642-4989',
-                skype: 'similique',
-                photo: 'http://aimed.spb.ru/images/cms/thumbs/142e21f5603e46b2330254502ddbcabba75dc90f/sperm_80_80_5_80.png?key=api',
-                idFacebook: 'architecto',
-                idInstagram: 'eos',
-                idTwitter: 'praesentium',
-                idVKontakte: 'aut',
-                holidayBegin: 'ratione',
-                holidayEnd: 'commodi',
-                regDate: 'aut'
-            },
-            {
-                name: 'Ананьев Александр',
-                email: 'email@pixonic.ru',
-                office: 'Москва',
-                post: '2D концепт-художник',
-                phone: '(933) 045-1869',
-                skype: 'necessitatibus',
-                photo: 'http://aimed.spb.ru/images/cms/thumbs/142e21f5603e46b2330254502ddbcabba75dc90f/sperm_80_80_5_80.png?key=api',
-                idFacebook: 'aliquam',
-                idInstagram: 'et',
-                idTwitter: 'assumenda',
-                idVKontakte: 'velit',
-                holidayBegin: 'est',
-                holidayEnd: 'alias',
-                regDate: 'saepe'
-            },
-            {
-                name: 'Ананьев Александр',
-                email: 'email@pixonic.ru',
-                office: 'Москва',
-                post: '2D концепт-художник',
-                phone: '(933) 045-1869',
-                skype: 'necessitatibus',
-                photo: 'http://aimed.spb.ru/images/cms/thumbs/142e21f5603e46b2330254502ddbcabba75dc90f/sperm_80_80_5_80.png?key=api',
-                idFacebook: 'aliquam',
-                idInstagram: 'et',
-                idTwitter: 'assumenda',
-                idVKontakte: 'velit',
-                holidayBegin: 'est',
-                holidayEnd: 'alias',
-                regDate: 'saepe'
-            },
-            {
-                name: 'Холин Роман',
-                email: 'email@pixonic.ru',
-                office: 'Белгород',
-                post: 'Гейм-дизайнер',
-                phone: '(234) 642-3689',
-                skype: 'similique',
-                photo: 'http://aimed.spb.ru/images/cms/thumbs/142e21f5603e46b2330254502ddbcabba75dc90f/sperm_80_80_5_80.png?key=api',
-                idFacebook: 'architecto',
-                idInstagram: 'eos',
-                idTwitter: 'praesentium',
-                idVKontakte: 'aut',
-                holidayBegin: 'ratione',
-                holidayEnd: 'commodi',
-                regDate: 'aut'
-            },
-            {
-                name: 'Матюха Дарья',
-                email: 'email@pixonic.ru',
-                office: 'Белгород',
-                post: 'Программист',
-                phone: '(234) 642-4989',
-                skype: 'similique',
-                photo: 'http://aimed.spb.ru/images/cms/thumbs/142e21f5603e46b2330254502ddbcabba75dc90f/sperm_80_80_5_80.png?key=api',
-                idFacebook: 'architecto',
-                idInstagram: 'eos',
-                idTwitter: 'praesentium',
-                idVKontakte: 'aut',
-                holidayBegin: 'ratione',
-                holidayEnd: 'commodi',
-                regDate: 'aut'
             }
         ],
         model: 'PixonicTeam.model.Employee',
@@ -60359,7 +60276,6 @@ Ext.define('PixonicTeam.view.ColleaguePanel', {
         hidden: false,
         id: 'colleaguePanel',
         layout: 'fit',
-        scrollable: false,
         items: [
             {
                 xtype: 'panel',
@@ -60369,7 +60285,7 @@ Ext.define('PixonicTeam.view.ColleaguePanel', {
                 items: [
                     {
                         xtype: 'container',
-                        height: '241px',
+                        height: '360px',
                         layout: {
                             type: 'vbox',
                             align: 'center'
@@ -60377,15 +60293,15 @@ Ext.define('PixonicTeam.view.ColleaguePanel', {
                         items: [
                             {
                                 xtype: 'spacer',
-                                height: 20,
+                                height: 10,
                                 id: 'spacer1',
                                 width: 50
                             },
                             {
                                 xtype: 'image',
-                                height: 150,
+                                height: 300,
                                 id: 'profilePhoto',
-                                width: 150,
+                                width: 300,
                                 src: 'http://alphachan.org/b/thumb/132656219997.png?key=api'
                             },
                             {
@@ -60398,17 +60314,16 @@ Ext.define('PixonicTeam.view.ColleaguePanel', {
                                 items: [
                                     {
                                         xtype: 'spacer',
-                                        height: '20px',
+                                        height: 10,
                                         id: 'spacer2',
-                                        width: 20
+                                        width: 10
                                     },
                                     {
                                         xtype: 'label',
                                         cls: 'list-item-header',
                                         height: '30px',
                                         html: 'Холин Роман',
-                                        id: 'nameLabel',
-                                        style: 'line-height:30px'
+                                        id: 'nameLabel'
                                     },
                                     {
                                         xtype: 'label',
@@ -60426,26 +60341,31 @@ Ext.define('PixonicTeam.view.ColleaguePanel', {
                     },
                     {
                         xtype: 'container',
-                        height: '90px',
+                        height: '100px',
                         id: 'contactsCnt',
                         style: 'border-top: 2px solid rgb(195,195,195); border-bottom: 2px solid rgb(195,195,195);',
                         layout: 'hbox',
                         items: [
                             {
+                                xtype: 'button',
+                                flex: 1,
+                                cls: 'transparent',
+                                html: '<div> \t<span style = "font-size: 16px; font-weight: bold"> E-mail: <span class ="mail-url" style="color: blue"> {email}</span> </span></br> \t<span style = "font-size: 16px; font-weight: bold"> Телефон: <span class ="phone-url" style="color: blue"> {email}</span> </span></br> \t<span style = "font-size: 16px; font-weight: bold"> Skype: <span class ="skype-url" style="color: blue"> {skype}</span> </span></br> \t<span style = "font-size: 16px; font-weight: bold">  Офис: <span style="font-weight: normal; color: rgb(140,140,140)"> {office}</span> </span> </div>',
+                                id: 'contactsBtn',
+                                labelCls: 'contacts-label',
+                                text: 'MyButton10'
+                            },
+                            {
                                 xtype: 'label',
-                                data: {
-                                    phone: '1245',
-                                    skype: 'dfj'
-                                },
+                                hidden: true,
                                 id: 'contactsLabel',
-                                tpl: [
-                                    '<div style="padding:5px 0px 5px 0px; font-size: 16px">',
-                                    '    <span style = "font-weight: bold; padding-left: 10px"> E-mail: <a href="mailto:{email}?call" style = "font-weight: normal"> {email}</a></span><br>',
-                                    '    <span style = "font-weight: bold; padding-left: 10px"> Телефон: <a href="tel:{phone}" style = "font-weight: normal"> {phone}</a></span><br>',
-                                    '    <span style = "font-weight: bold; padding-left: 10px"> Skype: <a href="skype:{skype}?call" style = "font-weight: normal"> {skype}</a></span><br>',
-                                    '    <span style = "font-weight: bold; padding-left: 10px"> Офис: <span style = "font-weight: normal; color: rgb(140,140,140)"> {office}</span></span>',
-                                    '</div>'
-                                ]
+                                tpl: Ext.create('Ext.XTemplate', '<div style="padding:5px 0px 5px 0px; font-size: 16px">', '    <span class="colleague-info"> E-mail: <a href="mailto:{email}?call" class = "colleague-info-hyperlink"> {email}</a></span><br>', '    <span class="colleague-info"> Телефон: <a href="tel:{[this.getNumbersFromPhone(values.phone)]}" class = "colleague-info-hyperlink"> {phone}</a></span><br>', '    <span class="colleague-info"> Skype: <a href="skype:{skype}?call" class = "colleague-info-hyperlink"> {skype}</a></span><br>', '    <span class="colleague-info"> Офис: <span style = "font-weight: normal; color: rgb(140,140,140)"> {office}</span></span>', '</div>', {
+                                    getNumbersFromPhone: function(phone) {
+                                        var digits = mainController.parsePhoneForCall(phone);
+                                        console.log('Parsed phone ' + digits);
+                                        return digits;
+                                    }
+                                })
                             }
                         ]
                     },
@@ -60453,7 +60373,7 @@ Ext.define('PixonicTeam.view.ColleaguePanel', {
                         xtype: 'label',
                         height: '',
                         id: 'infoLabel',
-                        minHeight: '50px'
+                        minHeight: '30px'
                     },
                     {
                         xtype: 'container',
@@ -60469,6 +60389,7 @@ Ext.define('PixonicTeam.view.ColleaguePanel', {
                                 xtype: 'image',
                                 height: 75,
                                 id: 'instagramBtn',
+                                itemId: 'myimg1',
                                 width: 75,
                                 src: 'resources/css/images/buttons/insta.active.png'
                             },
@@ -60476,6 +60397,7 @@ Ext.define('PixonicTeam.view.ColleaguePanel', {
                                 xtype: 'image',
                                 height: 75,
                                 id: 'facebookBtn',
+                                itemId: 'myimg2',
                                 width: 75,
                                 src: 'resources/css/images/buttons/fb.active.png'
                             },
@@ -60500,9 +60422,44 @@ Ext.define('PixonicTeam.view.ColleaguePanel', {
                     }
                 ]
             }
+        ],
+        listeners: [
+            {
+                fn: 'onInstagramBtnTap',
+                event: 'tap',
+                delegate: '#instagramBtn'
+            },
+            {
+                fn: 'onFacebookBtnTap',
+                event: 'tap',
+                delegate: '#facebookBtn'
+            },
+            {
+                fn: 'onVkBtnTap',
+                event: 'tap',
+                delegate: '#vkBtn'
+            },
+            {
+                fn: 'onTwitterBtnTap',
+                event: 'tap',
+                delegate: '#twitterBtn'
+            }
         ]
     },
+    onInstagramBtnTap: function(image, e, eOpts) {
+        this.onSocialButtonTap(image.getData());
+    },
+    onFacebookBtnTap: function(image, e, eOpts) {
+        this.onSocialButtonTap(image.getData());
+    },
+    onVkBtnTap: function(image, e, eOpts) {
+        this.onSocialButtonTap(image.getData());
+    },
+    onTwitterBtnTap: function(image, e, eOpts) {
+        this.onSocialButtonTap(image.getData());
+    },
     setInfo: function(record) {
+        this.setData(record);
         var contactsLabel = Ext.getCmp('contactsLabel');
         String.prototype.replaceAll = function(search, replacement) {
             var target = this;
@@ -60514,8 +60471,63 @@ Ext.define('PixonicTeam.view.ColleaguePanel', {
         postLabel.setHtml(record.data.post);
         contactsLabel.setData(record.data);
         var infoLabel = Ext.getCmp('infoLabel');
-        var infoHtml = '<span style = "font-weight: bold; padding-left: 10px">Доп. информация: <span style = "font-weight: normal; font-size: 14px"> {info}';
+        var infoHtml = '<div style = "padding: 0px 10px 0px 10px"> <span style = "font-weight: bold; ">Доп. информация: <span style = "font-weight: normal; font-size: 14px"> {info}</div>';
         infoLabel.setHtml(infoHtml.replace("{info}", record.data.info));
+        this.updateSocialButtons(record);
+    },
+    onSocialButtonTap: function(data) {
+        if (!data)  {
+            return;
+        }
+        
+        if (!data["id"])  {
+            return;
+        }
+        
+        var url = data["id"];
+        mainController.openUrl(url, true);
+    },
+    updateSocialButtons: function(record) {
+        var twBtn = Ext.getCmp('twitterBtn');
+        twBtn.setData({
+            "id": record.data.idTwitter
+        });
+        var twSrc = "resources/css/images/buttons/twitter.active.png";
+        if (!record.data.idTwitter)  {
+            twSrc = twSrc.replace("active", "disabled");
+        }
+        
+        twBtn.setSrc(twSrc);
+        var vkBtn = Ext.getCmp('vkBtn');
+        vkBtn.setData({
+            "id": record.data.idVKontakte
+        });
+        var vkSrc = "resources/css/images/buttons/vk.active.png";
+        if (!record.data.idVKontakte)  {
+            vkSrc = vkSrc.replace("active", "disabled");
+        }
+        
+        vkBtn.setSrc(vkSrc);
+        var fbBtn = Ext.getCmp('facebookBtn');
+        fbBtn.setData({
+            "id": record.data.idFacebook
+        });
+        var fbSrc = "resources/css/images/buttons/fb.active.png";
+        if (!record.data.idFacebook)  {
+            fbSrc = fbSrc.replace("active", "disabled");
+        }
+        
+        fbBtn.setSrc(fbSrc);
+        var instBtn = Ext.getCmp('instagramBtn');
+        instBtn.setData({
+            "id": record.data.idInstagram
+        });
+        var instSrc = "resources/css/images/buttons/insta.active.png";
+        if (!record.data.idInstagram)  {
+            instSrc = instSrc.replace("active", "disabled");
+        }
+        
+        instBtn.setSrc(instSrc);
     }
 });
 
@@ -60537,11 +60549,11 @@ Ext.define('PixonicTeam.view.EmployeesNav', {
     extend: Ext.navigation.View,
     config: {
         id: 'employeeNav',
+        autoDestroy: false,
         defaultBackButtonText: 'Назад',
         navigationBar: {
             cls: 'toolbar',
             docked: 'top',
-            height: '60px',
             id: 'navBar',
             itemId: 'navBar',
             ui: 'light',
@@ -60623,10 +60635,12 @@ Ext.define('PixonicTeam.view.EmployeesNav', {
                             '    </div>',
                             '    <h3 class="list-item-header">{name}</h3>',
                             '    <span class="post">{post}</span><br>',
-                            '    <span style = "font-size: 14px"> Тел. <a href="tel:+79803870801"> {phone}</a></span><br>',
-                            '    <span style = "font-size: 14px"> Skype <a href="skype:ripenemy?call"> {skype}</a></span>',
+                            '    <span style = "font-size: 16px"> Тел. <span class = "phone-url" style="color: blue" > {phone} </span></span><br>',
+                            '    <span style = "font-size: 16px"> Skype <span class = "skype-url" style="color: blue"> {skype}</span> </span>',
                             '</div>'
                         ],
+                        pressedCls: 'list-item-pressed',
+                        selectedCls: 'list-item-selected',
                         store: 'EmployeeStore',
                         grouped: true,
                         itemHeight: 80,
@@ -60652,15 +60666,17 @@ Ext.define('PixonicTeam.view.EmployeesNav', {
                 delegate: '#employeeSearch'
             },
             {
-                fn: 'onEmployeeListItemTap1',
+                fn: 'onListItemTap',
                 event: 'itemtap',
                 delegate: '#employeeList'
             }
         ]
     },
     onMynavigationbarBack: function(bar, eOpts) {
-        var menuBtn = Ext.getCmp('menuBtnNav');
-        menuBtn.show();
+        setTimeout(function() {
+            var menuBtn = Ext.getCmp('menuBtnNav');
+            menuBtn.show();
+        }, 350);
     },
     onSearchfieldKeyup: function(textfield, e, eOpts) {
         var searchString = textfield.getValue().toLowerCase();
@@ -60676,15 +60692,22 @@ Ext.define('PixonicTeam.view.EmployeesNav', {
     onEmployeeSearchClearicontap: function(textfield, e, eOpts) {
         Ext.getStore('EmployeeStore').clearFilter();
     },
-    onEmployeeListItemTap1: function(dataview, index, target, record, e, eOpts) {
+    onListItemTap: function(dataview, index, target, record, e, eOpts) {
+        e.stopEvent();
+        if (e.target.className == 'phone-url') {
+            mainController.openUrl("tel:" + mainController.parsePhoneForCall(record.data.phone), true);
+            return;
+        }
+        if (e.target.className == 'skype-url') {
+            mainController.openUrl("skype:" + record.data.skype + "?call", true);
+            return;
+        }
         var menuBtn = Ext.getCmp('menuBtnNav');
         menuBtn.hide();
         setTimeout(function() {
             dataview.deselect(index);
         }, 500);
-        var panel = Ext.create('PixonicTeam.view.ColleaguePanel', {
-                title: 'Сотрудники'
-            });
+        var panel = Ext.getCmp('colleaguePanel');
         panel.setInfo(record);
         this.push(panel);
     }
@@ -60752,44 +60775,6 @@ Ext.define('PixonicTeam.view.LoginPanel', {
 });
 
 /*
- * File: app/view/MainToolbar.js
- *
- * This file was generated by Sencha Architect version 3.2.0.
- * http://www.sencha.com/products/architect/
- *
- * This file requires use of the Sencha Touch 2.4.x library, under independent license.
- * License of Sencha Architect does not include license for Sencha Touch 2.4.x. For more
- * details see http://www.sencha.com/license or contact license@sencha.com.
- *
- * This file will be auto-generated each and everytime you save your project.
- *
- * Do NOT hand edit this file.
- */
-Ext.define('PixonicTeam.view.MainToolbar', {
-    extend: Ext.Toolbar,
-    alias: 'widget.mainToolbar',
-    config: {
-        cls: 'toolbar',
-        docked: 'top',
-        height: '60px',
-        id: 'mainToolbar',
-        ui: 'light',
-        layout: {
-            type: 'hbox',
-            align: 'end'
-        },
-        items: [
-            {
-                xtype: 'button',
-                action: 'menuButtonPressed',
-                id: 'menuBtn',
-                text: 'Меню'
-            }
-        ]
-    }
-});
-
-/*
  * File: app.js
  *
  * This file was generated by Sencha Architect version 3.2.0.
@@ -60825,7 +60810,6 @@ Ext.application({
         'LoginPanel',
         'CalendarPanel',
         'ProfilePanel',
-        'MainToolbar',
         'EmployeesNav',
         'ColleaguePanel'
     ],

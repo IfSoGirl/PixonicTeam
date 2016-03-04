@@ -19,6 +19,50 @@
     "designerId": "990b5b30-99c7-4b9d-b59e-57970d0ace14",
     "cn": [
         {
+            "type": "Ext.Toolbar",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "cls": [
+                    "toolbar"
+                ],
+                "container|align": "end",
+                "designer|uiInterfaceName": "light",
+                "docked": "top",
+                "id": "calendarToolbar",
+                "title": "Календарь",
+                "ui": "light"
+            },
+            "name": "MyToolbar",
+            "designerId": "1b838382-0994-4f7f-8adf-da2f21cc3f8b",
+            "cn": [
+                {
+                    "type": "Ext.Button",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "action": "menuButtonPressed",
+                        "text": "Меню"
+                    },
+                    "name": "MyButton9",
+                    "designerId": "53dcb7e4-56f8-4cf1-833c-828d6e7c9168",
+                    "customConfigs": [
+                        {
+                            "group": "(Custom Properties)",
+                            "name": "action",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
             "type": "Ext.Container",
             "reference": {
                 "name": "items",

@@ -21,7 +21,6 @@
             "LoginPanel",
             "CalendarPanel",
             "ProfilePanel",
-            "MainToolbar",
             "EmployeesNav",
             "ColleaguePanel"
         ]

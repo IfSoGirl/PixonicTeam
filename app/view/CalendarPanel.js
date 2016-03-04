@@ -18,13 +18,33 @@ Ext.define('PixonicTeam.view.CalendarPanel', {
     alias: 'widget.calendarPanel',
 
     requires: [
-        'Ext.Container'
+        'Ext.Toolbar',
+        'Ext.Button'
     ],
 
     config: {
         hidden: false,
         id: 'calendarPanel',
         items: [
+            {
+                xtype: 'toolbar',
+                cls: 'toolbar',
+                docked: 'top',
+                id: 'calendarToolbar',
+                ui: 'light',
+                title: 'Календарь',
+                layout: {
+                    type: 'hbox',
+                    align: 'end'
+                },
+                items: [
+                    {
+                        xtype: 'button',
+                        action: 'menuButtonPressed',
+                        text: 'Меню'
+                    }
+                ]
+            },
             {
                 xtype: 'container',
                 centered: true,

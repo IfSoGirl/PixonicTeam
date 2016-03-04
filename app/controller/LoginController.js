@@ -238,7 +238,6 @@ Ext.define('PixonicTeam.controller.LoginController', {
 
     onLoginSuccess: function() {
 
-            console.log('Login successful, login call main');
             mainController.showPanel('profilePanel');
             var calendarFrame  = Ext.getCmp('calendarFrame');
             var email = localStorage['email'];

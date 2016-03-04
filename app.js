@@ -44,7 +44,6 @@ Ext.application({
         'LoginPanel',
         'CalendarPanel',
         'ProfilePanel',
-        'MainToolbar',
         'EmployeesNav',
         'ColleaguePanel'
     ],

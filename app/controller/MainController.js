@@ -32,9 +32,6 @@ Ext.define('PixonicTeam.controller.MainController', {
             },
             "listitem": {
                 onListItemTap: 'OnListItemTap'
-            },
-            "[action /=/(?:menu)/]": {
-                tap: 'onButtonTap'
             }
         }
     },
@@ -75,18 +72,8 @@ Ext.define('PixonicTeam.controller.MainController', {
 
     },
 
-    onButtonTap: function(button, e, eOpts) {
-            console.log('Its not menu opening button');
-            Ext.Viewport.hideMenu('left');
-    },
-
     launch: function() {
-            console.log('Main controller launch');
             mainController = this;
-            var toolbar = Ext.create('PixonicTeam.view.MainToolbar');
-            toolbar.hide();
-            Ext.Viewport.add(toolbar);
-
             Ext.Viewport.setMenu(Ext.create('PixonicTeam.view.SlidingMenu'), {
                 side: 'left',
                 reveal: false
@@ -95,42 +82,35 @@ Ext.define('PixonicTeam.controller.MainController', {
             Ext.Viewport.add(Ext.create('PixonicTeam.view.ProfilePanel'));
             Ext.Viewport.add(Ext.create('PixonicTeam.view.CalendarPanel'));
 
-            Ext.Viewport.add(Ext.create('PixonicTeam.view.EmployeesNav'));
+            var nav = Ext.create('PixonicTeam.view.EmployeesNav');
+            Ext.Viewport.add(nav);
+            Ext.create('PixonicTeam.view.ColleaguePanel', {
+                title: 'Сотрудники'
+            });
 
     },
 
     showPanel: function(panelName) {
-            console.log('menu item pressed ' + panelName);
-            var tab, title, enableToolbar;
-            var bar = Ext.getCmp('mainToolbar');
+            var tab, title;
             switch(panelName){
                 case 'profilePanel': {
-                    title = 'Профиль';
                     tab = Ext.getCmp('profilePanel');
-                    enableToolbar = true;
                     break;
                 }
                 case 'calendarPanel': {
-                    title = 'Календарь';
                     tab = Ext.getCmp('calendarPanel');
-                     enableToolbar = true;
                     break;
                 }
                 case 'employeePanel': {
-                    title = 'Сотрудники';
                     tab = Ext.getCmp('employeeNav');
-                     enableToolbar = false;
                     break;
                 }
 
                 case 'colleaguePanel': {
-                    title = 'Сотрудники';
-                     enableToolbar = false;
                     tab = Ext.getCmp('colleaguePanel');
                     break;
                 }
                 case 'loginPanel': {
-                    enableToolbar = false;
                     tab = Ext.getCmp('loginPanel');
                     loginController.showLoginElements();
                     break;
@@ -139,14 +119,25 @@ Ext.define('PixonicTeam.controller.MainController', {
                     break;
             }
 
-            bar.setTitle(title);
-
-            if (enableToolbar)
-                bar.show();
-            else
-                bar.hide();
             Ext.Viewport.hideMenu('left');
             Ext.Viewport.setActiveItem(tab);
+    },
+
+    parsePhoneForCall: function(phone) {
+            var regExp = /\d+/g, phoneDigits = "+7";
+            while ((m = regExp.exec(phone)) !== null) {
+                phoneDigits += m[0];
+            }
+            return phoneDigits;
+    },
+
+    openUrl: function(url, separateWindow) {
+            console.log("Controller open url!" + url);
+            if (separateWindow)
+                window.open(url, '_system','location=yes,closebuttoncaption=Done');
+            else
+            location.href = url;
+
     }
 
 });
