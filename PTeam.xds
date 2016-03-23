@@ -2,9 +2,8 @@
     "name": "PTeam",
     "settings": {
         "cmd": {
-            "license": "commercial",
-            "cmdVersion": "6.0.2.14",
-            "frameworkVersion": "2.4.2.571"
+            "cmdVersion": "",
+            "license": "commercial"
         },
         "canvasControls": {
             "viewportSize": {
@@ -16,7 +15,7 @@
             "viewportOrientation": "portrait"
         },
         "urlPrefix": "http://localhost:1841",
-        "exportPath": "/Users/ifsogirl/untitled folder 2",
+        "exportPath": "",
         "spacesToIndent": 4,
         "sdkPath": "",
         "lineEnding": "LF",
@@ -32,8 +31,8 @@
         "lockUrlPrefix": true,
         "installStatus": "Not Installed"
     },
-    "xdsVersion": "3.2.0",
-    "xdsBuild": 339,
+    "xdsVersion": "3.5.0",
+    "xdsBuild": 268,
     "schemaVersion": 1,
     "upgradeVersion": 310000000001,
     "framework": "touch24",
@@ -44,7 +43,8 @@
             "990b5b30-99c7-4b9d-b59e-57970d0ace14",
             "f9bd5738-6292-4119-bc34-f679e9160b41",
             "84b0444e-349a-4fdb-a99a-1a69587f590e",
-            "396d328f-060a-4373-8381-3a17369e0915"
+            "396d328f-060a-4373-8381-3a17369e0915",
+            "1a089dfd-4555-4436-9455-9dd0337eb47f"
         ],
         "store": [
             "7392025e-0ef9-45c3-b771-0298f410465b"

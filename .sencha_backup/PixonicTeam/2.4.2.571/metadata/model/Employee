@@ -1,0 +1,226 @@
+{
+    "type": "Ext.data.Model",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "designer|userClassName": "Employee"
+    },
+    "name": "MyModel",
+    "designerId": "4b967aec-ba64-4a0c-9d49-bd432fdad9fe",
+    "cn": [
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "name",
+                "type": "string"
+            },
+            "name": "field",
+            "designerId": "ea0191a8-6046-4b82-ba98-3b7cb041ddfc"
+        },
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "email",
+                "type": "string"
+            },
+            "name": "field1",
+            "designerId": "d3dd20b6-bb1a-41de-9edc-d00644a78334"
+        },
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "office",
+                "type": "string"
+            },
+            "name": "field2",
+            "designerId": "245b964f-f05d-4a0e-a3d3-19e99e0dd2c4"
+        },
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "post",
+                "type": "string"
+            },
+            "name": "field3",
+            "designerId": "e474e460-50e2-48ea-9f87-b7b6eb2a082c"
+        },
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "phone",
+                "type": "string"
+            },
+            "name": "field4",
+            "designerId": "faf412d5-0b71-478b-8e99-3a1199519564"
+        },
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "skype",
+                "type": "string"
+            },
+            "name": "field5",
+            "designerId": "1f6e9018-3a17-4041-8b78-c17d598c15ec"
+        },
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "photo",
+                "type": "string"
+            },
+            "name": "field6",
+            "designerId": "96f65a08-b2ca-45f1-bf5e-6b61eac14010"
+        },
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "idFacebook",
+                "type": "string"
+            },
+            "name": "field7",
+            "designerId": "f46b4308-e205-4375-80ab-229e0c4f3b74"
+        },
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "idInstagram",
+                "type": "string"
+            },
+            "name": "field8",
+            "designerId": "653c9e3d-4676-4baa-ac11-f1bb835dc3a0"
+        },
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "idTwitter",
+                "type": "string"
+            },
+            "name": "field9",
+            "designerId": "85183345-85ce-40dc-8c49-b0309f8c0b43"
+        },
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "idVKontakte",
+                "type": "string"
+            },
+            "name": "field10",
+            "designerId": "75ff3bf8-6c65-493f-a982-3d7ef1a88308"
+        },
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "holidayBegin",
+                "type": "string"
+            },
+            "name": "field11",
+            "designerId": "e02df08e-b63b-46e8-bf69-cc2f4f2e212c"
+        },
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "holidayEnd",
+                "type": "string"
+            },
+            "name": "field12",
+            "designerId": "b6b1e600-5da7-4134-873b-575a5d1f31fe"
+        },
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "regDate",
+                "type": "string"
+            },
+            "name": "field13",
+            "designerId": "22862c98-74d6-49bf-a7c0-4c991e9ed3dd"
+        },
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "defaultValue": null,
+                "name": "info",
+                "type": "string"
+            },
+            "name": "field14",
+            "designerId": "92638ddb-b7c4-4bd1-800c-c5fc432eb46b"
+        }
+    ]
+}

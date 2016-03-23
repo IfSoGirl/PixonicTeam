@@ -1,0 +1,16 @@
+{
+    "type": "jsresource",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "defer": false,
+        "designer|userClassName": "js_iqyr66tt",
+        "url": "app/utils/Login.js",
+        "x-compile": true
+    },
+    "name": "js",
+    "designerId": "47f048e1-91fd-4210-bcb1-3fc991be4160"
+}

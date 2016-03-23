@@ -6,15 +6,13 @@
     },
     "codeClass": null,
     "userConfig": {
-        "container|align": "center",
         "designer|userAlias": "profilePanel",
         "designer|userClassName": "ProfilePanel",
         "hidden": false,
         "id": "profilePanel",
-        "layout": "vbox",
+        "layout": "fit",
         "showAnimation": null
     },
-    "name": "MyPanel",
     "configAlternates": {
         "showAnimation": "object"
     },
@@ -80,28 +78,36 @@
             "designerId": "54a757fe-7ad6-4880-8256-6c93e0a5e0b6"
         },
         {
-            "type": "Ext.Button",
+            "type": "linkedinstance",
             "reference": {
                 "name": "items",
                 "type": "array"
             },
             "codeClass": null,
             "userConfig": {
-                "action": "logout",
-                "height": 40,
-                "padding": "",
-                "text": "Выйти",
-                "width": 150
+                "docked": "top",
+                "id": "myInfo"
             },
-            "name": "MyButton1",
-            "designerId": "9afadd4c-dde9-477f-8afe-14c2af1cf1f9",
-            "customConfigs": [
-                {
-                    "group": "(Custom Properties)",
-                    "name": "action",
-                    "type": "string"
-                }
-            ]
+            "name": "profileinfo1",
+            "designerId": "f1c5743a-2317-455b-bb11-3abfff73dd7e",
+            "masterInstanceId": "1a089dfd-4555-4436-9455-9dd0337eb47f"
+        },
+        {
+            "type": "basicfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "fn": "updateInfo",
+                "implHandler": [
+                    "    var info = this.down('#myInfo');",
+                    "    info.setInfo(this.getData());"
+                ]
+            },
+            "name": "updateInfo",
+            "designerId": "1fc2cccd-6a3e-4528-b50c-3db05c4768e5"
         }
     ]
 }

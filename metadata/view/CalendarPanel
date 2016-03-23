@@ -77,6 +77,29 @@
             },
             "name": "MyContainer1",
             "designerId": "b4865a17-5974-46bd-bada-56f87c221a70"
+        },
+        {
+            "type": "basiceventbinding",
+            "reference": {
+                "name": "listeners",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "fn": "onCalendarPanelShow",
+                "implHandler": [
+                    "    var calendarFrame  = this.down('#calendarFrame');",
+                    "    var email = localStorage['email'];",
+                    "    if (email) {",
+                    "        var local = email.split('@')[0];",
+                    "        var calendarURL = personalCalendarHTML.replace(\"SETHEREUSERNAME\",local);",
+                    "        calendarFrame.setHtml(calendarURL);",
+                    "    }"
+                ],
+                "name": "show"
+            },
+            "name": "onCalendarPanelShow",
+            "designerId": "8734f0ff-39b5-4596-a847-752e4bfea49e"
         }
     ]
 }

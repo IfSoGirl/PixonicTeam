@@ -1,0 +1,254 @@
+{
+    "type": "Ext.Container",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "container|pack": "center",
+        "designer|userAlias": "profileinfo",
+        "designer|userClassName": "ProfileInfo",
+        "height": 460,
+        "layout": "vbox"
+    },
+    "designerId": "1a089dfd-4555-4436-9455-9dd0337eb47f",
+    "cn": [
+        {
+            "type": "Ext.Container",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "container|align": "center",
+                "docked": null,
+                "height": 360,
+                "itemId": "container",
+                "layout": "vbox",
+                "layout|flex": null,
+                "scrollable": null
+            },
+            "name": "MyContainer4",
+            "designerId": "97d5f0e0-f834-439b-99bd-028175d729bc",
+            "cn": [
+                {
+                    "type": "Ext.Spacer",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "height": 10,
+                        "id": null,
+                        "itemId": "spacer",
+                        "width": 50
+                    },
+                    "name": "MySpacer1",
+                    "designerId": "1e750957-5f41-4041-a315-1cd13a929d9d"
+                },
+                {
+                    "type": "Ext.Img",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "docked": null,
+                        "height": 300,
+                        "id": null,
+                        "itemId": "profilePhoto",
+                        "padding": null,
+                        "src": "http://www.vectortiles.com/wp-content/uploads/sky-and-cloud-patterns-01-300x300.jpg",
+                        "style": null,
+                        "width": 300
+                    },
+                    "name": "MyImg",
+                    "designerId": "7c60573a-fe6f-4e90-9fde-220ac6f280a3"
+                },
+                {
+                    "type": "Ext.Container",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "container|align": "center",
+                        "id": null,
+                        "itemId": "profileName",
+                        "layout": "vbox",
+                        "padding": null
+                    },
+                    "name": "MyContainer",
+                    "designerId": "aa4355c8-3835-4fab-9877-8e25f5d22ced",
+                    "cn": [
+                        {
+                            "type": "Ext.Spacer",
+                            "reference": {
+                                "name": "items",
+                                "type": "array"
+                            },
+                            "codeClass": null,
+                            "userConfig": {
+                                "height": 10,
+                                "id": null,
+                                "itemId": "spacer3",
+                                "width": 10
+                            },
+                            "name": "MySpacer2",
+                            "designerId": "68f0ad6b-d0dd-47b1-ad86-7350dcd79e1a"
+                        },
+                        {
+                            "type": "Ext.Label",
+                            "reference": {
+                                "name": "items",
+                                "type": "array"
+                            },
+                            "codeClass": null,
+                            "userConfig": {
+                                "cls": [
+                                    "list-item-header"
+                                ],
+                                "height": "30px",
+                                "html": "Холин Роман",
+                                "id": null,
+                                "itemId": "nameLabel",
+                                "padding": null,
+                                "style": null
+                            },
+                            "name": "MyLabel",
+                            "designerId": "2c6fc6e2-80d6-42c4-9a3f-eeea202fd015"
+                        },
+                        {
+                            "type": "Ext.Label",
+                            "reference": {
+                                "name": "items",
+                                "type": "array"
+                            },
+                            "codeClass": null,
+                            "userConfig": {
+                                "cls": [
+                                    "post",
+                                    "halign-center"
+                                ],
+                                "height": "30px",
+                                "html": "Гейм-дизайнер",
+                                "id": null,
+                                "itemId": "postLabel"
+                            },
+                            "name": "MyLabel1",
+                            "designerId": "319b41f5-a146-4141-894f-4bde26bcf54e"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "Ext.Container",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "docked": null,
+                "height": "100px",
+                "id": null,
+                "itemId": "contactsCnt",
+                "layout": "hbox",
+                "layout|flex": null,
+                "style": "border-top: 2px solid rgb(195,195,195); border-bottom: 2px solid rgb(195,195,195);"
+            },
+            "name": "MyContainer6",
+            "designerId": "43cc9374-84b4-4407-a4da-0a89ffcc67d7",
+            "cn": [
+                {
+                    "type": "Ext.Button",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "cls": [
+                            "transparent"
+                        ],
+                        "html": "<div> \t<span style = \"font-size: 16px; font-weight: bold\"> E-mail: <span class =\"mail-url\" style=\"color: blue; font-weight: normal\"> {email}</span> </span></br> \t<span style = \"font-size: 16px; font-weight: bold\"> Телефон: <span class =\"phone-url\" style=\"color: blue; font-weight: normal\"> {phone}</span> </span></br> \t<span style = \"font-size: 16px; font-weight: bold\"> Skype: <span class =\"skype-url\" style=\"color: blue; font-weight: normal\"> {skype}</span> </span></br> \t<span style = \"font-size: 16px; font-weight: bold\">  Офис: <span style=\"font-weight: normal; color: rgb(125,125,125)\"> {office}</span> </span> </div>",
+                        "id": null,
+                        "itemId": "contactsBtn",
+                        "labelCls": "contacts-label",
+                        "layout|flex": 1,
+                        "text": "MyButton10",
+                        "ui": null
+                    },
+                    "name": "MyButton10",
+                    "designerId": "1ed79e6b-f158-490e-a60c-bcd8cbb1ae03",
+                    "cn": [
+                        {
+                            "type": "fixedfunction",
+                            "reference": {
+                                "name": "items",
+                                "type": "array"
+                            },
+                            "codeClass": null,
+                            "userConfig": {
+                                "designer|params": [
+                                    "button",
+                                    "e"
+                                ],
+                                "fn": "handler",
+                                "implHandler": [
+                                    "                                    console.log(e.target);",
+                                    "                                    var data = button.getData();",
+                                    "                                    Ext.getCmp('colleaguePanel').onContactsButtonTap(e.target.className,data);"
+                                ]
+                            },
+                            "name": "handler",
+                            "designerId": "310750ec-61b9-4d16-b9e2-c57a846e7f20"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "basicfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|params": [
+                    "record"
+                ],
+                "fn": "setInfo",
+                "implHandler": [
+                    "    var nameLabel =this.down('#profileName').down('#nameLabel');",
+                    "    nameLabel.setHtml(record.data.name);",
+                    "    var postLabel =this.down('#profileName').down('#postLabel');",
+                    "    postLabel.setHtml(record.data.post);",
+                    "",
+                    "    var contactsCnt = this.down('#contactsCnt');",
+                    "    var contactsBtn = contactsCnt.down('#contactsBtn');",
+                    "    var btnHtml = contactsBtn.getHtml();",
+                    "    btnHtml = btnHtml.replace(\"{email}\",record.data.email);",
+                    "    btnHtml = btnHtml.replace(\"{phone}\",record.data.phone);",
+                    "    btnHtml = btnHtml.replace(\"{skype}\",record.data.skype);",
+                    "    btnHtml = btnHtml.replace(\"{office}\",record.data.office);",
+                    "    contactsBtn.setHtml(btnHtml);",
+                    "    contactsBtn.setData({",
+                    "        \"phone\" : record.data.phone,",
+                    "        \"email\" : record.data.email,",
+                    "        \"skype\" : record.data.email",
+                    "    });"
+                ]
+            },
+            "name": "setInfo",
+            "designerId": "b66116ee-bbba-40ff-8dc2-c5a2b00ad040"
+        }
+    ]
+}

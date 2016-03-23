@@ -1,0 +1,135 @@
+{
+    "type": "Ext.Panel",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "designer|userAlias": "profilePanel",
+        "designer|userClassName": "ProfilePanel",
+        "hidden": false,
+        "id": "profilePanel",
+        "layout": "fit",
+        "showAnimation": null
+    },
+    "configAlternates": {
+        "showAnimation": "object"
+    },
+    "designerId": "f9bd5738-6292-4119-bc34-f679e9160b41",
+    "cn": [
+        {
+            "type": "Ext.Toolbar",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "cls": [
+                    "toolbar"
+                ],
+                "container|align": "end",
+                "designer|uiInterfaceName": "light",
+                "docked": "top",
+                "id": "profileToolbar",
+                "title": "Профиль",
+                "ui": "light"
+            },
+            "name": "MyToolbar1",
+            "designerId": "9f58fbb2-7000-4ed7-804a-cd6456b98557",
+            "cn": [
+                {
+                    "type": "Ext.Button",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "action": "menuButtonPressed",
+                        "docked": null,
+                        "text": "Меню"
+                    },
+                    "name": "MyButton8",
+                    "designerId": "a4d190e4-7320-47a9-8ed5-68aded22a895",
+                    "customConfigs": [
+                        {
+                            "group": "(Custom Properties)",
+                            "name": "action",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "Ext.Spacer",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "height": 20,
+                "width": 20
+            },
+            "name": "MySpacer",
+            "designerId": "54a757fe-7ad6-4880-8256-6c93e0a5e0b6"
+        },
+        {
+            "type": "linkedinstance",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "docked": "top",
+                "id": "myInfo"
+            },
+            "name": "profileinfo1",
+            "designerId": "f1c5743a-2317-455b-bb11-3abfff73dd7e",
+            "masterInstanceId": "1a089dfd-4555-4436-9455-9dd0337eb47f"
+        },
+        {
+            "type": "basicfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "fn": "updateInfo",
+                "implHandler": [
+                    "    var info = this.down('#myInfo');",
+                    "    info.setInfo(this.getData());"
+                ]
+            },
+            "name": "updateInfo",
+            "designerId": "1fc2cccd-6a3e-4528-b50c-3db05c4768e5"
+        },
+        {
+            "type": "basiceventbinding",
+            "reference": {
+                "name": "listeners",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "fn": "onProfilePanelShow",
+                "implHandler": [
+                    "        var data = this.getData();",
+                    "        if (!data){",
+                    "            this.setData(myRecord);",
+                    "            this.updateInfo();",
+                    "        }",
+                    ""
+                ],
+                "name": "show"
+            },
+            "name": "onProfilePanelShow",
+            "designerId": "578d5f23-098a-478b-8263-b05ca526a776"
+        }
+    ]
+}

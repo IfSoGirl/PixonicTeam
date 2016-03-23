@@ -1,0 +1,126 @@
+{
+    "type": "arraystore",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "autoLoad": true,
+        "data": [
+            "[",
+            "    {",
+            "        \"name\": \"Ананьев Александр\",",
+            "        \"email\": \"email@pixonic.ru\",",
+            "        \"office\": \"Москва\",",
+            "        \"post\": \"2D концепт-художник\",",
+            "        \"phone\": \"(933) 045-1869\",",
+            "        \"skype\": \"necessitatibus\",",
+            "        \"photo\": \"http://www.vectortiles.com/wp-content/uploads/sky-and-cloud-patterns-01-300x300.jpg\",",
+            "        \"idFacebook\": \"\",",
+            "        \"idInstagram\": \"\",",
+            "        \"idTwitter\": \"\",",
+            "        \"idVKontakte\": \"\",",
+            "        \"holidayBegin\": \"est\",",
+            "        \"holidayEnd\": \"alias\",",
+            "        \"regDate\": \"saepe\",",
+            "        \"info\": \"О себе!\"",
+            "    },",
+            "    {",
+            "        \"name\": \"Холин Роман\",",
+            "        \"email\": \"r.holin@pixonic.ru\",",
+            "        \"office\": \"Белгород\",",
+            "        \"post\": \"Гейм-дизайнер\",",
+            "        \"phone\": \"(968) 921-48-37\",",
+            "        \"skype\": \"ripenemy\",",
+            "        \"photo\": \"http://www.vectortiles.com/wp-content/uploads/sky-and-cloud-patterns-01-300x300.jpg\",",
+            "        \"idFacebook\": \"https://www.facebook.com/roman.kholin.56\",",
+            "        \"idInstagram\": \"https://www.instagram.com/ripenemy/\",",
+            "        \"idTwitter\": \"https://twitter.com/RIPEnemy\",",
+            "        \"idVKontakte\": \"http://vk.com/r.kholin\",",
+            "        \"holidayBegin\": \"ratione\",",
+            "        \"holidayEnd\": \"commodi\",",
+            "        \"regDate\": \"aut\",",
+            "        \"info\": \"О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!\"",
+            "    },",
+            "    {",
+            "        \"name\": \"Матюха Дарья\",",
+            "        \"email\": \"matyukha@pixonic.ru\",",
+            "        \"office\": \"Белгород\",",
+            "        \"post\": \"Программист\",",
+            "        \"phone\": \"(980) 387-08-01\",",
+            "        \"skype\": \"magnolia9102\",",
+            "        \"photo\": \"http://www.vectortiles.com/wp-content/uploads/sky-and-cloud-patterns-01-300x300.jpg\",",
+            "        \"idFacebook\": \"https://www.facebook.com/profile.php?id=100006846364642\",",
+            "        \"idInstagram\": \"https://www.instagram.com/ifsogirl91/\",",
+            "        \"idTwitter\": \"\",",
+            "        \"idVKontakte\": \"https://vk.com/id5710116\",",
+            "        \"holidayBegin\": \"ratione\",",
+            "        \"holidayEnd\": \"commodi\",",
+            "        \"regDate\": \"aut\",",
+            "        \"info\": \"О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!О себе!\"",
+            "    }",
+            "   ",
+            "]"
+        ],
+        "designer|userClassName": "EmployeeStore",
+        "model": "Employee",
+        "storeId": "EmployeeStore"
+    },
+    "name": "MyArrayStore",
+    "designerId": "7392025e-0ef9-45c3-b771-0298f410465b",
+    "cn": [
+        {
+            "type": "Ext.util.Grouper",
+            "reference": {
+                "name": "grouper",
+                "type": "object"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "sortProperty": "name"
+            },
+            "name": "MyGrouper",
+            "designerId": "43733aec-a197-461c-90c5-b89bc6276141",
+            "cn": [
+                {
+                    "type": "fixedfunction",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|params": [
+                            "item"
+                        ],
+                        "fn": "groupFn",
+                        "implHandler": [
+                            "    return item.get('name').substr(0, 1);"
+                        ]
+                    },
+                    "name": "groupFn",
+                    "designerId": "7075d107-6bea-4dbb-a194-b1cc0ca4e59c"
+                }
+            ]
+        },
+        {
+            "type": "basiceventbinding",
+            "reference": {
+                "name": "listeners",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "fn": "onArraystoreLoad",
+                "implHandler": [
+                    "    myRecord = store.findRecord('email',localStorage['email']);",
+                    ""
+                ],
+                "name": "load"
+            },
+            "name": "onArraystoreLoad",
+            "designerId": "799032d8-d995-4682-a2ae-611d54248a13"
+        }
+    ]
+}

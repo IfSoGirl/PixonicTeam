@@ -1,0 +1,110 @@
+{
+    "type": "Ext.Panel",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "designer|initialView": true,
+        "designer|userAlias": "loginPanel",
+        "designer|userClassName": "LoginPanel",
+        "id": "loginPanel",
+        "style": "text-align: center"
+    },
+    "name": "MyPanel",
+    "designerId": "4d875df0-20ec-4b9e-9ede-5bd27bbf1943",
+    "cn": [
+        {
+            "type": "Ext.Container",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "container|align": "center",
+                "id": "loginContainer",
+                "itemId": "loginController",
+                "layout": "vbox"
+            },
+            "name": "MyContainer",
+            "designerId": "702fbd5d-6d4e-4f32-8c4a-d6919ff8863b",
+            "cn": [
+                {
+                    "type": "Ext.Label",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "html": "Добро пожаловать в PixonicTeam! ",
+                        "id": "helloLabel",
+                        "padding": "50 0 50 0",
+                        "style": "text-align: center",
+                        "width": 300
+                    },
+                    "name": "MyLabel",
+                    "designerId": "cdbac9f0-5bf6-42f3-a486-e5d371dcec45"
+                },
+                {
+                    "type": "Ext.Label",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "cls": [
+                            "x-label-error"
+                        ],
+                        "html": "Пожалуйста, подождите. Мы получаем актуальные данные о стордуниках",
+                        "id": "errorLabel"
+                    },
+                    "name": "MyLabel2",
+                    "designerId": "fde16c20-cfe1-49ab-806f-a0cb2743488c"
+                },
+                {
+                    "type": "Ext.Button",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "action": "login",
+                        "baseCls": null,
+                        "cls": [
+                            "google-button-active"
+                        ],
+                        "height": 46,
+                        "hidden": true,
+                        "id": "loginBtn",
+                        "pressedCls": "google-button-pressed",
+                        "showAnimation": [
+                            "'fadeIn'",
+                            ""
+                        ],
+                        "style": null,
+                        "text": null,
+                        "width": 191,
+                        "zIndex": null
+                    },
+                    "name": "MyButton",
+                    "configAlternates": {
+                        "showAnimation": "object"
+                    },
+                    "designerId": "3cfef5e8-87ab-4bc5-abd8-dd8f26026ac7",
+                    "customConfigs": [
+                        {
+                            "group": "(Custom Properties)",
+                            "name": "action",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

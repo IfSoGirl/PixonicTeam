@@ -55,21 +55,8 @@
                 "fn": "launch",
                 "implHandler": [
                     "    loginController = this;",
+                    "    needToShowProfile = false;",
                     "    Ext.Viewport.setMasked({xtype:'loadmask',message:'Загружаемся...'});",
-                    "    var token = localStorage['access_token'];",
-                    "    console.log('Login controller launch. Storage: access_token., refresh token');",
-                    "    console.log(localStorage['access_token']);",
-                    "    console.log(localStorage['refresh_token']);",
-                    "    if (token) {",
-                    "        console.log(\"token exist, validate\");",
-                    "        this.validateToken(token);",
-                    "    }",
-                    "    else {",
-                    "        Ext.Viewport.setMasked(false);",
-                    "        Ext.getCmp('errorLabel').setHtml('You dont have a token. Please login to Google!');",
-                    "        this.showLoginElements();",
-                    "    }",
-                    "",
                     ""
                 ]
             },
@@ -100,12 +87,12 @@
                     "        },",
                     "        disableCaching : false,",
                     "        callback: function(options, success, response) {",
-                    "           ",
+                    "",
                     "            var json = Ext.util.JSON.decode(response.responseText);",
                     "            if (response.status == 200) {",
-                    "                Ext.Viewport.setMasked(false);",
+                    "                console.log(\"Validating token success \");",
                     "                loginController.onLoginSuccess();",
-                    "                 console.log(\"Validating token success \");",
+                    "",
                     "            }",
                     "            else  {",
                     "                console.log(\"Validating token failed, need refresh, refresh token = \" + localStorage['refresh_token']);",
@@ -360,13 +347,11 @@
             "userConfig": {
                 "fn": "onLoginSuccess",
                 "implHandler": [
-                    "",
-                    "    mainController.showPanel('profilePanel');",
-                    "    var calendarFrame  = Ext.getCmp('calendarFrame');",
-                    "    var email = localStorage['email'];",
-                    "    var local = email.split('@')[0];",
-                    "    var calendarURL = personalCalendarHTML.replace(\"SETHEREUSERNAME\",local);",
-                    "    calendarFrame.setHtml(calendarURL);"
+                    "    var store = Ext.getStore('EmployeeStore');",
+                    "    myRecord = store.findRecord('email',localStorage['email']);",
+                    "    console.log(\"LoginSuccess\");",
+                    "    console.log('my email is *' + localStorage['email'] + '*; my record email is *' + myRecord.data.email);",
+                    "     mainController.showPanel('profilePanel');"
                 ]
             },
             "name": "onLoginSuccess",
@@ -455,6 +440,35 @@
             },
             "name": "showLoginElements",
             "designerId": "d15d38a7-cc23-4bef-85a5-73c487781d28"
+        },
+        {
+            "type": "basicfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "fn": "isLoggedIn",
+                "implHandler": [
+                    "    console.log('Check if logged in');",
+                    "    var token = localStorage['access_token'];",
+                    "    console.log('Login controller launch. Storage: access_token., refresh token');",
+                    "    console.log(localStorage['access_token']);",
+                    "    console.log(localStorage['refresh_token']);",
+                    "    if (token) {",
+                    "        console.log(\"token exist, validate\");",
+                    "        this.validateToken(token);",
+                    "    }",
+                    "    else {",
+                    "        Ext.Viewport.setMasked(false);",
+                    "        Ext.getCmp('errorLabel').setHtml('You dont have a token. Please login to Google!');",
+                    "        this.showLoginElements();",
+                    "    }"
+                ]
+            },
+            "name": "isLoggedIn",
+            "designerId": "5b9f5295-b964-4bc4-af7b-4297ff6d6d48"
         }
     ]
 }

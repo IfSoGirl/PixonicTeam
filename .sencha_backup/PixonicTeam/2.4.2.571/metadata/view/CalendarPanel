@@ -1,0 +1,103 @@
+{
+    "type": "Ext.Panel",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "designer|userAlias": "calendarPanel",
+        "designer|userClassName": "CalendarPanel",
+        "hidden": false,
+        "id": "calendarPanel",
+        "showAnimation": null
+    },
+    "name": "MyPanel",
+    "configAlternates": {
+        "showAnimation": "object"
+    },
+    "designerId": "990b5b30-99c7-4b9d-b59e-57970d0ace14",
+    "cn": [
+        {
+            "type": "Ext.Toolbar",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "cls": [
+                    "toolbar"
+                ],
+                "container|align": "end",
+                "designer|uiInterfaceName": "light",
+                "docked": "top",
+                "id": "calendarToolbar",
+                "title": "Календарь",
+                "ui": "light"
+            },
+            "name": "MyToolbar",
+            "designerId": "1b838382-0994-4f7f-8adf-da2f21cc3f8b",
+            "cn": [
+                {
+                    "type": "Ext.Button",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "action": "menuButtonPressed",
+                        "text": "Меню"
+                    },
+                    "name": "MyButton9",
+                    "designerId": "53dcb7e4-56f8-4cf1-833c-828d6e7c9168",
+                    "customConfigs": [
+                        {
+                            "group": "(Custom Properties)",
+                            "name": "action",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "Ext.Container",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "centered": true,
+                "height": 300,
+                "id": "calendarFrame",
+                "width": 300
+            },
+            "name": "MyContainer1",
+            "designerId": "b4865a17-5974-46bd-bada-56f87c221a70"
+        },
+        {
+            "type": "basiceventbinding",
+            "reference": {
+                "name": "listeners",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "fn": "onCalendarPanelShow",
+                "implHandler": [
+                    "    var calendarFrame  = this.down('#calendarFrame');",
+                    "    var email = localStorage['email'];",
+                    "    var local = email.split('@')[0];",
+                    "    var calendarURL = personalCalendarHTML.replace(\"SETHEREUSERNAME\",local);",
+                    "    calendarFrame.setHtml(calendarURL);"
+                ],
+                "name": "show"
+            },
+            "name": "onCalendarPanelShow",
+            "designerId": "8734f0ff-39b5-4596-a847-752e4bfea49e"
+        }
+    ]
+}

@@ -1,0 +1,73 @@
+{
+    "type": "Ext.app.Application",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "controllers": [
+            "LoginController",
+            "MainController"
+        ],
+        "models": [
+            "Employee"
+        ],
+        "name": "PixonicTeam",
+        "stores": [
+            "EmployeeStore"
+        ],
+        "views": [
+            "LoginPanel",
+            "CalendarPanel",
+            "ProfilePanel",
+            "EmployeesNav",
+            "ColleaguePanel"
+        ]
+    },
+    "name": "Application",
+    "designerId": "application",
+    "cn": [
+        {
+            "type": "Ext.Viewport",
+            "reference": {
+                "name": "viewport",
+                "type": "object"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "container|animation": "slide",
+                "container|animation.direction": "right",
+                "container|animation.duration": 500
+            },
+            "name": "Viewport",
+            "designerId": "8dfcbe04-64fa-40b0-b7ed-a70ca5caa97d"
+        },
+        {
+            "type": "Ext.Loader",
+            "reference": {
+                "name": "loader",
+                "type": "object"
+            },
+            "codeClass": null,
+            "name": "Loader132",
+            "designerId": "8bf96d96-78a4-49f9-905a-7d78b4c802e9"
+        },
+        {
+            "type": "fixedfunction",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "fn": "launch",
+                "implHandler": [
+                    "Ext.Ajax.cors = true;"
+                ]
+            },
+            "name": "launch",
+            "designerId": "767288d1-710e-4228-90c2-28d9cab3fb73"
+        }
+    ]
+}

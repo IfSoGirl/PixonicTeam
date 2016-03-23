@@ -38,7 +38,7 @@
 
 .menu-label
 {
-    font: normal 22px helvetica !important;
+    font: normal 26px helvetica !important;
     color: white !important;
     padding-left: 15px;
 }
@@ -59,7 +59,7 @@
 {
     font-size: 14px !important;
     font-style: italic;
-    color: rgb(140,140,140);
+    color: rgb(125,125,125);
     display:inline-block;
     margin-top:-10px;
 }
@@ -80,7 +80,7 @@
 {
     line-height: 30px !important;
     font-size: 16px;
-    color: rgb(140,140,140);
+    color: rgb(125,125,125);
 }
 
 .alphabet-underline
